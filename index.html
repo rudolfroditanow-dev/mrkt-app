@@ -33,7 +33,7 @@
             background: var(--bg);
             color: var(--text-primary);
             padding: 14px;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
             overflow-x: hidden;
         }
 
@@ -86,7 +86,7 @@
             gap: 6px;
             background: var(--surface);
             border: 1px solid var(--border);
-            padding: 8px 14px;
+            padding: 9px 14px;
             border-radius: var(--radius-md);
             font-size: 13px;
             font-weight: 600;
@@ -514,7 +514,7 @@
             color: #0c100e;
             border: none;
             border-radius: var(--radius-md);
-            padding: 11px;
+            padding: 12px;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
@@ -691,63 +691,85 @@
         const monoToggle = document.getElementById('mono-toggle');
         const activeToggle = document.getElementById('active-toggle');
 
-        // RESTORE SAVED STATE FROM LOCALSTORAGE
-        function loadSavedState() {
-            try {
-                const saved = localStorage.getItem('mrkt_filters_emerald');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    if (data.max_price !== undefined) {
-                        budgetSlider.value = data.max_price;
-                        budgetVal.textContent = data.max_price + ' TON';
+        function applyStateToUI(data) {
+            if (!data) return;
+            if (data.max_price !== undefined) {
+                budgetSlider.value = data.max_price;
+                budgetVal.textContent = data.max_price + ' TON';
+            }
+            if (data.min_discount !== undefined) {
+                currentDiscount = data.min_discount;
+                document.querySelectorAll('.pill-btn').forEach(b => {
+                    if (parseFloat(b.dataset.discount) === currentDiscount) {
+                        b.classList.add('active');
+                    } else {
+                        b.classList.remove('active');
                     }
-                    if (data.min_discount !== undefined) {
-                        currentDiscount = data.min_discount;
-                        document.querySelectorAll('.pill-btn').forEach(b => {
-                            if (parseFloat(b.dataset.discount) === currentDiscount) {
-                                b.classList.add('active');
-                            } else {
-                                b.classList.remove('active');
-                            }
-                        });
-                        discountVal.textContent = currentDiscount === 0 ? 'Любая (0%)' : '-' + currentDiscount + '%';
-                    }
-                    if (data.check_rare_id !== undefined) rareIdToggle.checked = data.check_rare_id;
-                    if (data.check_monochrome !== undefined) monoToggle.checked = data.check_monochrome;
-                    if (data.is_active !== undefined) activeToggle.checked = data.is_active;
+                });
+                discountVal.textContent = currentDiscount === 0 ? 'Любая (0%)' : '-' + currentDiscount + '%';
+            }
+            if (data.check_rare_id !== undefined) rareIdToggle.checked = data.check_rare_id;
+            if (data.check_monochrome !== undefined) monoToggle.checked = data.check_monochrome;
+            if (data.is_active !== undefined) activeToggle.checked = data.is_active;
 
-                    if (Array.isArray(data.selected_collections)) {
-                        selectedCollections = new Set(data.selected_collections);
-                        document.getElementById('selected-cols-count').textContent = 
-                            selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
-                    }
-                    if (Array.isArray(data.selected_backdrops)) {
-                        selectedBackdrops = new Set(data.selected_backdrops);
-                        document.getElementById('selected-backs-count').textContent = 
-                            selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
-                    }
+            if (Array.isArray(data.selected_collections)) {
+                selectedCollections = new Set(data.selected_collections);
+                document.getElementById('selected-cols-count').textContent = 
+                    selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
+            }
+            if (Array.isArray(data.selected_backdrops)) {
+                selectedBackdrops = new Set(data.selected_backdrops);
+                document.getElementById('selected-backs-count').textContent = 
+                    selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
+            }
+        }
+
+        // LOAD FROM BOTH TELEGRAM CLOUD STORAGE & LOCALSTORAGE
+        function loadSavedState() {
+            // 1. Try local storage first
+            try {
+                const localData = localStorage.getItem('mrkt_filters_emerald');
+                if (localData) {
+                    applyStateToUI(JSON.parse(localData));
                 }
             } catch (e) {
-                console.error("Failed to load local storage state", e);
+                console.error("Local storage read error", e);
+            }
+
+            // 2. Try Telegram CloudStorage if available
+            if (tg?.CloudStorage) {
+                tg.CloudStorage.getItem('mrkt_filters_emerald', (err, result) => {
+                    if (!err && result) {
+                        try {
+                            const cloudData = JSON.parse(result);
+                            applyStateToUI(cloudData);
+                        } catch (e) {}
+                    }
+                });
             }
         }
 
         function saveStateLocally() {
+            const payload = {
+                max_price: parseFloat(budgetSlider.value),
+                min_discount: currentDiscount,
+                check_rare_id: rareIdToggle.checked,
+                check_monochrome: monoToggle.checked,
+                is_active: activeToggle.checked,
+                selected_collections: Array.from(selectedCollections),
+                selected_backdrops: Array.from(selectedBackdrops)
+            };
+            const jsonStr = JSON.stringify(payload);
+
             try {
-                const payload = {
-                    max_price: parseFloat(budgetSlider.value),
-                    min_discount: currentDiscount,
-                    check_rare_id: rareIdToggle.checked,
-                    check_monochrome: monoToggle.checked,
-                    is_active: activeToggle.checked,
-                    selected_collections: Array.from(selectedCollections),
-                    selected_backdrops: Array.from(selectedBackdrops)
-                };
-                localStorage.setItem('mrkt_filters_emerald', JSON.stringify(payload));
-                return payload;
-            } catch (e) {
-                console.error("Failed to save local storage state", e);
+                localStorage.setItem('mrkt_filters_emerald', jsonStr);
+            } catch (e) {}
+
+            if (tg?.CloudStorage) {
+                tg.CloudStorage.setItem('mrkt_filters_emerald', jsonStr, () => {});
             }
+
+            return payload;
         }
 
         budgetSlider.addEventListener('input', (e) => {
@@ -861,7 +883,6 @@
             }
         }
 
-        // Select All Handler
         function toggleSelectAll() {
             const filter = document.getElementById('search-cols').value;
             const currentList = ALL_COLLECTIONS.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()));
@@ -964,12 +985,20 @@
             renderBackdrops(e.target.value);
         });
 
+        // MAIN SAVE BUTTON ACTION
         document.getElementById('save-btn').addEventListener('click', () => {
             const payload = saveStateLocally();
 
             if (tg) {
-                tg.sendData(JSON.stringify(payload));
-                tg.close();
+                // Telegram WebApp sendData
+                try {
+                    tg.sendData(JSON.stringify(payload));
+                } catch (e) {
+                    console.error("sendData error:", e);
+                }
+                setTimeout(() => {
+                    tg.close();
+                }, 150);
             } else {
                 alert('Настройки сохранены!\n' + JSON.stringify(payload, null, 2));
             }
