@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MRKT Sniper Filters</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #121318;
+            --card-bg: #1c1e24;
+            --accent-yellow: #f5c400;
+            --accent-hover: #e0b400;
+            --text-primary: #ffffff;
+            --text-secondary: #8c93a0;
+            --border-color: #272a33;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            padding: 16px;
+            padding-bottom: 90px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background: rgba(245, 196, 0, 0.15);
+            color: var(--accent-yellow);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-display {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .price-value {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--accent-yellow);
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 6px;
+            background: #2a2e39;
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--accent-yellow);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(245, 196, 0, 0.4);
+        }
+
+        .chips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .chip {
+            background: #252830;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 6px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .chip.active {
+            background: var(--accent-yellow);
+            color: #000;
+            border-color: var(--accent-yellow);
+            font-weight: 700;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-row:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .toggle-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #2c313d;
+            transition: .2s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .2s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-yellow);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+            background-color: #000;
+        }
+
+        /* Fixed Bottom Button */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18, 19, 24, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 14px 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .save-btn {
+            width: 100%;
+            background: var(--accent-yellow);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(245, 196, 0, 0.25);
+            transition: transform 0.1s ease;
+        }
+
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>MRKT SNIPER <span class="badge">PRO 2.0</span></h1>
+    </div>
+
+    <!-- Максимальная цена -->
+    <div class="card">
+        <div class="card-title">Максимальный бюджет</div>
+        <div class="price-display">
+            <span>Лимит за лот</span>
+            <div class="price-value"><span id="priceVal">20.0</span> TON</div>
+        </div>
+        <input type="range" id="priceRange" min="1" max="100" step="0.5" value="20" oninput="updatePrice(this.value)">
+    </div>
+
+    <!-- Минимальный дисконт от Floor -->
+    <div class="card">
+        <div class="card-title">Скидка от Floor Price</div>
+        <div class="chips-grid">
+            <div class="chip active" onclick="setDiscount(0, this)">Любой</div>
+            <div class="chip" onclick="setDiscount(10, this)">-10%</div>
+            <div class="chip" onclick="setDiscount(15, this)">-15%</div>
+            <div class="chip" onclick="setDiscount(20, this)">-20%</div>
+            <div class="chip" onclick="setDiscount(30, this)">-30%</div>
+            <div class="chip" onclick="setDiscount(50, this)">🔥 -50%</div>
+        </div>
+    </div>
+
+    <!-- Фильтры редкости -->
+    <div class="card">
+        <div class="card-title">Критерии редкости</div>
+        
+        <div class="toggle-row">
+            <div class="toggle-info">
+                <h4>Красивые ID</h4>
+                <p>#777, зеркальные #1221, #1000, low-ID</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="rareIdToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-row">
+            <div class="toggle-info">
+                <h4>Монохромность</h4>
+                <p>Черно-белые, Noir, Dark, Silver стили</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="monoToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-row">
+            <div class="toggle-info">
+                <h4>Статус сканера</h4>
+                <p>Присылать уведомления в Telegram</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="activeToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Кнопка сохранения -->
+    <div class="bottom-bar">
+        <button class="save-btn" onclick="saveFilters()">Сохранить настройки</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        let selectedDiscount = 0;
+
+        function updatePrice(val) {
+            document.getElementById('priceVal').innerText = parseFloat(val).toFixed(1);
+        }
+
+        function setDiscount(val, el) {
+            selectedDiscount = val;
+            document.querySelectorAll('.chips-grid .chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function saveFilters() {
+            const data = {
+                max_price: parseFloat(document.getElementById('priceRange').value),
+                min_discount: selectedDiscount,
+                check_rare_id: document.getElementById('rareIdToggle').checked,
+                check_monochrome: document.getElementById('monoToggle').checked,
+                is_active: document.getElementById('activeToggle').checked
+            };
+
+            if (tg && tg.sendData) {
+                // Отправляем данные боту
+                tg.sendData(JSON.stringify(data));
+            } else {
+                alert("Настройки сохранены: " + JSON.stringify(data));
+            }
+        }
+    </script>
+</body>
+</html>
