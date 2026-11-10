@@ -66,7 +66,7 @@
             border-radius: 6px;
         }
 
-        /* Top Bar Filter Buttons like MRKT */
+        /* Top Bar Filter Buttons */
         .chips-scroll {
             display: flex;
             gap: 8px;
@@ -359,7 +359,7 @@
         /* MRKT Table Header with Sort */
         .mrkt-table-header {
             display: grid;
-            grid-template-columns: 28px 1fr 90px 95px;
+            grid-template-columns: 24px 1fr 85px 85px;
             align-items: center;
             padding: 8px 6px;
             font-size: 12px;
@@ -389,12 +389,12 @@
             padding-right: 2px;
         }
 
-        /* MRKT Pure Table Row */
+        /* MRKT Grid Row with Mini Thumbnail */
         .mrkt-grid-row {
             display: grid;
-            grid-template-columns: 28px 1fr 90px 95px;
+            grid-template-columns: 24px 1fr 85px 85px;
             align-items: center;
-            padding: 11px 6px;
+            padding: 9px 6px;
             gap: 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             cursor: pointer;
@@ -402,6 +402,22 @@
 
         .mrkt-grid-row:active {
             background: var(--surface-hover);
+        }
+
+        .col-main {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .mini-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            background: #19221d;
+            object-fit: contain;
+            flex-shrink: 0;
         }
 
         .col-name {
@@ -414,21 +430,21 @@
         }
 
         .col-floor {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
         }
 
         .col-vol {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
             justify-content: flex-end;
         }
 
@@ -438,10 +454,11 @@
         }
 
         .backdrop-circle {
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             border: 2px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
         }
 
         .checkbox-custom {
@@ -452,6 +469,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .checkbox-custom.checked {
@@ -600,7 +618,7 @@
         <button class="btn-compact" id="save-btn" style="width: 100%;">Сохранить настройки</button>
     </div>
 
-    <!-- Collections Modal Styled Purely like MRKT Reference -->
+    <!-- Collections Modal -->
     <div class="modal-overlay" id="collections-modal">
         <div class="modal-sheet">
             <div class="modal-header">
@@ -612,7 +630,7 @@
                 <input type="text" class="search-input" id="search-cols" placeholder="Поиск коллекции...">
             </div>
 
-            <!-- MRKT Table Header: Checkbox + Title + Floor + Volume -->
+            <!-- Table Header -->
             <div class="mrkt-table-header">
                 <div class="checkbox-custom" id="select-all-cols-btn" title="Выбрать все"></div>
                 <span style="cursor: pointer;" id="label-select-all">Выбрать все</span>
@@ -620,10 +638,9 @@
                 <span class="sort-btn" id="sort-vol" style="justify-content: flex-end;">Оборот <span id="sort-vol-arrow">⇅</span></span>
             </div>
 
-            <!-- List rows without stickers, exactly like MRKT -->
+            <!-- List rows with mini-thumbnails -->
             <div class="list-container" id="cols-list"></div>
 
-            <!-- Footer Buttons: Reset + Show Results -->
             <div class="modal-action-row">
                 <button class="btn-reset" id="reset-cols">Сбросить</button>
                 <button class="btn-compact" id="apply-cols">Показать результаты</button>
@@ -664,9 +681,8 @@
         let selectedBackdrops = new Set();
         let currentDiscount = 0;
 
-        // Sorting state: 'none', 'asc', 'desc'
-        let sortField = 'vol'; // default sort by volume
-        let sortDirection = 'desc'; // highest volume first
+        let sortField = 'vol';
+        let sortDirection = 'desc';
 
         const budgetSlider = document.getElementById('budget-slider');
         const budgetVal = document.getElementById('budget-val');
@@ -675,8 +691,68 @@
         const monoToggle = document.getElementById('mono-toggle');
         const activeToggle = document.getElementById('active-toggle');
 
+        // RESTORE SAVED STATE FROM LOCALSTORAGE
+        function loadSavedState() {
+            try {
+                const saved = localStorage.getItem('mrkt_filters_emerald');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.max_price !== undefined) {
+                        budgetSlider.value = data.max_price;
+                        budgetVal.textContent = data.max_price + ' TON';
+                    }
+                    if (data.min_discount !== undefined) {
+                        currentDiscount = data.min_discount;
+                        document.querySelectorAll('.pill-btn').forEach(b => {
+                            if (parseFloat(b.dataset.discount) === currentDiscount) {
+                                b.classList.add('active');
+                            } else {
+                                b.classList.remove('active');
+                            }
+                        });
+                        discountVal.textContent = currentDiscount === 0 ? 'Любая (0%)' : '-' + currentDiscount + '%';
+                    }
+                    if (data.check_rare_id !== undefined) rareIdToggle.checked = data.check_rare_id;
+                    if (data.check_monochrome !== undefined) monoToggle.checked = data.check_monochrome;
+                    if (data.is_active !== undefined) activeToggle.checked = data.is_active;
+
+                    if (Array.isArray(data.selected_collections)) {
+                        selectedCollections = new Set(data.selected_collections);
+                        document.getElementById('selected-cols-count').textContent = 
+                            selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
+                    }
+                    if (Array.isArray(data.selected_backdrops)) {
+                        selectedBackdrops = new Set(data.selected_backdrops);
+                        document.getElementById('selected-backs-count').textContent = 
+                            selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to load local storage state", e);
+            }
+        }
+
+        function saveStateLocally() {
+            try {
+                const payload = {
+                    max_price: parseFloat(budgetSlider.value),
+                    min_discount: currentDiscount,
+                    check_rare_id: rareIdToggle.checked,
+                    check_monochrome: monoToggle.checked,
+                    is_active: activeToggle.checked,
+                    selected_collections: Array.from(selectedCollections),
+                    selected_backdrops: Array.from(selectedBackdrops)
+                };
+                localStorage.setItem('mrkt_filters_emerald', JSON.stringify(payload));
+                return payload;
+            } catch (e) {
+                console.error("Failed to save local storage state", e);
+            }
+        }
+
         budgetSlider.addEventListener('input', (e) => {
             budgetVal.textContent = e.target.value + ' TON';
+            saveStateLocally();
         });
 
         document.querySelectorAll('.pill-btn').forEach(btn => {
@@ -685,8 +761,13 @@
                 btn.classList.add('active');
                 currentDiscount = parseFloat(btn.dataset.discount);
                 discountVal.textContent = currentDiscount === 0 ? 'Любая (0%)' : '-' + currentDiscount + '%';
+                saveStateLocally();
             });
         });
+
+        rareIdToggle.addEventListener('change', saveStateLocally);
+        monoToggle.addEventListener('change', saveStateLocally);
+        activeToggle.addEventListener('change', saveStateLocally);
 
         const colsModal = document.getElementById('collections-modal');
         const backsModal = document.getElementById('backdrops-modal');
@@ -704,11 +785,14 @@
             colsModal.style.display = 'none';
             document.getElementById('selected-cols-count').textContent = 
                 selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
+            saveStateLocally();
         });
 
         document.getElementById('reset-cols').addEventListener('click', () => {
             selectedCollections.clear();
             renderCollections(document.getElementById('search-cols').value);
+            document.getElementById('selected-cols-count').textContent = 'Все';
+            saveStateLocally();
         });
 
         document.getElementById('open-backdrops-btn').addEventListener('click', () => {
@@ -724,11 +808,14 @@
             backsModal.style.display = 'none';
             document.getElementById('selected-backs-count').textContent = 
                 selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
+            saveStateLocally();
         });
 
         document.getElementById('reset-backs').addEventListener('click', () => {
             selectedBackdrops.clear();
             renderBackdrops(document.getElementById('search-backs').value);
+            document.getElementById('selected-backs-count').textContent = 'Все';
+            saveStateLocally();
         });
 
         // Toggle Sort by Volume
@@ -786,6 +873,7 @@
                 currentList.forEach(c => selectedCollections.add(c.name));
             }
             renderCollections(filter);
+            saveStateLocally();
         }
 
         document.getElementById('select-all-cols-btn').addEventListener('click', toggleSelectAll);
@@ -796,14 +884,12 @@
             container.innerHTML = '';
             let filtered = ALL_COLLECTIONS.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()));
 
-            // Sort
             filtered.sort((a, b) => {
                 const valA = a[sortField] || 0;
                 const valB = b[sortField] || 0;
                 return sortDirection === 'desc' ? (valB - valA) : (valA - valB);
             });
 
-            // Update Select All checkbox state
             const selectAllBtn = document.getElementById('select-all-cols-btn');
             if (filtered.length > 0 && filtered.every(c => selectedCollections.has(c.name))) {
                 selectAllBtn.classList.add('checked');
@@ -818,10 +904,14 @@
                 
                 const floorDisplay = c.floor > 0 ? c.floor.toFixed(2) : '—';
                 const volDisplay = c.vol >= 1000 ? (c.vol).toLocaleString('ru-RU', {maximumFractionDigits: 1}) : (c.vol || 0).toFixed(1);
+                const imgUrl = c.thumb ? ('https://cdn.tgmrkt.io/' + c.thumb) : '';
 
                 row.innerHTML = `
                     <div class="checkbox-custom ${isChecked ? 'checked' : ''}"></div>
-                    <div class="col-name">${c.title}</div>
+                    <div class="col-main">
+                        <img src="${imgUrl}" class="mini-thumb" loading="lazy" alt="">
+                        <span class="col-name">${c.title}</span>
+                    </div>
                     <div class="col-floor"><span class="diamond-icon">💎</span> ${floorDisplay}</div>
                     <div class="col-vol"><span class="diamond-icon">💎</span> ${volDisplay}</div>
                 `;
@@ -832,6 +922,7 @@
                         selectedCollections.add(c.name);
                     }
                     renderCollections(document.getElementById('search-cols').value);
+                    saveStateLocally();
                 });
                 container.appendChild(row);
             });
@@ -850,7 +941,7 @@
                 const isChecked = selectedBackdrops.has(b.name);
                 const row = document.createElement('div');
                 row.className = 'mrkt-grid-row';
-                row.style.gridTemplateColumns = '28px 1fr 30px';
+                row.style.gridTemplateColumns = '24px 1fr 30px';
                 row.innerHTML = `
                     <div class="checkbox-custom ${isChecked ? 'checked' : ''}"></div>
                     <div class="col-name">${b.name}</div>
@@ -863,6 +954,7 @@
                         selectedBackdrops.add(b.name);
                     }
                     renderBackdrops(document.getElementById('search-backs').value);
+                    saveStateLocally();
                 });
                 container.appendChild(row);
             });
@@ -873,15 +965,7 @@
         });
 
         document.getElementById('save-btn').addEventListener('click', () => {
-            const payload = {
-                max_price: parseFloat(budgetSlider.value),
-                min_discount: currentDiscount,
-                check_rare_id: rareIdToggle.checked,
-                check_monochrome: monoToggle.checked,
-                is_active: activeToggle.checked,
-                selected_collections: Array.from(selectedCollections),
-                selected_backdrops: Array.from(selectedBackdrops)
-            };
+            const payload = saveStateLocally();
 
             if (tg) {
                 tg.sendData(JSON.stringify(payload));
@@ -891,6 +975,7 @@
             }
         });
 
+        loadSavedState();
         updateSortHeaders();
     </script>
 </body>
