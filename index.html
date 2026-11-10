@@ -265,15 +265,15 @@
             z-index: 100;
         }
 
-        /* Bottom Sheet Modal for Collections & Backdrops */
+        /* Bottom Sheet Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
             z-index: 200;
             display: none;
             align-items: flex-end;
@@ -287,11 +287,11 @@
             border-top-right-radius: 20px;
             width: 100%;
             max-width: 500px;
-            height: 82vh;
+            height: 85vh;
             display: flex;
             flex-direction: column;
-            padding: 14px 14px 16px 14px;
-            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
+            padding: 14px 14px 14px 14px;
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.8);
             animation: slideUp 0.25s ease-out;
         }
 
@@ -309,7 +309,7 @@
         }
 
         .modal-header h2 {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
         }
 
@@ -334,7 +334,7 @@
 
         .search-input {
             width: 100%;
-            background: var(--surface);
+            background: #161e1a;
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 10px 14px 10px 36px;
@@ -356,6 +356,32 @@
             font-size: 13px;
         }
 
+        /* MRKT Table Header with Sort */
+        .mrkt-table-header {
+            display: grid;
+            grid-template-columns: 28px 1fr 90px 95px;
+            align-items: center;
+            padding: 8px 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            gap: 8px;
+        }
+
+        .sort-btn {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            user-select: none;
+            transition: color 0.15s;
+        }
+
+        .sort-btn:hover, .sort-btn.active {
+            color: var(--accent);
+        }
+
         .list-container {
             overflow-y: auto;
             flex: 1;
@@ -363,64 +389,66 @@
             padding-right: 2px;
         }
 
-        .mrkt-row {
-            display: flex;
+        /* MRKT Pure Table Row */
+        .mrkt-grid-row {
+            display: grid;
+            grid-template-columns: 28px 1fr 90px 95px;
             align-items: center;
-            justify-content: space-between;
-            padding: 9px 6px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
+            padding: 11px 6px;
+            gap: 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer;
         }
 
-        .mrkt-row:active {
+        .mrkt-grid-row:active {
             background: var(--surface-hover);
         }
 
-        .mrkt-row-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .col-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .mrkt-thumb {
-            width: 36px;
-            height: 36px;
-            border-radius: 9px;
-            object-fit: cover;
-            background: #1b2420;
+        .col-floor {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .col-vol {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            justify-content: flex-end;
+        }
+
+        .diamond-icon {
+            font-size: 10px;
+            color: var(--accent);
         }
 
         .backdrop-circle {
-            width: 30px;
-            height: 30px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             border: 2px solid rgba(255,255,255,0.1);
         }
 
-        .mrkt-title {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .mrkt-sub {
-            font-size: 12px;
-            color: var(--text-secondary);
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-top: 2px;
-        }
-
-        .mrkt-stat-badge {
-            color: #9cb5a8;
-        }
-
         .checkbox-custom {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border: 2px solid #36483f;
-            border-radius: 6px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -434,12 +462,36 @@
         .checkbox-custom.checked::after {
             content: "✔";
             color: #0c100e;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
         }
 
+        /* Action Buttons Row */
+        .modal-action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .btn-reset {
+            background: #1b2420;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-reset:active {
+            background: #23302a;
+            color: #fff;
+        }
+
         .btn-compact {
-            width: 100%;
+            flex: 1;
             background: var(--accent);
             color: #0c100e;
             border: none;
@@ -449,6 +501,7 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: 0 3px 12px var(--accent-glow);
+            transition: transform 0.1s;
         }
 
         .btn-compact:active {
@@ -461,7 +514,7 @@
     <div class="header">
         <div class="title-group">
             <h1>MRKT SNIPER</h1>
-            <span class="version-badge">PRO</span>
+            <span class="version-badge">EMERALD</span>
         </div>
     </div>
 
@@ -544,10 +597,10 @@
 
     <!-- Save Button -->
     <div class="footer">
-        <button class="btn-compact" id="save-btn">Сохранить настройки</button>
+        <button class="btn-compact" id="save-btn" style="width: 100%;">Сохранить настройки</button>
     </div>
 
-    <!-- Collections Modal -->
+    <!-- Collections Modal Styled Purely like MRKT Reference -->
     <div class="modal-overlay" id="collections-modal">
         <div class="modal-sheet">
             <div class="modal-header">
@@ -558,8 +611,23 @@
                 <span class="search-icon">🔍</span>
                 <input type="text" class="search-input" id="search-cols" placeholder="Поиск коллекции...">
             </div>
+
+            <!-- MRKT Table Header: Checkbox + Title + Floor + Volume -->
+            <div class="mrkt-table-header">
+                <div class="checkbox-custom" id="select-all-cols-btn" title="Выбрать все"></div>
+                <span style="cursor: pointer;" id="label-select-all">Выбрать все</span>
+                <span class="sort-btn" id="sort-floor">Флор <span id="sort-floor-arrow">⇅</span></span>
+                <span class="sort-btn" id="sort-vol" style="justify-content: flex-end;">Оборот <span id="sort-vol-arrow">⇅</span></span>
+            </div>
+
+            <!-- List rows without stickers, exactly like MRKT -->
             <div class="list-container" id="cols-list"></div>
-            <button class="btn-compact" id="apply-cols">Показать результаты</button>
+
+            <!-- Footer Buttons: Reset + Show Results -->
+            <div class="modal-action-row">
+                <button class="btn-reset" id="reset-cols">Сбросить</button>
+                <button class="btn-compact" id="apply-cols">Показать результаты</button>
+            </div>
         </div>
     </div>
 
@@ -575,7 +643,10 @@
                 <input type="text" class="search-input" id="search-backs" placeholder="Поиск фона...">
             </div>
             <div class="list-container" id="backs-list"></div>
-            <button class="btn-compact" id="apply-backs">Показать результаты</button>
+            <div class="modal-action-row">
+                <button class="btn-reset" id="reset-backs">Сбросить</button>
+                <button class="btn-compact" id="apply-backs">Показать результаты</button>
+            </div>
         </div>
     </div>
 
@@ -592,6 +663,10 @@
         let selectedCollections = new Set();
         let selectedBackdrops = new Set();
         let currentDiscount = 0;
+
+        // Sorting state: 'none', 'asc', 'desc'
+        let sortField = 'vol'; // default sort by volume
+        let sortDirection = 'desc'; // highest volume first
 
         const budgetSlider = document.getElementById('budget-slider');
         const budgetVal = document.getElementById('budget-val');
@@ -631,6 +706,11 @@
                 selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
         });
 
+        document.getElementById('reset-cols').addEventListener('click', () => {
+            selectedCollections.clear();
+            renderCollections(document.getElementById('search-cols').value);
+        });
+
         document.getElementById('open-backdrops-btn').addEventListener('click', () => {
             backsModal.style.display = 'flex';
             renderBackdrops();
@@ -646,29 +726,104 @@
                 selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
         });
 
+        document.getElementById('reset-backs').addEventListener('click', () => {
+            selectedBackdrops.clear();
+            renderBackdrops(document.getElementById('search-backs').value);
+        });
+
+        // Toggle Sort by Volume
+        document.getElementById('sort-vol').addEventListener('click', () => {
+            if (sortField === 'vol') {
+                sortDirection = (sortDirection === 'desc') ? 'asc' : 'desc';
+            } else {
+                sortField = 'vol';
+                sortDirection = 'desc';
+            }
+            updateSortHeaders();
+            renderCollections(document.getElementById('search-cols').value);
+        });
+
+        // Toggle Sort by Floor
+        document.getElementById('sort-floor').addEventListener('click', () => {
+            if (sortField === 'floor') {
+                sortDirection = (sortDirection === 'desc') ? 'asc' : 'desc';
+            } else {
+                sortField = 'floor';
+                sortDirection = 'asc';
+            }
+            updateSortHeaders();
+            renderCollections(document.getElementById('search-cols').value);
+        });
+
+        function updateSortHeaders() {
+            const volBtn = document.getElementById('sort-vol');
+            const floorBtn = document.getElementById('sort-floor');
+            const volArrow = document.getElementById('sort-vol-arrow');
+            const floorArrow = document.getElementById('sort-floor-arrow');
+
+            if (sortField === 'vol') {
+                volBtn.classList.add('active');
+                floorBtn.classList.remove('active');
+                volArrow.textContent = sortDirection === 'desc' ? '↓' : '↑';
+                floorArrow.textContent = '⇅';
+            } else if (sortField === 'floor') {
+                floorBtn.classList.add('active');
+                volBtn.classList.remove('active');
+                floorArrow.textContent = sortDirection === 'desc' ? '↓' : '↑';
+                volArrow.textContent = '⇅';
+            }
+        }
+
+        // Select All Handler
+        function toggleSelectAll() {
+            const filter = document.getElementById('search-cols').value;
+            const currentList = ALL_COLLECTIONS.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()));
+            const allSelected = currentList.every(c => selectedCollections.has(c.name));
+
+            if (allSelected) {
+                currentList.forEach(c => selectedCollections.delete(c.name));
+            } else {
+                currentList.forEach(c => selectedCollections.add(c.name));
+            }
+            renderCollections(filter);
+        }
+
+        document.getElementById('select-all-cols-btn').addEventListener('click', toggleSelectAll);
+        document.getElementById('label-select-all').addEventListener('click', toggleSelectAll);
+
         function renderCollections(filter = '') {
             const container = document.getElementById('cols-list');
             container.innerHTML = '';
-            const filtered = ALL_COLLECTIONS.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()));
+            let filtered = ALL_COLLECTIONS.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()));
+
+            // Sort
+            filtered.sort((a, b) => {
+                const valA = a[sortField] || 0;
+                const valB = b[sortField] || 0;
+                return sortDirection === 'desc' ? (valB - valA) : (valA - valB);
+            });
+
+            // Update Select All checkbox state
+            const selectAllBtn = document.getElementById('select-all-cols-btn');
+            if (filtered.length > 0 && filtered.every(c => selectedCollections.has(c.name))) {
+                selectAllBtn.classList.add('checked');
+            } else {
+                selectAllBtn.classList.remove('checked');
+            }
 
             filtered.forEach(c => {
                 const isChecked = selectedCollections.has(c.name);
                 const row = document.createElement('div');
-                row.className = 'mrkt-row';
-                const imgUrl = c.thumb ? ('https://cdn.tgmrkt.io/' + c.thumb) : '';
-                const volStr = c.vol > 1000 ? (c.vol / 1000).toFixed(1) + 'k' : c.vol;
+                row.className = 'mrkt-grid-row';
+                
+                const floorDisplay = c.floor > 0 ? c.floor.toFixed(2) : '—';
+                const volDisplay = c.vol >= 1000 ? (c.vol).toLocaleString('ru-RU', {maximumFractionDigits: 1}) : (c.vol || 0).toFixed(1);
+
                 row.innerHTML = `
-                    <div class="mrkt-row-left">
-                        <img src="${imgUrl}" class="mrkt-thumb">
-                        <div>
-                            <div class="mrkt-title">${c.title}</div>
-                            <div class="mrkt-sub">
-                                <span>💎 ${c.floor} TON</span>
-                                <span class="mrkt-stat-badge">📊 Об: ${volStr} TON</span>
-                            </div>
-                        </div>
-                    </div>
                     <div class="checkbox-custom ${isChecked ? 'checked' : ''}"></div>
+                    <div class="col-name">${c.title}</div>
+                    <div class="col-floor"><span class="diamond-icon">💎</span> ${floorDisplay}</div>
+                    <div class="col-vol"><span class="diamond-icon">💎</span> ${volDisplay}</div>
                 `;
                 row.addEventListener('click', () => {
                     if (selectedCollections.has(c.name)) {
@@ -694,13 +849,12 @@
             filtered.forEach(b => {
                 const isChecked = selectedBackdrops.has(b.name);
                 const row = document.createElement('div');
-                row.className = 'mrkt-row';
+                row.className = 'mrkt-grid-row';
+                row.style.gridTemplateColumns = '28px 1fr 30px';
                 row.innerHTML = `
-                    <div class="mrkt-row-left">
-                        <div class="backdrop-circle" style="background: ${b.color}"></div>
-                        <div class="mrkt-title">${b.name}</div>
-                    </div>
                     <div class="checkbox-custom ${isChecked ? 'checked' : ''}"></div>
+                    <div class="col-name">${b.name}</div>
+                    <div class="backdrop-circle" style="background: ${b.color}"></div>
                 `;
                 row.addEventListener('click', () => {
                     if (selectedBackdrops.has(b.name)) {
@@ -736,6 +890,8 @@
                 alert('Настройки сохранены!\n' + JSON.stringify(payload, null, 2));
             }
         });
+
+        updateSortHeaders();
     </script>
 </body>
 </html>
