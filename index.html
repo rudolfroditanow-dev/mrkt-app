@@ -15,8 +15,8 @@
             --text-secondary: #8d929f;
             --border: #292b34;
             --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
         }
 
         * {
@@ -32,7 +32,7 @@
             background: var(--bg);
             color: var(--text-primary);
             padding: 14px;
-            padding-bottom: 96px;
+            padding-bottom: 80px;
             overflow-x: hidden;
         }
 
@@ -40,7 +40,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .title-group {
@@ -50,7 +50,7 @@
         }
 
         .title-group h1 {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 700;
             letter-spacing: -0.3px;
         }
@@ -60,7 +60,7 @@
             color: var(--accent);
             font-size: 11px;
             font-weight: 700;
-            padding: 3px 7px;
+            padding: 2px 6px;
             border-radius: 6px;
         }
 
@@ -69,8 +69,8 @@
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            margin-bottom: 16px;
-            padding-bottom: 4px;
+            margin-bottom: 14px;
+            padding-bottom: 2px;
         }
 
         .chips-scroll::-webkit-scrollbar {
@@ -103,17 +103,17 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 16px;
-            margin-bottom: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
         }
 
         .card-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -121,19 +121,19 @@
 
         .card-value {
             color: var(--accent);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
         }
 
         /* Slider */
         .slider-container {
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .slider {
             -webkit-appearance: none;
             width: 100%;
-            height: 6px;
+            height: 5px;
             background: #2b2e38;
             border-radius: 4px;
             outline: none;
@@ -141,12 +141,12 @@
 
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: var(--accent);
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(245, 196, 0, 0.4);
+            box-shadow: 0 0 8px rgba(245, 196, 0, 0.4);
         }
 
         /* Pill Switches */
@@ -154,14 +154,14 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .pill-btn {
             background: #252831;
             border: 1px solid transparent;
             border-radius: var(--radius-sm);
-            padding: 10px 4px;
+            padding: 9px 4px;
             text-align: center;
             font-size: 13px;
             font-weight: 600;
@@ -180,7 +180,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 9px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -189,12 +189,12 @@
         }
 
         .switch-label {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
         }
 
         .switch-sub {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
             margin-top: 2px;
         }
@@ -202,8 +202,8 @@
         .toggle {
             position: relative;
             display: inline-block;
-            width: 48px;
-            height: 26px;
+            width: 44px;
+            height: 24px;
         }
 
         .toggle input {
@@ -218,14 +218,14 @@
             inset: 0;
             background-color: #313540;
             transition: .2s;
-            border-radius: 26px;
+            border-radius: 24px;
         }
 
         .toggle-slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
+            height: 18px;
+            width: 18px;
             left: 3px;
             bottom: 3px;
             background-color: white;
@@ -238,7 +238,7 @@
         }
 
         input:checked + .toggle-slider:before {
-            transform: translateX(22px);
+            transform: translateX(20px);
         }
 
         /* Bottom Sheet Modal for Collections & Backdrops */
@@ -254,14 +254,14 @@
 
         .modal-sheet {
             width: 100%;
-            height: 82vh;
+            height: 85vh;
             background: var(--bg);
-            border-radius: 24px 24px 0 0;
-            padding: 18px;
+            border-radius: 20px 20px 0 0;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             border-top: 1px solid var(--border);
-            animation: slideUp 0.25s ease-out;
+            animation: slideUp 0.22s ease-out;
         }
 
         @keyframes slideUp {
@@ -273,11 +273,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .modal-header h2 {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
         }
 
@@ -285,16 +285,16 @@
             background: var(--surface);
             border: none;
             color: var(--text-secondary);
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
         }
 
         .search-container {
             position: relative;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .search-input {
@@ -302,9 +302,9 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 12px 14px 12px 38px;
+            padding: 10px 14px 10px 36px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
         }
 
@@ -314,19 +314,21 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-secondary);
+            font-size: 13px;
         }
 
         .list-container {
             overflow-y: auto;
             flex: 1;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            padding-right: 2px;
         }
 
         .mrkt-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 8px;
+            padding: 9px 6px;
             border-radius: var(--radius-sm);
             cursor: pointer;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -339,20 +341,20 @@
         .mrkt-row-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .mrkt-thumb {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
             object-fit: cover;
             background: #252830;
         }
 
         .backdrop-circle {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             border: 2px solid rgba(255,255,255,0.1);
         }
@@ -365,11 +367,19 @@
         .mrkt-sub {
             font-size: 12px;
             color: var(--text-secondary);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 2px;
+        }
+
+        .mrkt-stat-badge {
+            color: #b0b5c1;
         }
 
         .checkbox-custom {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             border: 2px solid #4a4f5c;
             border-radius: 6px;
             display: flex;
@@ -383,38 +393,40 @@
         }
 
         .checkbox-custom.checked::after {
-            content: "✔";
+            content: "вњ”";
             color: #000;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
         }
 
-        /* Fixed Footer Save Button */
+        /* Fixed Compact Footer Button */
         .footer {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 14px;
+            padding: 12px 14px;
             background: rgba(18, 19, 22, 0.95);
             backdrop-filter: blur(10px);
             border-top: 1px solid var(--border);
-            display: flex;
-            gap: 10px;
             z-index: 500;
         }
 
-        .btn-main {
-            flex: 1;
+        .btn-compact {
+            width: 100%;
             background: var(--accent);
             color: #000000;
             border: none;
             border-radius: var(--radius-md);
-            padding: 14px;
-            font-size: 15px;
+            padding: 11px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(245, 196, 0, 0.35);
+            box-shadow: 0 3px 10px rgba(245, 196, 0, 0.3);
+        }
+
+        .btn-compact:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -430,19 +442,19 @@
     <!-- MRKT Menu Filters Row -->
     <div class="chips-scroll">
         <div class="chip-tab" id="open-collections-btn">
-            <span>📦 Коллекция</span>
-            <span id="selected-cols-count" style="color: var(--accent); font-weight: 700;">Все</span>
+            <span>рџ“¦ РљРѕР»Р»РµРєС†РёСЏ</span>
+            <span id="selected-cols-count" style="color: var(--accent); font-weight: 700;">Р’СЃРµ</span>
         </div>
         <div class="chip-tab" id="open-backdrops-btn">
-            <span>🎨 Фон</span>
-            <span id="selected-backs-count" style="color: var(--accent); font-weight: 700;">Все</span>
+            <span>рџЋЁ Р¤РѕРЅ</span>
+            <span id="selected-backs-count" style="color: var(--accent); font-weight: 700;">Р’СЃРµ</span>
         </div>
     </div>
 
     <!-- Budget Slider -->
     <div class="card">
         <div class="card-title">
-            <span>Лимит бюджета</span>
+            <span>Р›РёРјРёС‚ Р±СЋРґР¶РµС‚Р°</span>
             <span class="card-value" id="budget-val">25 TON</span>
         </div>
         <div class="slider-container">
@@ -453,11 +465,11 @@
     <!-- Discount from Floor -->
     <div class="card">
         <div class="card-title">
-            <span>Скидка от Floor</span>
-            <span class="card-value" id="discount-val">Любая (0%)</span>
+            <span>РЎРєРёРґРєР° РѕС‚ Floor</span>
+            <span class="card-value" id="discount-val">Р›СЋР±Р°СЏ (0%)</span>
         </div>
         <div class="pill-grid">
-            <div class="pill-btn active" data-discount="0">Все</div>
+            <div class="pill-btn active" data-discount="0">Р’СЃРµ</div>
             <div class="pill-btn" data-discount="10">-10%</div>
             <div class="pill-btn" data-discount="15">-15%</div>
             <div class="pill-btn" data-discount="20">-20%</div>
@@ -467,13 +479,13 @@
     <!-- Rare Traits & Modules -->
     <div class="card">
         <div class="card-title">
-            <span>Редкие Трейты</span>
+            <span>Р РµРґРєРёРµ РўСЂРµР№С‚С‹</span>
         </div>
         
         <div class="switch-row">
             <div>
-                <div class="switch-label">Редкие и красивые ID</div>
-                <div class="switch-sub">Стрики (#777, #12223), года, палиндромы</div>
+                <div class="switch-label">Р РµРґРєРёРµ Рё РєСЂР°СЃРёРІС‹Рµ ID</div>
+                <div class="switch-sub">РЎС‚СЂРёРєРё (#777, #12223), РіРѕРґР°, РїР°Р»РёРЅРґСЂРѕРјС‹</div>
             </div>
             <label class="toggle">
                 <input type="checkbox" id="rare-id-toggle" checked>
@@ -483,8 +495,8 @@
 
         <div class="switch-row">
             <div>
-                <div class="switch-label">Full-Match & Монохром</div>
-                <div class="switch-sub">Цвет в цвет (красный/красный) и Black/White</div>
+                <div class="switch-label">Full-Match & РњРѕРЅРѕС…СЂРѕРј</div>
+                <div class="switch-sub">Р¦РІРµС‚ РІ С†РІРµС‚ (РєСЂР°СЃРЅС‹Р№/РєСЂР°СЃРЅС‹Р№) Рё Black/White</div>
             </div>
             <label class="toggle">
                 <input type="checkbox" id="mono-toggle" checked>
@@ -494,8 +506,8 @@
 
         <div class="switch-row">
             <div>
-                <div class="switch-label">Статус снайпера</div>
-                <div class="switch-sub">Мгновенный мониторинг в реальном времени</div>
+                <div class="switch-label">РЎС‚Р°С‚СѓСЃ СЃРЅР°Р№РїРµСЂР°</div>
+                <div class="switch-sub">РњРіРЅРѕРІРµРЅРЅС‹Р№ РјРѕРЅРёС‚РѕСЂРёРЅРі РІ СЂРµР°Р»СЊРЅРѕРј РІСЂРµРјРµРЅРё</div>
             </div>
             <label class="toggle">
                 <input type="checkbox" id="active-toggle" checked>
@@ -506,22 +518,22 @@
 
     <!-- Save Button -->
     <div class="footer">
-        <button class="btn-main" id="save-btn">Сохранить настройки</button>
+        <button class="btn-compact" id="save-btn">РЎРѕС…СЂР°РЅРёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё</button>
     </div>
 
     <!-- Collections Modal -->
     <div class="modal-overlay" id="collections-modal">
         <div class="modal-sheet">
             <div class="modal-header">
-                <h2>Коллекция</h2>
+                <h2>РљРѕР»Р»РµРєС†РёСЏ</h2>
                 <button class="close-btn" id="close-cols">&times;</button>
             </div>
             <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="search-cols" placeholder="Поиск коллекции...">
+                <span class="search-icon">рџ”Ќ</span>
+                <input type="text" class="search-input" id="search-cols" placeholder="РџРѕРёСЃРє РєРѕР»Р»РµРєС†РёРё...">
             </div>
             <div class="list-container" id="cols-list"></div>
-            <button class="btn-main" id="apply-cols">Показать результаты</button>
+            <button class="btn-compact" id="apply-cols">РџРѕРєР°Р·Р°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹</button>
         </div>
     </div>
 
@@ -529,15 +541,15 @@
     <div class="modal-overlay" id="backdrops-modal">
         <div class="modal-sheet">
             <div class="modal-header">
-                <h2>Фон</h2>
+                <h2>Р¤РѕРЅ</h2>
                 <button class="close-btn" id="close-backs">&times;</button>
             </div>
             <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="search-backs" placeholder="Поиск фона...">
+                <span class="search-icon">рџ”Ќ</span>
+                <input type="text" class="search-input" id="search-backs" placeholder="РџРѕРёСЃРє С„РѕРЅР°...">
             </div>
             <div class="list-container" id="backs-list"></div>
-            <button class="btn-main" id="apply-backs">Показать результаты</button>
+            <button class="btn-compact" id="apply-backs">РџРѕРєР°Р·Р°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹</button>
         </div>
     </div>
 
@@ -548,7 +560,7 @@
             tg.ready();
         }
 
-        const ALL_COLLECTIONS = [{"name": "Resistance Dog", "title": "Resistance Dog", "floor": 548.96, "thumb": "gifts/collections/526573697374616e636520446f67-thumb.webp"}, {"name": "Myth Mask", "title": "Myth Mask", "floor": 11.59, "thumb": "gifts/collections/4d797468204d61736b-thumb.webp"}, {"name": "Astral Shard", "title": "Astral Shard", "floor": 130.04, "thumb": "gifts/collections/41737472616c205368617264-thumb.webp"}, {"name": "B-Day Candle", "title": "B-Day Candle", "floor": 5.02, "thumb": "gifts/collections/422d4461792043616e646c65-thumb.webp"}, {"name": "Berry Box", "title": "Berry Box", "floor": 10.11, "thumb": "gifts/collections/426572727920426f78-thumb.webp"}, {"name": "Big Year", "title": "Big Year", "floor": 4.42, "thumb": "gifts/collections/4269672059656172-thumb.webp"}, {"name": "Bonded Ring", "title": "Bonded Ring", "floor": 45.77, "thumb": "gifts/collections/426f6e6465642052696e67-thumb.webp"}, {"name": "Bow Tie", "title": "Bow Tie", "floor": 6.17, "thumb": "gifts/collections/426f7720546965-thumb.webp"}, {"name": "Bunny Muffin", "title": "Bunny Muffin", "floor": 8.86, "thumb": "gifts/collections/42756e6e79204d756666696e-thumb.webp"}, {"name": "Candy Cane", "title": "Candy Cane", "floor": 4.45, "thumb": "gifts/collections/43616e64792043616e65-thumb.webp"}, {"name": "Cookie Heart", "title": "Cookie Heart", "floor": 5.57, "thumb": "gifts/collections/436f6f6b6965204865617274-thumb.webp"}, {"name": "Crystal Ball", "title": "Crystal Ball", "floor": 14.15, "thumb": "gifts/collections/4372797374616c2042616c6c-thumb.webp"}, {"name": "Desk Calendar", "title": "Desk Calendar", "floor": 6.34, "thumb": "gifts/collections/4465736b2043616c656e646172-thumb.webp"}, {"name": "Diamond Ring", "title": "Diamond Ring", "floor": 37.74, "thumb": "gifts/collections/4469616d6f6e642052696e67-thumb.webp"}, {"name": "Durov’s Cap", "title": "Durov’s Cap", "floor": 436.12, "thumb": "gifts/collections/4475726f76e280997320436170-thumb.webp"}, {"name": "Easter Egg", "title": "Easter Egg", "floor": 4.81, "thumb": "gifts/collections/45617374657220456767-thumb.webp"}, {"name": "Electric Skull", "title": "Electric Skull", "floor": 30.54, "thumb": "gifts/collections/456c65637472696320536b756c6c-thumb.webp"}, {"name": "Eternal Candle", "title": "Eternal Candle", "floor": 6.71, "thumb": "gifts/collections/457465726e616c2043616e646c65-thumb.webp"}, {"name": "Eternal Rose", "title": "Eternal Rose", "floor": 28.27, "thumb": "gifts/collections/457465726e616c20526f7365-thumb.webp"}, {"name": "Evil Eye", "title": "Evil Eye", "floor": 8.46, "thumb": "gifts/collections/4576696c20457965-thumb.webp"}, {"name": "Flying Broom", "title": "Flying Broom", "floor": 13.24, "thumb": "gifts/collections/466c79696e672042726f6f6d-thumb.webp"}, {"name": "Gem Signet", "title": "Gem Signet", "floor": 66.3, "thumb": "gifts/collections/47656d205369676e6574-thumb.webp"}, {"name": "Genie Lamp", "title": "Genie Lamp", "floor": 39.76, "thumb": "gifts/collections/47656e6965204c616d70-thumb.webp"}, {"name": "Ginger Cookie", "title": "Ginger Cookie", "floor": 5.54, "thumb": "gifts/collections/47696e67657220436f6f6b6965-thumb.webp"}, {"name": "Hanging Star", "title": "Hanging Star", "floor": 10.5, "thumb": "gifts/collections/48616e67696e672053746172-thumb.webp"}, {"name": "Heart Locket", "title": "Heart Locket", "floor": 1449.99, "thumb": "gifts/collections/4865617274204c6f636b6574-thumb.webp"}, {"name": "Heroic Helmet", "title": "Heroic Helmet", "floor": 185.56, "thumb": "gifts/collections/4865726f69632048656c6d6574-thumb.webp"}, {"name": "Hex Pot", "title": "Hex Pot", "floor": 5.51, "thumb": "gifts/collections/48657820506f74-thumb.webp"}, {"name": "Holiday Drink", "title": "Holiday Drink", "floor": 5.33, "thumb": "gifts/collections/486f6c69646179204472696e6b-thumb.webp"}, {"name": "Homemade Cake", "title": "Homemade Cake", "floor": 5.77, "thumb": "gifts/collections/486f6d656d6164652043616b65-thumb.webp"}, {"name": "Hypno Lollipop", "title": "Hypno Lollipop", "floor": 4.79, "thumb": "gifts/collections/4879706e6f204c6f6c6c69706f70-thumb.webp"}, {"name": "Ion Gem", "title": "Ion Gem", "floor": 74.36, "thumb": "gifts/collections/496f6e2047656d-thumb.webp"}, {"name": "Jack-in-the-Box", "title": "Jack-in-the-Box", "floor": 5.24, "thumb": "gifts/collections/4a61636b2d696e2d7468652d426f78-thumb.webp"}, {"name": "Jelly Bunny", "title": "Jelly Bunny", "floor": 9.69, "thumb": "gifts/collections/4a656c6c792042756e6e79-thumb.webp"}, {"name": "Jester Hat", "title": "Jester Hat", "floor": 4.62, "thumb": "gifts/collections/4a657374657220486174-thumb.webp"}, {"name": "Jingle Bells", "title": "Jingle Bells", "floor": 10.39, "thumb": "gifts/collections/4a696e676c652042656c6c73-thumb.webp"}, {"name": "Kissed Frog", "title": "Kissed Frog", "floor": 50.97, "thumb": "gifts/collections/4b69737365642046726f67-thumb.webp"}, {"name": "Light Sword", "title": "Light Sword", "floor": 6.58, "thumb": "gifts/collections/4c696768742053776f7264-thumb.webp"}, {"name": "Lol Pop", "title": "Lol Pop", "floor": 4.44, "thumb": "gifts/collections/4c6f6c20506f70-thumb.webp"}, {"name": "Loot Bag", "title": "Loot Bag", "floor": 138.67, "thumb": "gifts/collections/4c6f6f7420426167-thumb.webp"}, {"name": "Love Candle", "title": "Love Candle", "floor": 12.59, "thumb": "gifts/collections/4c6f76652043616e646c65-thumb.webp"}, {"name": "Love Potion", "title": "Love Potion", "floor": 16.54, "thumb": "gifts/collections/4c6f766520506f74696f6e-thumb.webp"}, {"name": "Lunar Snake", "title": "Lunar Snake", "floor": 4.4, "thumb": "gifts/collections/4c756e617220536e616b65-thumb.webp"}, {"name": "Lush Bouquet", "title": "Lush Bouquet", "floor": 6.31, "thumb": "gifts/collections/4c75736820426f7571756574-thumb.webp"}, {"name": "Mad Pumpkin", "title": "Mad Pumpkin", "floor": 14.08, "thumb": "gifts/collections/4d61642050756d706b696e-thumb.webp"}, {"name": "Magic Potion", "title": "Magic Potion", "floor": 63.24, "thumb": "gifts/collections/4d6167696320506f74696f6e-thumb.webp"}, {"name": "Mini Oscar", "title": "Mini Oscar", "floor": 72.87, "thumb": "gifts/collections/4d696e69204f73636172-thumb.webp"}, {"name": "Nail Bracelet", "title": "Nail Bracelet", "floor": 130.35, "thumb": "gifts/collections/4e61696c2042726163656c6574-thumb.webp"}, {"name": "Neko Helmet", "title": "Neko Helmet", "floor": 41.48, "thumb": "gifts/collections/4e656b6f2048656c6d6574-thumb.webp"}, {"name": "Party Sparkler", "title": "Party Sparkler", "floor": 5.51, "thumb": "gifts/collections/506172747920537061726b6c6572-thumb.webp"}, {"name": "Perfume Bottle", "title": "Perfume Bottle", "floor": 84.64, "thumb": "gifts/collections/50657266756d6520426f74746c65-thumb.webp"}, {"name": "Pet Snake", "title": "Pet Snake", "floor": 4.69, "thumb": "gifts/collections/50657420536e616b65-thumb.webp"}, {"name": "Plush Pepe", "title": "Plush Pepe", "floor": 7701.0, "thumb": "gifts/collections/506c7573682050657065-thumb.webp"}, {"name": "Precious Peach", "title": "Precious Peach", "floor": 280.79, "thumb": "gifts/collections/50726563696f7573205065616368-thumb.webp"}, {"name": "Record Player", "title": "Record Player", "floor": 14.49, "thumb": "gifts/collections/5265636f726420506c61796572-thumb.webp"}, {"name": "Restless Jar", "title": "Restless Jar", "floor": 5.53, "thumb": "gifts/collections/526573746c657373204a6172-thumb.webp"}, {"name": "Sakura Flower", "title": "Sakura Flower", "floor": 12.04, "thumb": "gifts/collections/53616b75726120466c6f776572-thumb.webp"}, {"name": "Santa Hat", "title": "Santa Hat", "floor": 8.35, "thumb": "gifts/collections/53616e746120486174-thumb.webp"}, {"name": "Scared Cat", "title": "Scared Cat", "floor": 301.21, "thumb": "gifts/collections/53636172656420436174-thumb.webp"}, {"name": "Sharp Tongue", "title": "Sharp Tongue", "floor": 53.96, "thumb": "gifts/collections/536861727020546f6e677565-thumb.webp"}, {"name": "Signet Ring", "title": "Signet Ring", "floor": 37.13, "thumb": "gifts/collections/5369676e65742052696e67-thumb.webp"}, {"name": "Skull Flower", "title": "Skull Flower", "floor": 12.7, "thumb": "gifts/collections/536b756c6c20466c6f776572-thumb.webp"}, {"name": "Sleigh Bell", "title": "Sleigh Bell", "floor": 10.9, "thumb": "gifts/collections/536c656967682042656c6c-thumb.webp"}, {"name": "Snake Box", "title": "Snake Box", "floor": 4.41, "thumb": "gifts/collections/536e616b6520426f78-thumb.webp"}, {"name": "Snow Globe", "title": "Snow Globe", "floor": 8.07, "thumb": "gifts/collections/536e6f7720476c6f6265-thumb.webp"}, {"name": "Snow Mittens", "title": "Snow Mittens", "floor": 9.19, "thumb": "gifts/collections/536e6f77204d697474656e73-thumb.webp"}, {"name": "Spiced Wine", "title": "Spiced Wine", "floor": 5.25, "thumb": "gifts/collections/5370696365642057696e65-thumb.webp"}, {"name": "Spy Agaric", "title": "Spy Agaric", "floor": 7.02, "thumb": "gifts/collections/53707920416761726963-thumb.webp"}, {"name": "Star Notepad", "title": "Star Notepad", "floor": 5.22, "thumb": "gifts/collections/53746172204e6f7465706164-thumb.webp"}, {"name": "Swiss Watch", "title": "Swiss Watch", "floor": 63.08, "thumb": "gifts/collections/5377697373205761746368-thumb.webp"}, {"name": "Tama Gadget", "title": "Tama Gadget", "floor": 4.53, "thumb": "gifts/collections/54616d6120476164676574-thumb.webp"}, {"name": "Top Hat", "title": "Top Hat", "floor": 10.67, "thumb": "gifts/collections/546f7020486174-thumb.webp"}, {"name": "Toy Bear", "title": "Toy Bear", "floor": 36.87, "thumb": "gifts/collections/546f792042656172-thumb.webp"}, {"name": "Trapped Heart", "title": "Trapped Heart", "floor": 19.88, "thumb": "gifts/collections/54726170706564204865617274-thumb.webp"}, {"name": "Vintage Cigar", "title": "Vintage Cigar", "floor": 43.45, "thumb": "gifts/collections/56696e74616765204369676172-thumb.webp"}, {"name": "Voodoo Doll", "title": "Voodoo Doll", "floor": 40.21, "thumb": "gifts/collections/566f6f646f6f20446f6c6c-thumb.webp"}, {"name": "Winter Wreath", "title": "Winter Wreath", "floor": 5.77, "thumb": "gifts/collections/57696e74657220577265617468-thumb.webp"}, {"name": "Witch Hat", "title": "Witch Hat", "floor": 7.04, "thumb": "gifts/collections/576974636820486174-thumb.webp"}, {"name": "Xmas Stocking", "title": "Xmas Stocking", "floor": 4.44, "thumb": "gifts/collections/586d61732053746f636b696e67-thumb.webp"}, {"name": "Cupid Charm", "title": "Cupid Charm", "floor": 27.03, "thumb": "gifts/collections/437570696420436861726d-thumb.webp"}, {"name": "Whip Cupcake", "title": "Whip Cupcake", "floor": 4.42, "thumb": "gifts/collections/576869702043757063616b65-thumb.webp"}, {"name": "Valentine Box", "title": "Valentine Box", "floor": 13.67, "thumb": "gifts/collections/56616c656e74696e6520426f78-thumb.webp"}, {"name": "Joyful Bundle", "title": "Joyful Bundle", "floor": 9.01, "thumb": "gifts/collections/4a6f7966756c2042756e646c65-thumb.webp"}, {"name": "Low Rider", "title": "Low Rider", "floor": 73.3, "thumb": "gifts/collections/4c6f77205269646572-thumb.webp"}, {"name": "Westside Sign", "title": "Westside Sign", "floor": 127.99, "thumb": "gifts/collections/5765737473696465205369676e-thumb.webp"}, {"name": "Snoop Cigar", "title": "Snoop Cigar", "floor": 17.33, "thumb": "gifts/collections/536e6f6f70204369676172-thumb.webp"}, {"name": "Swag Bag", "title": "Swag Bag", "floor": 6.02, "thumb": "gifts/collections/5377616720426167-thumb.webp"}, {"name": "Snoop Dogg", "title": "Snoop Dogg", "floor": 6.02, "thumb": "gifts/collections/536e6f6f7020446f6767-thumb.webp"}, {"name": "Ionic Dryer", "title": "Ionic Dryer", "floor": 17.89, "thumb": "gifts/collections/496f6e6963204472796572-thumb.webp"}, {"name": "Jolly Chimp", "title": "Jolly Chimp", "floor": 8.59, "thumb": "gifts/collections/4a6f6c6c79204368696d70-thumb.webp"}, {"name": "Moon Pendant", "title": "Moon Pendant", "floor": 7.07, "thumb": "gifts/collections/4d6f6f6e2050656e64616e74-thumb.webp"}, {"name": "Stellar Rocket", "title": "Stellar Rocket", "floor": 5.53, "thumb": "gifts/collections/5374656c6c617220526f636b6574-thumb.webp"}, {"name": "Artisan Brick", "title": "Artisan Brick", "floor": 76.5, "thumb": "gifts/collections/4172746973616e20427269636b-thumb.webp"}, {"name": "Input Key", "title": "Input Key", "floor": 6.75, "thumb": "gifts/collections/496e707574204b6579-thumb.webp"}, {"name": "Mighty Arm", "title": "Mighty Arm", "floor": 124.39, "thumb": "gifts/collections/4d69676874792041726d-thumb.webp"}, {"name": "Fresh Socks", "title": "Fresh Socks", "floor": 5.3, "thumb": "gifts/collections/467265736820536f636b73-thumb.webp"}, {"name": "Clover Pin", "title": "Clover Pin", "floor": 5.61, "thumb": "gifts/collections/436c6f7665722050696e-thumb.webp"}, {"name": "Sky Stilettos", "title": "Sky Stilettos", "floor": 22.7, "thumb": "gifts/collections/536b79205374696c6574746f73-thumb.webp"}, {"name": "Faith Amulet", "title": "Faith Amulet", "floor": 6.19, "thumb": "gifts/collections/466169746820416d756c6574-thumb.webp"}, {"name": "Happy Brownie", "title": "Happy Brownie", "floor": 4.84, "thumb": "gifts/collections/48617070792042726f776e6965-thumb.webp"}, {"name": "Ice Cream", "title": "Ice Cream", "floor": 4.4, "thumb": "gifts/collections/49636520437265616d-thumb.webp"}, {"name": "Instant Ramen", "title": "Instant Ramen", "floor": 4.41, "thumb": "gifts/collections/496e7374616e742052616d656e-thumb.webp"}, {"name": "Mousse Cake", "title": "Mousse Cake", "floor": 5.3, "thumb": "gifts/collections/4d6f757373652043616b65-thumb.webp"}, {"name": "Spring Basket", "title": "Spring Basket", "floor": 6.1, "thumb": "gifts/collections/537072696e67204261736b6574-thumb.webp"}, {"name": "6001229799790478558", "title": "Durov’s Boots", "floor": 153.3, "thumb": "gifts/collections/36303031323239373939373930343738353538.webp"}, {"name": "6001425315291727333", "title": "Durov’s Coat", "floor": 173.25, "thumb": "gifts/collections/36303031343235333135323931373237333333.webp"}, {"name": "6003477390536213997", "title": "Durov’s Figurine", "floor": 2730.0, "thumb": "gifts/collections/36303033343737333930353336323133393937.webp"}, {"name": "5775955135867913556", "title": "Gravestone", "floor": 88.94, "thumb": "gifts/collections/35373735393535313335383637393133353536.webp"}, {"name": "5776227780391864916", "title": "Coffin", "floor": 38.63, "thumb": "gifts/collections/35373736323237373830333931383634393136.webp"}, {"name": "5775966332847654507", "title": "Mask", "floor": 22.92, "thumb": "gifts/collections/35373735393636333332383437363534353037.webp"}, {"name": "Bling Binky", "title": "Bling Binky", "floor": 28.25, "thumb": "gifts/collections/426c696e672042696e6b79-thumb.webp"}, {"name": "Money Pot", "title": "Money Pot", "floor": 5.3, "thumb": "gifts/collections/4d6f6e657920506f74-thumb.webp"}, {"name": "Pretty Posy", "title": "Pretty Posy", "floor": 5.66, "thumb": "gifts/collections/50726574747920506f7379-thumb.webp"}, {"name": "5818708013426410448", "title": "Airplane", "floor": 8400.0, "thumb": "gifts/collections/35383138373038303133343236343130343438.webp"}, {"name": "5839094187366024301", "title": "Khabib's Papakha", "floor": 136.5, "thumb": "gifts/collections/35383339303934313837333636303234333031.webp"}, {"name": "Khabib’s Papakha", "title": "Khabib’s Papakha", "floor": 28.78, "thumb": "gifts/collections/4b6861626962e280997320506170616b6861-thumb.webp"}, {"name": "5882260270843168924", "title": "UFC box", "floor": 108.14, "thumb": "gifts/collections/35383832323630323730383433313638393234.webp"}, {"name": "UFC Strike", "title": "UFC Strike", "floor": 18.24, "thumb": "gifts/collections/55464320537472696b65-thumb.webp"}, {"name": "5922558454332916696", "title": "Christmas Tree", "floor": 0.0, "thumb": "gifts/collections/35393232353538343534333332393136363936.webp"}, {"name": "5956308547863052791", "title": "Trojan Horse", "floor": 146.99, "thumb": "gifts/collections/35393536333038353437383633303532373931.webp"}, {"name": "Victory Medal", "title": "Victory Medal", "floor": 5.28, "thumb": "gifts/collections/566963746f7279204d6564616c-thumb.webp"}, {"name": "Rare Bird", "title": "Rare Bird", "floor": 31.36, "thumb": "gifts/collections/526172652042697264-thumb.webp"}, {"name": "Mood Pack", "title": "Mood Pack", "floor": 4.87, "thumb": "gifts/collections/4d6f6f64205061636b-thumb.webp"}, {"name": "Pool Float", "title": "Pool Float", "floor": 4.42, "thumb": "gifts/collections/506f6f6c20466c6f6174-thumb.webp"}, {"name": "Timeless Book", "title": "Timeless Book", "floor": 5.31, "thumb": "gifts/collections/54696d656c65737320426f6f6b-thumb.webp"}, {"name": "Chill Flame", "title": "Chill Flame", "floor": 4.39, "thumb": "gifts/collections/4368696c6c20466c616d65-thumb.webp"}, {"name": "Vice Cream", "title": "Vice Cream", "floor": 4.41, "thumb": "gifts/collections/5669636520437265616d-thumb.webp"}, {"name": "Surge Board", "title": "Surge Board", "floor": 7.46, "thumb": "gifts/collections/537572676520426f617264-thumb.webp"}, {"name": "Liberty Figure", "title": "Liberty Figure", "floor": 5.75, "thumb": "gifts/collections/4c69626572747920466967757265-thumb.webp"}, {"name": "Durov’s Glasses", "title": "Durov’s Glasses", "floor": 140.68, "thumb": "gifts/collections/4475726f76e280997320476c6173736573-thumb.webp"}, {"name": "Fine Pen", "title": "Fine Pen", "floor": 8.5, "thumb": "gifts/collections/46696e652050656e-thumb.webp"}, {"name": "Algorithm Cup", "title": "Algorithm Cup", "floor": 1122.0, "thumb": "gifts/collections/416c676f726974686d20437570-thumb.webp"}, {"name": "Intelligence Cup", "title": "Intelligence Cup", "floor": 1424.94, "thumb": "gifts/collections/496e74656c6c6967656e636520437570-thumb.webp"}, {"name": "Mirage Lamp", "title": "Mirage Lamp", "floor": 4.59, "thumb": "gifts/collections/4d6972616765204c616d70-thumb.webp"}, {"name": "Lucky Locket", "title": "Lucky Locket", "floor": 15.3, "thumb": "gifts/collections/4c75636b79204c6f636b6574-thumb.webp"}];
+        const ALL_COLLECTIONS = [{"name": "Resistance Dog", "title": "Resistance Dog", "floor": 548.15, "vol": 58980.1, "thumb": "gifts/collections/526573697374616e636520446f67-thumb.webp"}, {"name": "Myth Mask", "title": "Myth Mask", "floor": 11.58, "vol": 29140.5, "thumb": "gifts/collections/4d797468204d61736b-thumb.webp"}, {"name": "Astral Shard", "title": "Astral Shard", "floor": 130.05, "vol": 5550.7, "thumb": "gifts/collections/41737472616c205368617264-thumb.webp"}, {"name": "B-Day Candle", "title": "B-Day Candle", "floor": 5.02, "vol": 1181.4, "thumb": "gifts/collections/422d4461792043616e646c65-thumb.webp"}, {"name": "Berry Box", "title": "Berry Box", "floor": 10.13, "vol": 3053.8, "thumb": "gifts/collections/426572727920426f78-thumb.webp"}, {"name": "Big Year", "title": "Big Year", "floor": 4.42, "vol": 1288.2, "thumb": "gifts/collections/4269672059656172-thumb.webp"}, {"name": "Bonded Ring", "title": "Bonded Ring", "floor": 44.88, "vol": 4792.6, "thumb": "gifts/collections/426f6e6465642052696e67-thumb.webp"}, {"name": "Bow Tie", "title": "Bow Tie", "floor": 6.17, "vol": 1219.4, "thumb": "gifts/collections/426f7720546965-thumb.webp"}, {"name": "Bunny Muffin", "title": "Bunny Muffin", "floor": 8.86, "vol": 1276.9, "thumb": "gifts/collections/42756e6e79204d756666696e-thumb.webp"}, {"name": "Candy Cane", "title": "Candy Cane", "floor": 4.45, "vol": 1951.2, "thumb": "gifts/collections/43616e64792043616e65-thumb.webp"}, {"name": "Cookie Heart", "title": "Cookie Heart", "floor": 5.57, "vol": 1107.5, "thumb": "gifts/collections/436f6f6b6965204865617274-thumb.webp"}, {"name": "Crystal Ball", "title": "Crystal Ball", "floor": 14.15, "vol": 2241.5, "thumb": "gifts/collections/4372797374616c2042616c6c-thumb.webp"}, {"name": "Desk Calendar", "title": "Desk Calendar", "floor": 6.31, "vol": 2791.2, "thumb": "gifts/collections/4465736b2043616c656e646172-thumb.webp"}, {"name": "Diamond Ring", "title": "Diamond Ring", "floor": 37.74, "vol": 4809.1, "thumb": "gifts/collections/4469616d6f6e642052696e67-thumb.webp"}, {"name": "DurovвЂ™s Cap", "title": "DurovвЂ™s Cap", "floor": 436.12, "vol": 6316.4, "thumb": "gifts/collections/4475726f76e280997320436170-thumb.webp"}, {"name": "Easter Egg", "title": "Easter Egg", "floor": 4.82, "vol": 2013.5, "thumb": "gifts/collections/45617374657220456767-thumb.webp"}, {"name": "Electric Skull", "title": "Electric Skull", "floor": 30.54, "vol": 3900.7, "thumb": "gifts/collections/456c65637472696320536b756c6c-thumb.webp"}, {"name": "Eternal Candle", "title": "Eternal Candle", "floor": 6.85, "vol": 1615.9, "thumb": "gifts/collections/457465726e616c2043616e646c65-thumb.webp"}, {"name": "Eternal Rose", "title": "Eternal Rose", "floor": 28.22, "vol": 5140.7, "thumb": "gifts/collections/457465726e616c20526f7365-thumb.webp"}, {"name": "Evil Eye", "title": "Evil Eye", "floor": 8.5, "vol": 1724.9, "thumb": "gifts/collections/4576696c20457965-thumb.webp"}, {"name": "Flying Broom", "title": "Flying Broom", "floor": 13.24, "vol": 2670.0, "thumb": "gifts/collections/466c79696e672042726f6f6d-thumb.webp"}, {"name": "Gem Signet", "title": "Gem Signet", "floor": 66.3, "vol": 3704.7, "thumb": "gifts/collections/47656d205369676e6574-thumb.webp"}, {"name": "Genie Lamp", "title": "Genie Lamp", "floor": 39.76, "vol": 2922.0, "thumb": "gifts/collections/47656e6965204c616d70-thumb.webp"}, {"name": "Ginger Cookie", "title": "Ginger Cookie", "floor": 5.54, "vol": 1558.8, "thumb": "gifts/collections/47696e67657220436f6f6b6965-thumb.webp"}, {"name": "Hanging Star", "title": "Hanging Star", "floor": 10.42, "vol": 2058.0, "thumb": "gifts/collections/48616e67696e672053746172-thumb.webp"}, {"name": "Heart Locket", "title": "Heart Locket", "floor": 1449.99, "vol": 2690.5, "thumb": "gifts/collections/4865617274204c6f636b6574-thumb.webp"}, {"name": "Heroic Helmet", "title": "Heroic Helmet", "floor": 185.54, "vol": 7016.3, "thumb": "gifts/collections/4865726f69632048656c6d6574-thumb.webp"}, {"name": "Hex Pot", "title": "Hex Pot", "floor": 5.51, "vol": 897.1, "thumb": "gifts/collections/48657820506f74-thumb.webp"}, {"name": "Holiday Drink", "title": "Holiday Drink", "floor": 5.33, "vol": 1079.4, "thumb": "gifts/collections/486f6c69646179204472696e6b-thumb.webp"}, {"name": "Homemade Cake", "title": "Homemade Cake", "floor": 5.76, "vol": 1050.0, "thumb": "gifts/collections/486f6d656d6164652043616b65-thumb.webp"}, {"name": "Hypno Lollipop", "title": "Hypno Lollipop", "floor": 4.79, "vol": 811.3, "thumb": "gifts/collections/4879706e6f204c6f6c6c69706f70-thumb.webp"}, {"name": "Ion Gem", "title": "Ion Gem", "floor": 74.35, "vol": 4921.0, "thumb": "gifts/collections/496f6e2047656d-thumb.webp"}, {"name": "Jack-in-the-Box", "title": "Jack-in-the-Box", "floor": 5.24, "vol": 663.8, "thumb": "gifts/collections/4a61636b2d696e2d7468652d426f78-thumb.webp"}, {"name": "Jelly Bunny", "title": "Jelly Bunny", "floor": 9.68, "vol": 2737.8, "thumb": "gifts/collections/4a656c6c792042756e6e79-thumb.webp"}, {"name": "Jester Hat", "title": "Jester Hat", "floor": 4.62, "vol": 1606.3, "thumb": "gifts/collections/4a657374657220486174-thumb.webp"}, {"name": "Jingle Bells", "title": "Jingle Bells", "floor": 10.4, "vol": 1844.9, "thumb": "gifts/collections/4a696e676c652042656c6c73-thumb.webp"}, {"name": "Kissed Frog", "title": "Kissed Frog", "floor": 50.97, "vol": 5122.0, "thumb": "gifts/collections/4b69737365642046726f67-thumb.webp"}, {"name": "Light Sword", "title": "Light Sword", "floor": 6.58, "vol": 2220.6, "thumb": "gifts/collections/4c696768742053776f7264-thumb.webp"}, {"name": "Lol Pop", "title": "Lol Pop", "floor": 4.43, "vol": 2908.8, "thumb": "gifts/collections/4c6f6c20506f70-thumb.webp"}, {"name": "Loot Bag", "title": "Loot Bag", "floor": 138.66, "vol": 7011.3, "thumb": "gifts/collections/4c6f6f7420426167-thumb.webp"}, {"name": "Love Candle", "title": "Love Candle", "floor": 12.57, "vol": 1773.9, "thumb": "gifts/collections/4c6f76652043616e646c65-thumb.webp"}, {"name": "Love Potion", "title": "Love Potion", "floor": 16.6, "vol": 3058.1, "thumb": "gifts/collections/4c6f766520506f74696f6e-thumb.webp"}, {"name": "Lunar Snake", "title": "Lunar Snake", "floor": 4.39, "vol": 3617.2, "thumb": "gifts/collections/4c756e617220536e616b65-thumb.webp"}, {"name": "Lush Bouquet", "title": "Lush Bouquet", "floor": 6.31, "vol": 1168.1, "thumb": "gifts/collections/4c75736820426f7571756574-thumb.webp"}, {"name": "Mad Pumpkin", "title": "Mad Pumpkin", "floor": 14.07, "vol": 2013.3, "thumb": "gifts/collections/4d61642050756d706b696e-thumb.webp"}, {"name": "Magic Potion", "title": "Magic Potion", "floor": 63.24, "vol": 2975.3, "thumb": "gifts/collections/4d6167696320506f74696f6e-thumb.webp"}, {"name": "Mini Oscar", "title": "Mini Oscar", "floor": 72.87, "vol": 3324.0, "thumb": "gifts/collections/4d696e69204f73636172-thumb.webp"}, {"name": "Nail Bracelet", "title": "Nail Bracelet", "floor": 130.55, "vol": 4180.0, "thumb": "gifts/collections/4e61696c2042726163656c6574-thumb.webp"}, {"name": "Neko Helmet", "title": "Neko Helmet", "floor": 41.47, "vol": 4193.5, "thumb": "gifts/collections/4e656b6f2048656c6d6574-thumb.webp"}, {"name": "Party Sparkler", "title": "Party Sparkler", "floor": 5.51, "vol": 1219.7, "thumb": "gifts/collections/506172747920537061726b6c6572-thumb.webp"}, {"name": "Perfume Bottle", "title": "Perfume Bottle", "floor": 84.64, "vol": 6491.0, "thumb": "gifts/collections/50657266756d6520426f74746c65-thumb.webp"}, {"name": "Pet Snake", "title": "Pet Snake", "floor": 4.69, "vol": 1445.2, "thumb": "gifts/collections/50657420536e616b65-thumb.webp"}, {"name": "Plush Pepe", "title": "Plush Pepe", "floor": 7701.0, "vol": 0.0, "thumb": "gifts/collections/506c7573682050657065-thumb.webp"}, {"name": "Precious Peach", "title": "Precious Peach", "floor": 280.79, "vol": 9858.6, "thumb": "gifts/collections/50726563696f7573205065616368-thumb.webp"}, {"name": "Record Player", "title": "Record Player", "floor": 14.67, "vol": 1685.8, "thumb": "gifts/collections/5265636f726420506c61796572-thumb.webp"}, {"name": "Restless Jar", "title": "Restless Jar", "floor": 5.52, "vol": 1313.2, "thumb": "gifts/collections/526573746c657373204a6172-thumb.webp"}, {"name": "Sakura Flower", "title": "Sakura Flower", "floor": 12.03, "vol": 2957.9, "thumb": "gifts/collections/53616b75726120466c6f776572-thumb.webp"}, {"name": "Santa Hat", "title": "Santa Hat", "floor": 8.37, "vol": 1951.7, "thumb": "gifts/collections/53616e746120486174-thumb.webp"}, {"name": "Scared Cat", "title": "Scared Cat", "floor": 301.21, "vol": 23879.1, "thumb": "gifts/collections/53636172656420436174-thumb.webp"}, {"name": "Sharp Tongue", "title": "Sharp Tongue", "floor": 53.96, "vol": 6070.2, "thumb": "gifts/collections/536861727020546f6e677565-thumb.webp"}, {"name": "Signet Ring", "title": "Signet Ring", "floor": 36.58, "vol": 4174.0, "thumb": "gifts/collections/5369676e65742052696e67-thumb.webp"}, {"name": "Skull Flower", "title": "Skull Flower", "floor": 12.68, "vol": 1691.5, "thumb": "gifts/collections/536b756c6c20466c6f776572-thumb.webp"}, {"name": "Sleigh Bell", "title": "Sleigh Bell", "floor": 10.89, "vol": 1460.5, "thumb": "gifts/collections/536c656967682042656c6c-thumb.webp"}, {"name": "Snake Box", "title": "Snake Box", "floor": 4.4, "vol": 1704.4, "thumb": "gifts/collections/536e616b6520426f78-thumb.webp"}, {"name": "Snow Globe", "title": "Snow Globe", "floor": 8.03, "vol": 1011.4, "thumb": "gifts/collections/536e6f7720476c6f6265-thumb.webp"}, {"name": "Snow Mittens", "title": "Snow Mittens", "floor": 9.18, "vol": 1918.8, "thumb": "gifts/collections/536e6f77204d697474656e73-thumb.webp"}, {"name": "Spiced Wine", "title": "Spiced Wine", "floor": 5.23, "vol": 1094.8, "thumb": "gifts/collections/5370696365642057696e65-thumb.webp"}, {"name": "Spy Agaric", "title": "Spy Agaric", "floor": 7.02, "vol": 1315.5, "thumb": "gifts/collections/53707920416761726963-thumb.webp"}, {"name": "Star Notepad", "title": "Star Notepad", "floor": 5.19, "vol": 1316.3, "thumb": "gifts/collections/53746172204e6f7465706164-thumb.webp"}, {"name": "Swiss Watch", "title": "Swiss Watch", "floor": 62.73, "vol": 10484.1, "thumb": "gifts/collections/5377697373205761746368-thumb.webp"}, {"name": "Tama Gadget", "title": "Tama Gadget", "floor": 4.53, "vol": 1430.9, "thumb": "gifts/collections/54616d6120476164676574-thumb.webp"}, {"name": "Top Hat", "title": "Top Hat", "floor": 10.67, "vol": 2569.4, "thumb": "gifts/collections/546f7020486174-thumb.webp"}, {"name": "Toy Bear", "title": "Toy Bear", "floor": 36.87, "vol": 5798.9, "thumb": "gifts/collections/546f792042656172-thumb.webp"}, {"name": "Trapped Heart", "title": "Trapped Heart", "floor": 19.88, "vol": 3848.9, "thumb": "gifts/collections/54726170706564204865617274-thumb.webp"}, {"name": "Vintage Cigar", "title": "Vintage Cigar", "floor": 43.44, "vol": 7486.8, "thumb": "gifts/collections/56696e74616765204369676172-thumb.webp"}, {"name": "Voodoo Doll", "title": "Voodoo Doll", "floor": 40.21, "vol": 2387.7, "thumb": "gifts/collections/566f6f646f6f20446f6c6c-thumb.webp"}, {"name": "Winter Wreath", "title": "Winter Wreath", "floor": 5.75, "vol": 1161.7, "thumb": "gifts/collections/57696e74657220577265617468-thumb.webp"}, {"name": "Witch Hat", "title": "Witch Hat", "floor": 7.04, "vol": 1670.0, "thumb": "gifts/collections/576974636820486174-thumb.webp"}, {"name": "Xmas Stocking", "title": "Xmas Stocking", "floor": 4.44, "vol": 1976.3, "thumb": "gifts/collections/586d61732053746f636b696e67-thumb.webp"}, {"name": "Cupid Charm", "title": "Cupid Charm", "floor": 27.03, "vol": 4514.5, "thumb": "gifts/collections/437570696420436861726d-thumb.webp"}, {"name": "Whip Cupcake", "title": "Whip Cupcake", "floor": 4.4, "vol": 2847.7, "thumb": "gifts/collections/576869702043757063616b65-thumb.webp"}, {"name": "Valentine Box", "title": "Valentine Box", "floor": 13.67, "vol": 1786.0, "thumb": "gifts/collections/56616c656e74696e6520426f78-thumb.webp"}, {"name": "Joyful Bundle", "title": "Joyful Bundle", "floor": 8.99, "vol": 1335.9, "thumb": "gifts/collections/4a6f7966756c2042756e646c65-thumb.webp"}, {"name": "Low Rider", "title": "Low Rider", "floor": 73.22, "vol": 6199.2, "thumb": "gifts/collections/4c6f77205269646572-thumb.webp"}, {"name": "Westside Sign", "title": "Westside Sign", "floor": 127.93, "vol": 4331.4, "thumb": "gifts/collections/5765737473696465205369676e-thumb.webp"}, {"name": "Snoop Cigar", "title": "Snoop Cigar", "floor": 17.39, "vol": 6990.1, "thumb": "gifts/collections/536e6f6f70204369676172-thumb.webp"}, {"name": "Swag Bag", "title": "Swag Bag", "floor": 6.05, "vol": 3243.3, "thumb": "gifts/collections/5377616720426167-thumb.webp"}, {"name": "Snoop Dogg", "title": "Snoop Dogg", "floor": 6.07, "vol": 4993.0, "thumb": "gifts/collections/536e6f6f7020446f6767-thumb.webp"}, {"name": "Ionic Dryer", "title": "Ionic Dryer", "floor": 17.89, "vol": 2574.4, "thumb": "gifts/collections/496f6e6963204472796572-thumb.webp"}, {"name": "Jolly Chimp", "title": "Jolly Chimp", "floor": 8.59, "vol": 3523.2, "thumb": "gifts/collections/4a6f6c6c79204368696d70-thumb.webp"}, {"name": "Moon Pendant", "title": "Moon Pendant", "floor": 7.07, "vol": 825.3, "thumb": "gifts/collections/4d6f6f6e2050656e64616e74-thumb.webp"}, {"name": "Stellar Rocket", "title": "Stellar Rocket", "floor": 5.53, "vol": 1858.6, "thumb": "gifts/collections/5374656c6c617220526f636b6574-thumb.webp"}, {"name": "Artisan Brick", "title": "Artisan Brick", "floor": 76.5, "vol": 3608.7, "thumb": "gifts/collections/4172746973616e20427269636b-thumb.webp"}, {"name": "Input Key", "title": "Input Key", "floor": 6.75, "vol": 3189.9, "thumb": "gifts/collections/496e707574204b6579-thumb.webp"}, {"name": "Mighty Arm", "title": "Mighty Arm", "floor": 124.39, "vol": 6824.6, "thumb": "gifts/collections/4d69676874792041726d-thumb.webp"}, {"name": "Fresh Socks", "title": "Fresh Socks", "floor": 5.3, "vol": 2523.2, "thumb": "gifts/collections/467265736820536f636b73-thumb.webp"}, {"name": "Clover Pin", "title": "Clover Pin", "floor": 5.61, "vol": 1760.3, "thumb": "gifts/collections/436c6f7665722050696e-thumb.webp"}, {"name": "Sky Stilettos", "title": "Sky Stilettos", "floor": 22.67, "vol": 4545.6, "thumb": "gifts/collections/536b79205374696c6574746f73-thumb.webp"}, {"name": "Faith Amulet", "title": "Faith Amulet", "floor": 6.17, "vol": 1182.5, "thumb": "gifts/collections/466169746820416d756c6574-thumb.webp"}, {"name": "Happy Brownie", "title": "Happy Brownie", "floor": 4.87, "vol": 2196.0, "thumb": "gifts/collections/48617070792042726f776e6965-thumb.webp"}, {"name": "Ice Cream", "title": "Ice Cream", "floor": 4.4, "vol": 3440.7, "thumb": "gifts/collections/49636520437265616d-thumb.webp"}, {"name": "Instant Ramen", "title": "Instant Ramen", "floor": 4.41, "vol": 5633.0, "thumb": "gifts/collections/496e7374616e742052616d656e-thumb.webp"}, {"name": "Mousse Cake", "title": "Mousse Cake", "floor": 5.3, "vol": 1326.7, "thumb": "gifts/collections/4d6f757373652043616b65-thumb.webp"}, {"name": "Spring Basket", "title": "Spring Basket", "floor": 6.1, "vol": 1929.8, "thumb": "gifts/collections/537072696e67204261736b6574-thumb.webp"}, {"name": "6001229799790478558", "title": "DurovвЂ™s Boots", "floor": 153.3, "vol": 146.0, "thumb": "gifts/collections/36303031323239373939373930343738353538.webp"}, {"name": "6001425315291727333", "title": "DurovвЂ™s Coat", "floor": 173.25, "vol": 0.0, "thumb": "gifts/collections/36303031343235333135323931373237333333.webp"}, {"name": "6003477390536213997", "title": "DurovвЂ™s Figurine", "floor": 2709.0, "vol": 0.0, "thumb": "gifts/collections/36303033343737333930353336323133393937.webp"}, {"name": "5775955135867913556", "title": "Gravestone", "floor": 88.94, "vol": 253.9, "thumb": "gifts/collections/35373735393535313335383637393133353536.webp"}, {"name": "5776227780391864916", "title": "Coffin", "floor": 38.63, "vol": 288.4, "thumb": "gifts/collections/35373736323237373830333931383634393136.webp"}, {"name": "5775966332847654507", "title": "Mask", "floor": 22.89, "vol": 1448.4, "thumb": "gifts/collections/35373735393636333332383437363534353037.webp"}, {"name": "Bling Binky", "title": "Bling Binky", "floor": 28.24, "vol": 2527.2, "thumb": "gifts/collections/426c696e672042696e6b79-thumb.webp"}, {"name": "Money Pot", "title": "Money Pot", "floor": 5.3, "vol": 1155.6, "thumb": "gifts/collections/4d6f6e657920506f74-thumb.webp"}, {"name": "Pretty Posy", "title": "Pretty Posy", "floor": 5.66, "vol": 1133.5, "thumb": "gifts/collections/50726574747920506f7379-thumb.webp"}, {"name": "5818708013426410448", "title": "Airplane", "floor": 8400.0, "vol": 0.0, "thumb": "gifts/collections/35383138373038303133343236343130343438.webp"}, {"name": "5839094187366024301", "title": "Khabib's Papakha", "floor": 136.5, "vol": 0.0, "thumb": "gifts/collections/35383339303934313837333636303234333031.webp"}, {"name": "KhabibвЂ™s Papakha", "title": "KhabibвЂ™s Papakha", "floor": 28.78, "vol": 3777.8, "thumb": "gifts/collections/4b6861626962e280997320506170616b6861-thumb.webp"}, {"name": "5882260270843168924", "title": "UFC box", "floor": 108.14, "vol": 0.0, "thumb": "gifts/collections/35383832323630323730383433313638393234.webp"}, {"name": "UFC Strike", "title": "UFC Strike", "floor": 18.26, "vol": 4692.8, "thumb": "gifts/collections/55464320537472696b65-thumb.webp"}, {"name": "5922558454332916696", "title": "Christmas Tree", "floor": 0.0, "vol": 0.0, "thumb": "gifts/collections/35393232353538343534333332393136363936.webp"}, {"name": "5956308547863052791", "title": "Trojan Horse", "floor": 146.99, "vol": 1677.5, "thumb": "gifts/collections/35393536333038353437383633303532373931.webp"}, {"name": "Victory Medal", "title": "Victory Medal", "floor": 5.28, "vol": 1940.6, "thumb": "gifts/collections/566963746f7279204d6564616c-thumb.webp"}, {"name": "Rare Bird", "title": "Rare Bird", "floor": 31.42, "vol": 4630.7, "thumb": "gifts/collections/526172652042697264-thumb.webp"}, {"name": "Mood Pack", "title": "Mood Pack", "floor": 4.9, "vol": 3343.8, "thumb": "gifts/collections/4d6f6f64205061636b-thumb.webp"}, {"name": "Pool Float", "title": "Pool Float", "floor": 4.42, "vol": 2797.8, "thumb": "gifts/collections/506f6f6c20466c6f6174-thumb.webp"}, {"name": "Timeless Book", "title": "Timeless Book", "floor": 5.29, "vol": 1533.1, "thumb": "gifts/collections/54696d656c65737320426f6f6b-thumb.webp"}, {"name": "Chill Flame", "title": "Chill Flame", "floor": 4.41, "vol": 8383.3, "thumb": "gifts/collections/4368696c6c20466c616d65-thumb.webp"}, {"name": "Vice Cream", "title": "Vice Cream", "floor": 4.41, "vol": 6205.5, "thumb": "gifts/collections/5669636520437265616d-thumb.webp"}, {"name": "Surge Board", "title": "Surge Board", "floor": 7.34, "vol": 2693.9, "thumb": "gifts/collections/537572676520426f617264-thumb.webp"}, {"name": "Liberty Figure", "title": "Liberty Figure", "floor": 5.73, "vol": 5315.4, "thumb": "gifts/collections/4c69626572747920466967757265-thumb.webp"}, {"name": "DurovвЂ™s Glasses", "title": "DurovвЂ™s Glasses", "floor": 139.73, "vol": 6228.9, "thumb": "gifts/collections/4475726f76e280997320476c6173736573-thumb.webp"}, {"name": "Fine Pen", "title": "Fine Pen", "floor": 8.5, "vol": 2799.8, "thumb": "gifts/collections/46696e652050656e-thumb.webp"}, {"name": "Algorithm Cup", "title": "Algorithm Cup", "floor": 1122.0, "vol": 0.0, "thumb": "gifts/collections/416c676f726974686d20437570-thumb.webp"}, {"name": "Intelligence Cup", "title": "Intelligence Cup", "floor": 1424.94, "vol": 0.0, "thumb": "gifts/collections/496e74656c6c6967656e636520437570-thumb.webp"}, {"name": "Mirage Lamp", "title": "Mirage Lamp", "floor": 4.63, "vol": 3173.4, "thumb": "gifts/collections/4d6972616765204c616d70-thumb.webp"}, {"name": "Lucky Locket", "title": "Lucky Locket", "floor": 15.29, "vol": 7467.3, "thumb": "gifts/collections/4c75636b79204c6f636b6574-thumb.webp"}];
         const ALL_BACKDROPS = [{"name": "Amber", "color": "#dab345"}, {"name": "Aquamarine", "color": "#60b195"}, {"name": "Azure Blue", "color": "#5db1cb"}, {"name": "Battleship Grey", "color": "#8c8c85"}, {"name": "Black", "color": "#363738"}, {"name": "Burgundy", "color": "#a35e66"}, {"name": "Burnt Sienna", "color": "#d66f3c"}, {"name": "Camo Green", "color": "#75944d"}, {"name": "Cappuccino", "color": "#b1907e"}, {"name": "Caramel", "color": "#d09932"}, {"name": "Carmine", "color": "#e0574a"}, {"name": "Carrot Juice", "color": "#db9867"}, {"name": "Celtic Blue", "color": "#45b8ed"}, {"name": "Chestnut", "color": "#be6f54"}, {"name": "Chocolate", "color": "#a46e58"}, {"name": "Cobalt Blue", "color": "#6088cf"}, {"name": "Copper", "color": "#d08656"}, {"name": "Coral Red", "color": "#da896b"}, {"name": "Cyberpunk", "color": "#858ff3"}, {"name": "Dark Green", "color": "#516341"}, {"name": "Dark Lilac", "color": "#b17da5"}, {"name": "Deep Cyan", "color": "#31b5aa"}, {"name": "Desert Sand", "color": "#b39f82"}, {"name": "Electric Indigo", "color": "#a980f3"}, {"name": "Electric Purple", "color": "#ca70c6"}, {"name": "Emerald", "color": "#78c585"}, {"name": "English Violet", "color": "#b186bb"}, {"name": "Fandango", "color": "#e28ab6"}, {"name": "Feldgrau", "color": "#899288"}, {"name": "Fire Engine", "color": "#f05f4f"}, {"name": "French Blue", "color": "#5c9bc4"}, {"name": "French Violet", "color": "#c260e6"}, {"name": "Grape", "color": "#9d74c1"}, {"name": "Gunmetal", "color": "#4c5d63"}, {"name": "Gunship Green", "color": "#558a65"}, {"name": "Hunter Green", "color": "#8fae78"}, {"name": "Indigo Dye", "color": "#537991"}, {"name": "Ivory White", "color": "#bab6b1"}, {"name": "Jade Green", "color": "#55c49c"}, {"name": "Khaki Green", "color": "#adb070"}, {"name": "Lavender", "color": "#b789e4"}, {"name": "Lemongrass", "color": "#aeb85a"}, {"name": "Light Olive", "color": "#c2af64"}, {"name": "Malachite", "color": "#95b457"}, {"name": "Marine Blue", "color": "#4e689c"}, {"name": "Mexican Pink", "color": "#e36692"}, {"name": "Midnight Blue", "color": "#5c6985"}, {"name": "Mint Green", "color": "#7ecb82"}, {"name": "Moonstone", "color": "#7eb1b4"}, {"name": "Mustard", "color": "#d4980d"}, {"name": "Mystic Pearl", "color": "#d08b6d"}, {"name": "Navy Blue", "color": "#6c9edd"}, {"name": "Neon Blue", "color": "#7596f9"}, {"name": "Old Gold", "color": "#b58d38"}, {"name": "Onyx Black", "color": "#4d5254"}, {"name": "Orange", "color": "#d19a3a"}, {"name": "Pacific Cyan", "color": "#5abea6"}, {"name": "Pacific Green", "color": "#6fc793"}, {"name": "Persimmon", "color": "#e7a75a"}, {"name": "Pine Green", "color": "#6ba97c"}, {"name": "Pistachio", "color": "#97b07c"}, {"name": "Platinum", "color": "#b2aea7"}, {"name": "Pure Gold", "color": "#ccab41"}, {"name": "Purple", "color": "#ae6cae"}, {"name": "Ranger Green", "color": "#5f7849"}, {"name": "Raspberry", "color": "#e07b85"}, {"name": "Rifle Green", "color": "#64695c"}, {"name": "Roman Silver", "color": "#a3a8b5"}, {"name": "Rosewood", "color": "#b77a77"}, {"name": "Sapphire", "color": "#58a3c8"}, {"name": "Satin Gold", "color": "#bf9b47"}, {"name": "Seal Brown", "color": "#664d45"}, {"name": "Shamrock Green", "color": "#8ab163"}, {"name": "Silver Blue", "color": "#80a4b8"}, {"name": "Sky Blue", "color": "#58b4c8"}, {"name": "Steel Grey", "color": "#97a2ac"}, {"name": "Strawberry", "color": "#dd8e6f"}, {"name": "Tactical Pine", "color": "#44826b"}, {"name": "Tomato", "color": "#e6793e"}, {"name": "Turquoise", "color": "#5ec0b8"}];
 
         let selectedCollections = new Set();
@@ -571,7 +583,7 @@
                 document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentDiscount = parseFloat(btn.dataset.discount);
-                discountVal.textContent = currentDiscount === 0 ? 'Любая (0%)' : '-' + currentDiscount + '%';
+                discountVal.textContent = currentDiscount === 0 ? 'Р›СЋР±Р°СЏ (0%)' : '-' + currentDiscount + '%';
             });
         });
 
@@ -590,7 +602,7 @@
         document.getElementById('apply-cols').addEventListener('click', () => {
             colsModal.style.display = 'none';
             document.getElementById('selected-cols-count').textContent = 
-                selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
+                selectedCollections.size === 0 ? 'Р’СЃРµ' : selectedCollections.size + ' С€С‚';
         });
 
         document.getElementById('open-backdrops-btn').addEventListener('click', () => {
@@ -605,7 +617,7 @@
         document.getElementById('apply-backs').addEventListener('click', () => {
             backsModal.style.display = 'none';
             document.getElementById('selected-backs-count').textContent = 
-                selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
+                selectedBackdrops.size === 0 ? 'Р’СЃРµ' : selectedBackdrops.size + ' С€С‚';
         });
 
         function renderCollections(filter = '') {
@@ -618,12 +630,16 @@
                 const row = document.createElement('div');
                 row.className = 'mrkt-row';
                 const imgUrl = c.thumb ? ('https://cdn.tgmrkt.io/' + c.thumb) : '';
+                const volStr = c.vol > 1000 ? (c.vol / 1000).toFixed(1) + 'k' : c.vol;
                 row.innerHTML = `
                     <div class="mrkt-row-left">
                         <img src="${imgUrl}" class="mrkt-thumb">
                         <div>
                             <div class="mrkt-title">${c.title}</div>
-                            <div class="mrkt-sub">Флор: ${c.floor} TON</div>
+                            <div class="mrkt-sub">
+                                <span>рџ’Ћ ${c.floor} TON</span>
+                                <span class="mrkt-stat-badge">рџ“Љ РћР±: ${volStr} TON</span>
+                            </div>
                         </div>
                     </div>
                     <div class="checkbox-custom ${isChecked ? 'checked' : ''}"></div>
@@ -691,7 +707,7 @@
                 tg.sendData(JSON.stringify(payload));
                 tg.close();
             } else {
-                alert('Настройки сохранены!\n' + JSON.stringify(payload, null, 2));
+                alert('РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹!\n' + JSON.stringify(payload, null, 2));
             }
         });
     </script>
