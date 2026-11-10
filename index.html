@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MRKT Radar Pro</title>
+    <title>MRKT Sniper Emerald</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg: #121316;
-            --surface: #1c1d22;
-            --surface-hover: #262830;
-            --accent: #f5c400;
+            --bg: #0c100e;
+            --surface: #131916;
+            --surface-hover: #1b2420;
+            --accent: #00d67d;
+            --accent-glow: rgba(0, 214, 125, 0.35);
             --text-primary: #ffffff;
-            --text-secondary: #8d929f;
-            --border: #292b34;
+            --text-secondary: #7f948a;
+            --border: #1e2923;
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 18px;
@@ -56,11 +57,12 @@
         }
 
         .version-badge {
-            background: rgba(245, 196, 0, 0.15);
+            background: rgba(0, 214, 125, 0.15);
             color: var(--accent);
+            border: 1px solid rgba(0, 214, 125, 0.3);
             font-size: 11px;
             font-weight: 700;
-            padding: 2px 6px;
+            padding: 2px 7px;
             border-radius: 6px;
         }
 
@@ -136,7 +138,7 @@
             width: 100%;
             height: 6px;
             border-radius: 3px;
-            background: #2a2d36;
+            background: #1c2621;
             outline: none;
         }
 
@@ -148,7 +150,7 @@
             border-radius: 50%;
             background: var(--accent);
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(245, 196, 0, 0.5);
+            box-shadow: 0 0 12px var(--accent-glow);
             transition: transform 0.1s;
         }
 
@@ -164,7 +166,7 @@
         }
 
         .pill-btn {
-            background: #23252c;
+            background: #161e1a;
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 10px 4px;
@@ -176,7 +178,7 @@
         }
 
         .pill-btn.active {
-            background: rgba(245, 196, 0, 0.15);
+            background: rgba(0, 214, 125, 0.15);
             border-color: var(--accent);
             color: var(--accent);
         }
@@ -224,7 +226,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #2e313b;
+            background-color: #1e2823;
             transition: .25s;
             border-radius: 24px;
         }
@@ -247,7 +249,7 @@
 
         input:checked + .toggle-slider:before {
             transform: translateX(20px);
-            background-color: #000;
+            background-color: #0c100e;
         }
 
         /* Bottom Fixed Bar */
@@ -256,7 +258,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(18, 19, 22, 0.95);
+            background: rgba(12, 16, 14, 0.95);
             backdrop-filter: blur(10px);
             border-top: 1px solid var(--border);
             padding: 12px 16px;
@@ -270,7 +272,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(4px);
             z-index: 200;
             display: none;
@@ -279,7 +281,7 @@
         }
 
         .modal-sheet {
-            background: #18191e;
+            background: #111714;
             border-top: 1px solid var(--border);
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
@@ -289,7 +291,7 @@
             display: flex;
             flex-direction: column;
             padding: 14px 14px 16px 14px;
-            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
             animation: slideUp 0.25s ease-out;
         }
 
@@ -312,7 +314,7 @@
         }
 
         .close-btn {
-            background: #252830;
+            background: #1b2420;
             border: none;
             color: var(--text-secondary);
             width: 28px;
@@ -339,6 +341,10 @@
             color: #fff;
             font-size: 13px;
             outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
         }
 
         .search-icon {
@@ -382,7 +388,7 @@
             height: 36px;
             border-radius: 9px;
             object-fit: cover;
-            background: #252830;
+            background: #1b2420;
         }
 
         .backdrop-circle {
@@ -407,13 +413,13 @@
         }
 
         .mrkt-stat-badge {
-            color: #b0b5c1;
+            color: #9cb5a8;
         }
 
         .checkbox-custom {
             width: 20px;
             height: 20px;
-            border: 2px solid #4a4f5c;
+            border: 2px solid #36483f;
             border-radius: 6px;
             display: flex;
             align-items: center;
@@ -427,7 +433,7 @@
 
         .checkbox-custom.checked::after {
             content: "✔";
-            color: #000;
+            color: #0c100e;
             font-size: 11px;
             font-weight: 800;
         }
@@ -435,14 +441,14 @@
         .btn-compact {
             width: 100%;
             background: var(--accent);
-            color: #000000;
+            color: #0c100e;
             border: none;
             border-radius: var(--radius-md);
             padding: 11px;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 3px 10px rgba(245, 196, 0, 0.3);
+            box-shadow: 0 3px 12px var(--accent-glow);
         }
 
         .btn-compact:active {
