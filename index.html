@@ -1089,31 +1089,24 @@
             const payload = saveStateLocally();
             const jsonStr = JSON.stringify(payload);
 
-            let sentDirectly = false;
-            // Native Telegram WebApp sendData (works from Keyboard button)
-            if (tg) {
-                try {
+            // 1. Try native tg.sendData (for keyboard button launch)
+            try {
+                if (tg && typeof tg.sendData === 'function') {
                     tg.sendData(jsonStr);
-                    sentDirectly = true;
-                } catch (e) {
-                    console.warn("sendData not supported in this launch mode:", e);
-                    sentDirectly = false;
                 }
-            }
+            } catch (e) {}
 
-            // Fallback for Menu button / Inline button / Web browser:
-            if (!sentDirectly) {
-                try {
-                    const compact = getCompactConfigParam(payload);
-                    const deepLink = "https://t.me/mrkt_loot_radar_bot?start=" + compact;
-                    if (tg && typeof tg.openTelegramLink === 'function') {
-                        tg.openTelegramLink(deepLink);
-                    } else {
-                        window.location.href = deepLink;
-                    }
-                } catch (err) {
-                    console.error("Deep link fallback error:", err);
+            // 2. Always trigger openTelegramLink deep-link for 100% reliability in Menu / Inline modes
+            try {
+                const compact = getCompactConfigParam(payload);
+                const deepLink = "https://t.me/mrkt_loot_radar_bot?start=" + compact;
+                if (tg && typeof tg.openTelegramLink === 'function') {
+                    tg.openTelegramLink(deepLink);
+                } else {
+                    window.location.href = deepLink;
                 }
+            } catch (err) {
+                console.error("Deep link error:", err);
             }
 
             setTimeout(() => {
