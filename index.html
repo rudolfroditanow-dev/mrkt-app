@@ -548,14 +548,29 @@
         </div>
     </div>
 
-    <!-- Budget Slider -->
+    <!-- Price Range Sliders (Цена от и до) -->
     <div class="card">
         <div class="card-title">
-            <span>Лимит бюджета</span>
-            <span class="card-value" id="budget-val">25 TON</span>
+            <span>Диапазон цены</span>
+            <span class="card-value" id="price-range-val">от 5 до 100 TON</span>
         </div>
-        <div class="slider-container">
-            <input type="range" min="1" max="200" value="25" class="slider" id="budget-slider">
+        <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--text-secondary);">Цена от (минимум):</span>
+                <span style="color: var(--accent); font-weight: 700;" id="min-val-label">5 TON</span>
+            </div>
+            <div class="slider-container">
+                <input type="range" min="0" max="500" value="5" step="1" class="slider" id="min-price-slider">
+            </div>
+        </div>
+        <div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--text-secondary);">Цена до (максимум):</span>
+                <span style="color: var(--accent); font-weight: 700;" id="max-val-label">100 TON</span>
+            </div>
+            <div class="slider-container">
+                <input type="range" min="1" max="500" value="100" step="1" class="slider" id="max-price-slider">
+            </div>
         </div>
     </div>
 
@@ -684,19 +699,38 @@
         let sortField = 'vol';
         let sortDirection = 'desc';
 
-        const budgetSlider = document.getElementById('budget-slider');
-        const budgetVal = document.getElementById('budget-val');
+        const minPriceSlider = document.getElementById('min-price-slider');
+        const maxPriceSlider = document.getElementById('max-price-slider');
+        const minValLabel = document.getElementById('min-val-label');
+        const maxValLabel = document.getElementById('max-val-label');
+        const priceRangeVal = document.getElementById('price-range-val');
         const discountVal = document.getElementById('discount-val');
         const rareIdToggle = document.getElementById('rare-id-toggle');
         const monoToggle = document.getElementById('mono-toggle');
         const activeToggle = document.getElementById('active-toggle');
 
+        function updatePriceRangeUI() {
+            let minP = parseFloat(minPriceSlider.value) || 0;
+            let maxP = parseFloat(maxPriceSlider.value) || 100;
+            if (minP > maxP) {
+                maxP = minP;
+                maxPriceSlider.value = maxP;
+            }
+            minValLabel.textContent = minP + ' TON';
+            maxValLabel.textContent = maxP + ' TON';
+            priceRangeVal.textContent = 'от ' + minP + ' до ' + maxP + ' TON';
+        }
+
         function applyStateToUI(data) {
             if (!data) return;
-            if (data.max_price !== undefined) {
-                budgetSlider.value = data.max_price;
-                budgetVal.textContent = data.max_price + ' TON';
+            if (data.min_price !== undefined) {
+                minPriceSlider.value = data.min_price;
             }
+            if (data.max_price !== undefined) {
+                maxPriceSlider.value = data.max_price;
+            }
+            updatePriceRangeUI();
+
             if (data.min_discount !== undefined) {
                 currentDiscount = data.min_discount;
                 document.querySelectorAll('.pill-btn').forEach(b => {
@@ -724,9 +758,25 @@
             }
         }
 
-        // LOAD FROM BOTH TELEGRAM CLOUD STORAGE & LOCALSTORAGE
+        // LOAD FROM BOTH TELEGRAM CLOUD STORAGE & LOCALSTORAGE & URL PARAMS
         function loadSavedState() {
-            // 1. Try local storage first
+            // 1. Try URL parameters first if launched with deep link
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('min_p') || urlParams.has('max_p')) {
+                if (urlParams.has('min_p')) minPriceSlider.value = parseFloat(urlParams.get('min_p')) || 0;
+                if (urlParams.has('max_p')) maxPriceSlider.value = parseFloat(urlParams.get('max_p')) || 100;
+                if (urlParams.has('cols')) {
+                    const cList = urlParams.get('cols').split(',').filter(Boolean);
+                    if (cList.length > 0 && !cList.includes('all')) {
+                        selectedCollections = new Set(cList);
+                        document.getElementById('selected-cols-count').textContent = selectedCollections.size + ' шт';
+                    }
+                }
+                updatePriceRangeUI();
+                return;
+            }
+
+            // 2. Try local storage
             try {
                 const localData = localStorage.getItem('mrkt_filters_emerald');
                 if (localData) {
@@ -736,7 +786,7 @@
                 console.error("Local storage read error", e);
             }
 
-            // 2. Try Telegram CloudStorage if available
+            // 3. Try Telegram CloudStorage if available
             if (tg?.CloudStorage) {
                 tg.CloudStorage.getItem('mrkt_filters_emerald', (err, result) => {
                     if (!err && result) {
@@ -750,8 +800,13 @@
         }
 
         function saveStateLocally() {
+            let minP = parseFloat(minPriceSlider.value) || 0;
+            let maxP = parseFloat(maxPriceSlider.value) || 500;
+            if (minP > maxP) maxP = minP;
+
             const payload = {
-                max_price: parseFloat(budgetSlider.value),
+                min_price: minP,
+                max_price: maxP,
                 min_discount: currentDiscount,
                 check_rare_id: rareIdToggle.checked,
                 check_monochrome: monoToggle.checked,
@@ -772,8 +827,23 @@
             return payload;
         }
 
-        budgetSlider.addEventListener('input', (e) => {
-            budgetVal.textContent = e.target.value + ' TON';
+        minPriceSlider.addEventListener('input', () => {
+            let minP = parseFloat(minPriceSlider.value);
+            let maxP = parseFloat(maxPriceSlider.value);
+            if (minP > maxP) {
+                maxPriceSlider.value = minP;
+            }
+            updatePriceRangeUI();
+            saveStateLocally();
+        });
+
+        maxPriceSlider.addEventListener('input', () => {
+            let minP = parseFloat(minPriceSlider.value);
+            let maxP = parseFloat(maxPriceSlider.value);
+            if (maxP < minP) {
+                minPriceSlider.value = maxP;
+            }
+            updatePriceRangeUI();
             saveStateLocally();
         });
 
