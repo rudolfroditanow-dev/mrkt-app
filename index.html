@@ -709,6 +709,17 @@
         const monoToggle = document.getElementById('mono-toggle');
         const activeToggle = document.getElementById('active-toggle');
 
+        function updateSelectedCounts() {
+            const colsCountEl = document.getElementById('selected-cols-count');
+            if (colsCountEl) {
+                colsCountEl.textContent = selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
+            }
+            const backsCountEl = document.getElementById('selected-backs-count');
+            if (backsCountEl) {
+                backsCountEl.textContent = selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
+            }
+        }
+
         function updatePriceRangeUI() {
             let minP = parseFloat(minPriceSlider.value) || 0;
             let maxP = parseFloat(maxPriceSlider.value) || 100;
@@ -748,47 +759,49 @@
 
             if (Array.isArray(data.selected_collections)) {
                 selectedCollections = new Set(data.selected_collections);
-                document.getElementById('selected-cols-count').textContent = 
-                    selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
+                updateSelectedCounts();
             }
             if (Array.isArray(data.selected_backdrops)) {
                 selectedBackdrops = new Set(data.selected_backdrops);
-                document.getElementById('selected-backs-count').textContent = 
-                    selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
+                updateSelectedCounts();
             }
         }
 
         // LOAD FROM BOTH TELEGRAM CLOUD STORAGE & LOCALSTORAGE & URL PARAMS
         function loadSavedState() {
-            // 1. Try URL parameters first if launched with deep link
+            // 1. Try URL parameters first if launched with deep link or from bot
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('min_p') || urlParams.has('max_p')) {
                 if (urlParams.has('min_p')) minPriceSlider.value = parseFloat(urlParams.get('min_p')) || 0;
                 if (urlParams.has('max_p')) maxPriceSlider.value = parseFloat(urlParams.get('max_p')) || 100;
                 if (urlParams.has('cols')) {
-                    const cList = urlParams.get('cols').split(',').filter(Boolean);
-                    if (cList.length > 0 && !cList.includes('all')) {
+                    const rawCols = urlParams.get('cols');
+                    if (rawCols && rawCols !== 'all') {
+                        const cList = rawCols.split(',').map(s => decodeURIComponent(s.trim())).filter(Boolean);
                         selectedCollections = new Set(cList);
-                        document.getElementById('selected-cols-count').textContent = selectedCollections.size + ' шт';
+                    } else {
+                        selectedCollections.clear();
                     }
                 }
                 updatePriceRangeUI();
+                updateSelectedCounts();
                 return;
             }
 
-            // 2. Try local storage
+            // 2. Try local storage (v3 key)
             try {
-                const localData = localStorage.getItem('mrkt_filters_emerald');
+                const localData = localStorage.getItem('mrkt_filters_emerald_v3');
                 if (localData) {
                     applyStateToUI(JSON.parse(localData));
+                    return;
                 }
             } catch (e) {
                 console.error("Local storage read error", e);
             }
 
-            // 3. Try Telegram CloudStorage if available
+            // 3. Try Telegram CloudStorage if available (v3 key)
             if (tg?.CloudStorage) {
-                tg.CloudStorage.getItem('mrkt_filters_emerald', (err, result) => {
+                tg.CloudStorage.getItem('mrkt_filters_emerald_v3', (err, result) => {
                     if (!err && result) {
                         try {
                             const cloudData = JSON.parse(result);
@@ -817,11 +830,11 @@
             const jsonStr = JSON.stringify(payload);
 
             try {
-                localStorage.setItem('mrkt_filters_emerald', jsonStr);
+                localStorage.setItem('mrkt_filters_emerald_v3', jsonStr);
             } catch (e) {}
 
             if (tg?.CloudStorage) {
-                tg.CloudStorage.setItem('mrkt_filters_emerald', jsonStr, () => {});
+                tg.CloudStorage.setItem('mrkt_filters_emerald_v3', jsonStr, () => {});
             }
 
             return payload;
@@ -871,19 +884,19 @@
 
         document.getElementById('close-cols').addEventListener('click', () => {
             colsModal.style.display = 'none';
+            updateSelectedCounts();
         });
 
         document.getElementById('apply-cols').addEventListener('click', () => {
             colsModal.style.display = 'none';
-            document.getElementById('selected-cols-count').textContent = 
-                selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
+            updateSelectedCounts();
             saveStateLocally();
         });
 
         document.getElementById('reset-cols').addEventListener('click', () => {
             selectedCollections.clear();
             renderCollections(document.getElementById('search-cols').value);
-            document.getElementById('selected-cols-count').textContent = 'Все';
+            updateSelectedCounts();
             saveStateLocally();
         });
 
@@ -894,19 +907,19 @@
 
         document.getElementById('close-backs').addEventListener('click', () => {
             backsModal.style.display = 'none';
+            updateSelectedCounts();
         });
 
         document.getElementById('apply-backs').addEventListener('click', () => {
             backsModal.style.display = 'none';
-            document.getElementById('selected-backs-count').textContent = 
-                selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
+            updateSelectedCounts();
             saveStateLocally();
         });
 
         document.getElementById('reset-backs').addEventListener('click', () => {
             selectedBackdrops.clear();
             renderBackdrops(document.getElementById('search-backs').value);
-            document.getElementById('selected-backs-count').textContent = 'Все';
+            updateSelectedCounts();
             saveStateLocally();
         });
 
@@ -955,15 +968,16 @@
 
         function toggleSelectAll() {
             const filter = document.getElementById('search-cols').value;
-            const currentList = ALL_COLLECTIONS.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()));
-            const allSelected = currentList.every(c => selectedCollections.has(c.name));
+            const currentList = ALL_COLLECTIONS.filter(c => (c.title || c.name).toLowerCase().includes(filter.toLowerCase()));
+            const allSelected = currentList.every(c => selectedCollections.has(c.title || c.name));
 
             if (allSelected) {
-                currentList.forEach(c => selectedCollections.delete(c.name));
+                currentList.forEach(c => selectedCollections.delete(c.title || c.name));
             } else {
-                currentList.forEach(c => selectedCollections.add(c.name));
+                currentList.forEach(c => selectedCollections.add(c.title || c.name));
             }
             renderCollections(filter);
+            updateSelectedCounts();
             saveStateLocally();
         }
 
@@ -973,7 +987,7 @@
         function renderCollections(filter = '') {
             const container = document.getElementById('cols-list');
             container.innerHTML = '';
-            let filtered = ALL_COLLECTIONS.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()));
+            let filtered = ALL_COLLECTIONS.filter(c => (c.title || c.name).toLowerCase().includes(filter.toLowerCase()));
 
             filtered.sort((a, b) => {
                 const valA = a[sortField] || 0;
@@ -982,14 +996,15 @@
             });
 
             const selectAllBtn = document.getElementById('select-all-cols-btn');
-            if (filtered.length > 0 && filtered.every(c => selectedCollections.has(c.name))) {
+            if (filtered.length > 0 && filtered.every(c => selectedCollections.has(c.title || c.name))) {
                 selectAllBtn.classList.add('checked');
             } else {
                 selectAllBtn.classList.remove('checked');
             }
 
             filtered.forEach(c => {
-                const isChecked = selectedCollections.has(c.name);
+                const colKey = c.title || c.name;
+                const isChecked = selectedCollections.has(colKey);
                 const row = document.createElement('div');
                 row.className = 'mrkt-grid-row';
                 
@@ -1001,18 +1016,19 @@
                     <div class="checkbox-custom ${isChecked ? 'checked' : ''}"></div>
                     <div class="col-main">
                         <img src="${imgUrl}" class="mini-thumb" loading="lazy" alt="">
-                        <span class="col-name">${c.title}</span>
+                        <span class="col-name">${colKey}</span>
                     </div>
                     <div class="col-floor"><span class="diamond-icon">💎</span> ${floorDisplay}</div>
                     <div class="col-vol"><span class="diamond-icon">💎</span> ${volDisplay}</div>
                 `;
                 row.addEventListener('click', () => {
-                    if (selectedCollections.has(c.name)) {
-                        selectedCollections.delete(c.name);
+                    if (selectedCollections.has(colKey)) {
+                        selectedCollections.delete(colKey);
                     } else {
-                        selectedCollections.add(c.name);
+                        selectedCollections.add(colKey);
                     }
                     renderCollections(document.getElementById('search-cols').value);
+                    updateSelectedCounts();
                     saveStateLocally();
                 });
                 container.appendChild(row);
@@ -1045,6 +1061,7 @@
                         selectedBackdrops.add(b.name);
                     }
                     renderBackdrops(document.getElementById('search-backs').value);
+                    updateSelectedCounts();
                     saveStateLocally();
                 });
                 container.appendChild(row);
@@ -1055,27 +1072,58 @@
             renderBackdrops(e.target.value);
         });
 
+        function getCompactConfigParam(payload) {
+            const colIndices = [];
+            payload.selected_collections.forEach(name => {
+                const idx = ALL_COLLECTIONS.findIndex(c => (c.title === name || c.name === name));
+                if (idx !== -1) colIndices.push(idx);
+            });
+            const colsPart = colIndices.length > 0 ? colIndices.join('_') : 'all';
+            const rareBit = payload.check_rare_id ? 1 : 0;
+            const monoBit = payload.check_monochrome ? 1 : 0;
+            return `c_${Math.round(payload.min_price)}_${Math.round(payload.max_price)}_${Math.round(payload.min_discount)}_${rareBit}_${monoBit}_${colsPart}`;
+        }
+
         // MAIN SAVE BUTTON ACTION
         document.getElementById('save-btn').addEventListener('click', () => {
             const payload = saveStateLocally();
+            const jsonStr = JSON.stringify(payload);
 
+            let sentDirectly = false;
+            // Native Telegram WebApp sendData (works from Keyboard button)
             if (tg) {
-                // Telegram WebApp sendData
                 try {
-                    tg.sendData(JSON.stringify(payload));
+                    tg.sendData(jsonStr);
+                    sentDirectly = true;
                 } catch (e) {
-                    console.error("sendData error:", e);
+                    console.warn("sendData not supported in this launch mode:", e);
+                    sentDirectly = false;
                 }
-                setTimeout(() => {
-                    tg.close();
-                }, 150);
-            } else {
-                alert('Настройки сохранены!\n' + JSON.stringify(payload, null, 2));
             }
+
+            // Fallback for Menu button / Inline button / Web browser:
+            if (!sentDirectly) {
+                try {
+                    const compact = getCompactConfigParam(payload);
+                    const deepLink = "https://t.me/mrkt_loot_radar_bot?start=" + compact;
+                    if (tg && typeof tg.openTelegramLink === 'function') {
+                        tg.openTelegramLink(deepLink);
+                    } else {
+                        window.location.href = deepLink;
+                    }
+                } catch (err) {
+                    console.error("Deep link fallback error:", err);
+                }
+            }
+
+            setTimeout(() => {
+                try { tg?.close(); } catch(e) {}
+            }, 300);
         });
 
         loadSavedState();
         updateSortHeaders();
+        updateSelectedCounts();
     </script>
 </body>
 </html>
