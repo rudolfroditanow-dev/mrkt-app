@@ -2,235 +2,849 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MRKT Sniper Emerald</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Loot Radar // MRKT Sniper</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0c100e;
-            --surface: #131916;
-            --surface-hover: #1b2420;
-            --accent: #00d67d;
-            --accent-glow: rgba(0, 214, 125, 0.35);
-            --text-primary: #ffffff;
-            --text-secondary: #7f948a;
-            --border: #1e2923;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 18px;
+            --bg-color: #0b0c10;
+            --card-bg: #141721;
+            --card-sub-bg: #1a1e2d;
+            --border-color: rgba(255, 255, 255, 0.07);
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-glow: rgba(99, 102, 241, 0.25);
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-muted: #64748b;
+            --pill-active: #6366f1;
+            --tab-active-bg: #1e2336;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            background: var(--bg);
-            color: var(--text-primary);
-            padding: 14px;
-            padding-bottom: 90px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 14px 16px 100px;
             overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
         }
 
-        .header {
+        /* Top Brand Header */
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+        }
+        .brand-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: #ffffff;
+        }
+        .brand-sub {
+            font-size: 11.5px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        /* Status Banner */
+        .status-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 14px;
         }
-
-        .title-group {
+        .status-left {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
-
-        .title-group h1 {
-            font-size: 18px;
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse-green 2s infinite;
+        }
+        .pulse-dot.paused {
+            background-color: var(--accent-amber);
+            box-shadow: 0 0 10px var(--accent-amber);
+            animation: none;
+        }
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+        .status-title {
+            font-size: 13.5px;
             font-weight: 700;
-            letter-spacing: -0.3px;
+            color: #fff;
         }
-
-        .version-badge {
-            background: rgba(0, 214, 125, 0.15);
-            color: var(--accent);
-            border: 1px solid rgba(0, 214, 125, 0.3);
+        .status-date {
             font-size: 11px;
-            font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 6px;
+            color: var(--text-sub);
+            margin-top: 2px;
         }
-
-        /* Top Bar Filter Buttons */
-        .chips-scroll {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            margin-bottom: 14px;
-            scrollbar-width: none;
-        }
-
-        .chips-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .chip-tab {
+        .btn-pause {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 9px 14px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            white-space: nowrap;
-            cursor: pointer;
+            gap: 5px;
             transition: all 0.2s;
         }
-
-        .chip-tab:active {
-            background: var(--surface-hover);
-            transform: scale(0.97);
+        .btn-pause:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            margin-bottom: 12px;
+        /* Main Navigation Tabs */
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            background: #10121b;
+            padding: 4px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 14px;
+            gap: 4px;
         }
-
-        .card-title {
+        .nav-tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            padding: 10px 4px;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: 600;
-            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .nav-tab-btn.active {
+            background: var(--tab-active-bg);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+        }
+
+        /* Sub-pills (Листинги / Продажи & Оборот / Продажи / Флор) */
+        .sub-pills {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .sub-pill-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-sub);
+            padding: 9px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .sub-pill-btn.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.8), rgba(139, 92, 246, 0.8));
+            color: #fff;
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 3px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Section Sub-header */
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            padding-left: 2px;
+        }
+
+        /* Filters List & Empty State */
+        .filters-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .filter-item-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 12px;
         }
-
-        .card-value {
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 14px;
+        .filter-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
         }
-
-        /* Budget Slider */
-        .slider-container {
-            position: relative;
-            padding: 8px 0;
+        .filter-item-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            overflow: hidden;
         }
-
-        .slider {
-            -webkit-appearance: none;
+        .filter-item-icon img {
             width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #1c2621;
-            outline: none;
+            height: 100%;
+            object-fit: cover;
         }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--accent);
+        .filter-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .filter-item-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .filter-item-desc {
+            font-size: 11.5px;
+            color: var(--text-sub);
+            margin-top: 3px;
+        }
+        .filter-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-delete-filter {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 0 12px var(--accent-glow);
-            transition: transform 0.1s;
+            padding: 6px;
+            border-radius: 8px;
+        }
+        .btn-delete-filter:active {
+            color: var(--accent-red);
         }
 
-        .slider::-webkit-slider-thumb:active {
-            transform: scale(1.15);
+        /* Empty State */
+        .empty-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 34px 20px;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 14px;
+            background: rgba(99, 102, 241, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+        }
+        .empty-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .empty-desc {
+            font-size: 12.5px;
+            color: var(--text-sub);
+            line-height: 1.45;
+            max-width: 320px;
+            margin: 0 auto;
         }
 
-        /* Discount Chips */
-        .pill-grid {
+        /* Big Action Buttons */
+        .btn-main-action {
+            width: 100%;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35);
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .btn-main-action:active {
+            transform: scale(0.98);
+        }
+        .btn-secondary-action {
+            width: 100%;
+            background: #141724;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #e0e7ff;
+            padding: 13px;
+            border-radius: 14px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-secondary-action:active {
+            transform: scale(0.98);
+            background: #191e30;
+        }
+
+        /* Budget Presets Drawer */
+        .budget-presets-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 16px;
+            margin-top: 10px;
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .budget-presets-card.open {
+            display: block;
+        }
+        .budget-desc {
+            font-size: 12px;
+            color: var(--text-sub);
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+        .budget-pills {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
         }
-
-        .pill-btn {
-            background: #161e1a;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 10px 4px;
+        .budget-pill {
+            background: #1e2233;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 9px 4px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
             text-align: center;
-            font-size: 13px;
-            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
-
-        .pill-btn.active {
-            background: rgba(0, 214, 125, 0.15);
-            border-color: var(--accent);
-            color: var(--accent);
+        .budget-pill:active {
+            transform: scale(0.95);
+            background: var(--primary);
         }
 
-        /* Switches */
+        /* Market Screen (Screen 2) */
+        .market-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .market-item-row {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .market-item-row:active {
+            transform: scale(0.99);
+            background: #1a1e2c;
+        }
+        .market-rank {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            width: 18px;
+            text-align: center;
+        }
+        .market-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #1e2333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .market-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .market-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .market-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .market-sub {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+        .market-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .market-floor {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .market-vol {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        /* Subscription Screen (Screen 3) */
+        .perks-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .perk-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .perk-row:last-child {
+            margin-bottom: 0;
+        }
+        .perk-icon {
+            font-size: 18px;
+            line-height: 1.2;
+        }
+        .perk-text {
+            font-size: 12.5px;
+            color: var(--text-sub);
+            line-height: 1.4;
+        }
+        .perk-text b {
+            color: #fff;
+        }
+
+        .tariff-info-banner {
+            background: #101626;
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: #e0e7ff;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+        .tariff-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tariff-card:active {
+            transform: scale(0.98);
+            border-color: var(--primary);
+        }
+        .tariff-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .tariff-sub {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-top: 3px;
+        }
+        .tariff-price {
+            text-align: right;
+        }
+        .tariff-main-p {
+            font-size: 17px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .tariff-alt-p {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        /* Modal: Filter Creation & Collection Selector */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+            padding: 0;
+        }
+        .modal-overlay.open {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-sheet {
+            background: #121520;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal-header {
+            padding: 16px 20px 10px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        .modal-drag-bar {
+            width: 36px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 0 auto 12px;
+        }
+        .modal-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .modal-sub {
+            font-size: 11.5px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+        .btn-modal-close {
+            position: absolute;
+            right: 16px;
+            top: 18px;
+            background: #1e2333;
+            border: none;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 14px 16px 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Search input */
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .search-input {
+            width: 100%;
+            background: #191c2b;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 11px 14px 11px 38px;
+            color: #fff;
+            font-size: 13.5px;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            color: var(--text-sub);
+        }
+
+        /* 3-Column Gift Grid */
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .gift-grid-card {
+            background: #171b28;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+        .gift-grid-card:active {
+            transform: scale(0.96);
+            border-color: var(--primary);
+            background: #1f2538;
+        }
+        .gift-grid-card.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 14px rgba(99, 102, 241, 0.3);
+        }
+        .gift-thumb-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
+        }
+        .gift-thumb-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .gift-card-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            padding: 0 4px;
+        }
+        .gift-card-floor {
+            font-size: 10.5px;
+            color: var(--text-sub);
+            margin-top: 3px;
+        }
+
+        /* Filter Settings Form */
+        .filter-form-box {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .form-section {
+            background: #161927;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px;
+        }
+        .form-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .form-section-val {
+            color: var(--accent-green);
+            font-weight: 800;
+        }
+
+        /* Sliders */
+        .range-slider-wrapper {
+            margin: 10px 0 6px;
+        }
+        input[type=range] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #252b3d;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Discount buttons */
+        .discount-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .disc-btn {
+            background: #1f2538;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-sub);
+            padding: 8px 4px;
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+        }
+        .disc-btn.active {
+            background: var(--accent-green);
+            color: #000;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Toggle Switches */
         .switch-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-
         .switch-row:last-child {
             border-bottom: none;
-            padding-bottom: 0;
         }
-
-        .switch-label {
-            font-size: 14px;
+        .switch-title {
+            font-size: 13px;
             font-weight: 600;
+            color: #fff;
         }
-
         .switch-sub {
             font-size: 11px;
-            color: var(--text-secondary);
+            color: var(--text-sub);
             margin-top: 2px;
         }
-
-        .toggle {
+        .toggle-switch {
             position: relative;
             display: inline-block;
             width: 44px;
             height: 24px;
-            flex-shrink: 0;
         }
-
-        .toggle input {
+        .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-
         .toggle-slider {
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #1e2823;
-            transition: .25s;
+            background-color: #2b3248;
+            transition: .2s;
             border-radius: 24px;
         }
-
         .toggle-slider:before {
             position: absolute;
             content: "";
@@ -239,884 +853,777 @@
             left: 3px;
             bottom: 3px;
             background-color: white;
-            transition: .25s;
+            transition: .2s;
             border-radius: 50%;
         }
-
         input:checked + .toggle-slider {
-            background-color: var(--accent);
+            background-color: var(--accent-green);
         }
-
         input:checked + .toggle-slider:before {
             transform: translateX(20px);
-            background-color: #0c100e;
         }
 
-        /* Bottom Fixed Bar */
-        .footer {
+        /* Toast notification */
+        .toast-notify {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(12, 16, 14, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border);
-            padding: 12px 16px;
-            z-index: 100;
-        }
-
-        /* Bottom Sheet Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(6px);
-            z-index: 200;
-            display: none;
-            align-items: flex-end;
-            justify-content: center;
-        }
-
-        .modal-sheet {
-            background: #111714;
-            border-top: 1px solid var(--border);
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            width: 100%;
-            max-width: 500px;
-            height: 85vh;
-            display: flex;
-            flex-direction: column;
-            padding: 14px 14px 14px 14px;
-            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.8);
-            animation: slideUp 0.25s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding: 0 4px;
-        }
-
-        .modal-header h2 {
-            font-size: 17px;
-            font-weight: 700;
-        }
-
-        .close-btn {
-            background: #1b2420;
-            border: none;
-            color: var(--text-secondary);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .search-container {
-            position: relative;
-            margin-bottom: 10px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: #161e1a;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 10px 14px 10px 36px;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e2438;
+            border: 1px solid var(--primary);
             color: #fff;
+            padding: 12px 20px;
+            border-radius: 30px;
             font-size: 13px;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: var(--accent);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        /* MRKT Table Header with Sort */
-        .mrkt-table-header {
-            display: grid;
-            grid-template-columns: 24px 1fr 85px 85px;
-            align-items: center;
-            padding: 8px 6px;
-            font-size: 12px;
             font-weight: 600;
-            color: var(--text-secondary);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            gap: 8px;
-        }
-
-        .sort-btn {
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            user-select: none;
-            transition: color 0.15s;
-        }
-
-        .sort-btn:hover, .sort-btn.active {
-            color: var(--accent);
-        }
-
-        .list-container {
-            overflow-y: auto;
-            flex: 1;
-            margin-bottom: 10px;
-            padding-right: 2px;
-        }
-
-        /* MRKT Grid Row with Mini Thumbnail */
-        .mrkt-grid-row {
-            display: grid;
-            grid-template-columns: 24px 1fr 85px 85px;
-            align-items: center;
-            padding: 9px 6px;
-            gap: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            cursor: pointer;
-        }
-
-        .mrkt-grid-row:active {
-            background: var(--surface-hover);
-        }
-
-        .col-main {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
             display: flex;
             align-items: center;
             gap: 8px;
-            min-width: 0;
+            z-index: 2000;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
         }
-
-        .mini-thumb {
-            width: 28px;
-            height: 28px;
-            border-radius: 7px;
-            background: #19221d;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-
-        .col-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #ffffff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .col-floor {
-            font-size: 12px;
-            font-weight: 600;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 2px;
-        }
-
-        .col-vol {
-            font-size: 12px;
-            font-weight: 600;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            justify-content: flex-end;
-        }
-
-        .diamond-icon {
-            font-size: 10px;
-            color: var(--accent);
-        }
-
-        .backdrop-circle {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.1);
-            flex-shrink: 0;
-        }
-
-        .checkbox-custom {
-            width: 18px;
-            height: 18px;
-            border: 2px solid #36483f;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .checkbox-custom.checked {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .checkbox-custom.checked::after {
-            content: "✔";
-            color: #0c100e;
-            font-size: 10px;
-            font-weight: 800;
-        }
-
-        /* Action Buttons Row */
-        .modal-action-row {
-            display: flex;
-            gap: 10px;
-            margin-top: 4px;
-        }
-
-        .btn-reset {
-            background: #1b2420;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 10px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-reset:active {
-            background: #23302a;
-            color: #fff;
-        }
-
-        .btn-compact {
-            flex: 1;
-            background: var(--accent);
-            color: #0c100e;
-            border: none;
-            border-radius: var(--radius-md);
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 3px 12px var(--accent-glow);
-            transition: transform 0.1s;
-        }
-
-        .btn-compact:active {
-            transform: scale(0.98);
+        .toast-notify.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="title-group">
-            <h1>MRKT SNIPER</h1>
-            <span class="version-badge">EMERALD</span>
-        </div>
-    </div>
-
-    <!-- MRKT Menu Filters Row -->
-    <div class="chips-scroll">
-        <div class="chip-tab" id="open-collections-btn">
-            <span>📦 Коллекция</span>
-            <span id="selected-cols-count" style="color: var(--accent); font-weight: 700;">Все</span>
-        </div>
-        <div class="chip-tab" id="open-backdrops-btn">
-            <span>🎨 Фон</span>
-            <span id="selected-backs-count" style="color: var(--accent); font-weight: 700;">Все</span>
-        </div>
-    </div>
-
-    <!-- Price Range Sliders (Цена от и до) -->
-    <div class="card">
-        <div class="card-title">
-            <span>Диапазон цены</span>
-            <span class="card-value" id="price-range-val">от 5 до 100 TON</span>
-        </div>
-        <div style="margin-bottom: 14px;">
-            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
-                <span style="color: var(--text-secondary);">Цена от (минимум):</span>
-                <span style="color: var(--accent); font-weight: 700;" id="min-val-label">5 TON</span>
-            </div>
-            <div class="slider-container">
-                <input type="range" min="0" max="500" value="5" step="1" class="slider" id="min-price-slider">
-            </div>
-        </div>
+    <!-- Top Brand Header -->
+    <div class="brand-header">
+        <div class="brand-icon">🔔</div>
         <div>
-            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
-                <span style="color: var(--text-secondary);">Цена до (максимум):</span>
-                <span style="color: var(--accent); font-weight: 700;" id="max-val-label">100 TON</span>
-            </div>
-            <div class="slider-container">
-                <input type="range" min="1" max="500" value="100" step="1" class="slider" id="max-price-slider">
-            </div>
+            <div class="brand-title">Loot Radar</div>
+            <div class="brand-sub">Мгновенные уведомления о NFT-подарках • MRKT</div>
         </div>
     </div>
 
-    <!-- Discount from Floor -->
-    <div class="card">
-        <div class="card-title">
-            <span>Скидка от Floor</span>
-            <span class="card-value" id="discount-val">Любая (0%)</span>
-        </div>
-        <div class="pill-grid">
-            <div class="pill-btn active" data-discount="0">Все</div>
-            <div class="pill-btn" data-discount="10">-10%</div>
-            <div class="pill-btn" data-discount="15">-15%</div>
-            <div class="pill-btn" data-discount="20">-20%</div>
-        </div>
-    </div>
-
-    <!-- Rare Traits & Modules -->
-    <div class="card">
-        <div class="card-title">
-            <span>Редкие Трейты</span>
-        </div>
-        
-        <div class="switch-row">
+    <!-- Status Banner -->
+    <div class="status-card">
+        <div class="status-left">
+            <div class="pulse-dot" id="status-pulse"></div>
             <div>
-                <div class="switch-label">Редкие и красивые ID</div>
-                <div class="switch-sub">Стрики (#777, #12223), года, палиндромы</div>
+                <div class="status-title" id="status-text">Снайпер активен</div>
+                <div class="status-date" id="status-sub">MRKT Live Radar • Быстрый перехват</div>
             </div>
-            <label class="toggle">
-                <input type="checkbox" id="rare-id-toggle" checked>
-                <span class="toggle-slider"></span>
-            </label>
+        </div>
+        <button class="btn-pause" id="btn-toggle-pause">
+            <span id="pause-icon">🔕</span> <span id="pause-label">Пауза</span>
+        </button>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="nav-tab-btn active" id="tab-filters-btn" onclick="switchMainTab('filters')">
+            🎯 Фильтры
+        </button>
+        <button class="nav-tab-btn" id="tab-market-btn" onclick="switchMainTab('market')">
+            📊 Рынок
+        </button>
+        <button class="nav-tab-btn" id="tab-sub-btn" onclick="switchMainTab('sub')">
+            💎 Подписка
+        </button>
+    </div>
+
+    <!-- ==================== TAB 1: ФИЛЬТРЫ ==================== -->
+    <div id="screen-filters">
+        <!-- Sub-pills -->
+        <div class="sub-pills">
+            <button class="sub-pill-btn active" id="subpill-listings">
+                🟢 Листинги · <span id="listings-count-badge">0</span>
+            </button>
+            <button class="sub-pill-btn" id="subpill-sales" onclick="showToast('История продаж синхронизирована с MRKT')">
+                💸 Продажи · 0
+            </button>
         </div>
 
-        <div class="switch-row">
-            <div>
-                <div class="switch-label">Full-Match & Монохром</div>
-                <div class="switch-sub">Цвет в цвет (красный/красный) и Black/White</div>
-            </div>
-            <label class="toggle">
-                <input type="checkbox" id="mono-toggle" checked>
-                <span class="toggle-slider"></span>
-            </label>
+        <div class="section-label" id="filters-header-label">
+            ФИЛЬТРЫ ЛИСТИНГОВ: <span id="filters-active-count">0</span> · ЛИМИТ 300
         </div>
 
-        <div class="switch-row">
-            <div>
-                <div class="switch-label">Статус снайпера</div>
-                <div class="switch-sub">Мгновенный мониторинг в реальном времени</div>
+        <!-- Filters List (Empty State or Items) -->
+        <div class="filters-container" id="filters-list-container">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Action Buttons -->
+        <button class="btn-main-action" id="btn-open-create-filter">
+            + Новый фильтр
+        </button>
+        <button class="btn-secondary-action" id="btn-toggle-budget">
+            ⚡ Готовые фильтры под бюджет
+        </button>
+
+        <!-- Budget Presets Card -->
+        <div class="budget-presets-card" id="budget-presets-box">
+            <div class="budget-desc">
+                Сколько TON готов отдать за один подарок? Добавлю фильтры на самые ходовые коллекции под твой бюджет: редкие модели и чёрные фоны. Потом их можно поправить или выключить.
             </div>
-            <label class="toggle">
-                <input type="checkbox" id="active-toggle" checked>
-                <span class="toggle-slider"></span>
-            </label>
+            <div class="budget-pills">
+                <div class="budget-pill" onclick="applyBudgetPreset(50)">до 50 TON</div>
+                <div class="budget-pill" onclick="applyBudgetPreset(250)">до 250</div>
+                <div class="budget-pill" onclick="applyBudgetPreset(650)">до 650</div>
+                <div class="budget-pill" onclick="applyBudgetPreset(9999)">650+</div>
+            </div>
         </div>
     </div>
 
-    <!-- Save Button -->
-    <div class="footer">
-        <button class="btn-compact" id="save-btn" style="width: 100%;">Сохранить настройки</button>
+    <!-- ==================== TAB 2: РЫНОК ==================== -->
+    <div id="screen-market" style="display: none;">
+        <!-- Sub-pills under Market -->
+        <div class="sub-pills">
+            <button class="sub-pill-btn active" id="market-sort-vol" onclick="sortMarketBy('vol')">
+                🔥 Оборот 24ч ↓
+            </button>
+            <button class="sub-pill-btn" id="market-sort-sales" onclick="sortMarketBy('sales')">
+                🛒 Продажи 24ч
+            </button>
+            <button class="sub-pill-btn" id="market-sort-floor" onclick="sortMarketBy('floor')">
+                💰 Флор
+            </button>
+        </div>
+
+        <div class="section-label">КОЛЛЕКЦИИ (MRKT)</div>
+
+        <div class="market-list" id="market-rows-container">
+            <!-- 135 Collections rendered by JS -->
+        </div>
     </div>
 
-    <!-- Collections Modal -->
-    <div class="modal-overlay" id="collections-modal">
+    <!-- ==================== TAB 3: ПОДПИСКА ==================== -->
+    <div id="screen-sub" style="display: none;">
+        <div class="section-label">ЧТО ДАЁТ ПОДПИСКА</div>
+        <div class="perks-card">
+            <div class="perk-row">
+                <div class="perk-icon">⚡️</div>
+                <div class="perk-text"><b>Узнаёшь первым</b> — уведомление через секунды после листинга на MRKT</div>
+            </div>
+            <div class="perk-row">
+                <div class="perk-icon">🔥</div>
+                <div class="perk-text"><b>Видишь скидку к флору</b> — бот сам сравнивает цену с рынком</div>
+            </div>
+            <div class="perk-row">
+                <div class="perk-icon">📊</div>
+                <div class="perk-text"><b>Флоры, продажи, изменение цены</b> — прямо в уведомлении</div>
+            </div>
+            <div class="perk-row">
+                <div class="perk-icon">🎯</div>
+                <div class="perk-text"><b>Точные фильтры:</b> модель, фон, узор, номер, цена, «ниже флора на N%», красивые номера</div>
+            </div>
+            <div class="perk-row">
+                <div class="perk-icon">🛒</div>
+                <div class="perk-text"><b>MRKT снайпер</b> — прямой переход к выкупу лота в 1 клик</div>
+            </div>
+        </div>
+
+        <div class="section-label">ТАРИФЫ</div>
+        <div class="tariff-info-banner">
+            👇 <b>Нажми на тариф</b> — откроется выбор способа оплаты:<br>
+            💎 криптовалютой · ⭐️ звёздами Telegram · 💳 банковской картой / СБП
+        </div>
+
+        <div class="tariff-card" onclick="selectTariff('1 месяц', 17)">
+            <div>
+                <div class="tariff-title">1 месяц</div>
+                <div class="tariff-sub">≈0.57 $ в день</div>
+            </div>
+            <div class="tariff-price">
+                <div class="tariff-main-p">17 $</div>
+                <div class="tariff-alt-p">или 1 350 ⭐️ · 1 490 ₽</div>
+            </div>
+        </div>
+
+        <div class="tariff-card" onclick="selectTariff('3 месяца', 41)">
+            <div>
+                <div class="tariff-title">3 месяца <span style="color: var(--accent-green); font-size: 11px;">(-20%)</span></div>
+                <div class="tariff-sub">≈0.45 $ в день</div>
+            </div>
+            <div class="tariff-price">
+                <div class="tariff-main-p">41 $</div>
+                <div class="tariff-alt-p">или 3 200 ⭐️ · 3 590 ₽</div>
+            </div>
+        </div>
+
+        <div class="tariff-card" onclick="selectTariff('VIP Навсегда', 99)">
+            <div>
+                <div class="tariff-title">VIP Навсегда</div>
+                <div class="tariff-sub">Все функции без ограничений</div>
+            </div>
+            <div class="tariff-price">
+                <div class="tariff-main-p">99 $</div>
+                <div class="tariff-alt-p">или 7 800 ⭐️ · 8 990 ₽</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: ВЫБЕРИ ПОДАРОК & ФИЛЬТР ==================== -->
+    <div class="modal-overlay" id="filter-modal">
         <div class="modal-sheet">
             <div class="modal-header">
-                <h2>Коллекция</h2>
-                <button class="close-btn" id="close-cols">&times;</button>
+                <div class="modal-drag-bar"></div>
+                <div class="modal-title" id="modal-screen-title">Выбери подарок</div>
+                <div class="modal-sub" id="modal-screen-sub">Под каждым подарком — текущий флор на MRKT</div>
+                <button class="btn-modal-close" onclick="closeFilterModal()">✕</button>
             </div>
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="search-cols" placeholder="Поиск коллекции...">
-            </div>
+            
+            <div class="modal-body" id="modal-scroll-area">
+                <!-- STEP 1: Select Gift / Collection -->
+                <div id="modal-step-collections">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="gift-search-input" placeholder="Поиск подарка...">
+                    </div>
+                    <div class="gift-grid" id="gifts-grid-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
 
-            <!-- Table Header -->
-            <div class="mrkt-table-header">
-                <div class="checkbox-custom" id="select-all-cols-btn" title="Выбрать все"></div>
-                <span style="cursor: pointer;" id="label-select-all">Выбрать все</span>
-                <span class="sort-btn" id="sort-floor">Флор <span id="sort-floor-arrow">⇅</span></span>
-                <span class="sort-btn" id="sort-vol" style="justify-content: flex-end;">Оборот <span id="sort-vol-arrow">⇅</span></span>
-            </div>
+                <!-- STEP 2: Configure Price & Traits -->
+                <div id="modal-step-params" style="display: none;">
+                    <div class="filter-form-box">
+                        <!-- Target Collection Banner -->
+                        <div style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <div style="font-size: 11px; color: var(--text-sub);">Выбранная коллекция:</div>
+                                <div style="font-size: 14px; font-weight: 800; color: #fff;" id="form-col-name">Любой подарок</div>
+                            </div>
+                            <button onclick="backToStepCollections()" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;">Изменить</button>
+                        </div>
 
-            <!-- List rows with mini-thumbnails -->
-            <div class="list-container" id="cols-list"></div>
+                        <!-- Price Sliders -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <span>Диапазон цены покупки</span>
+                                <span class="form-section-val" id="form-price-display">от 0 до 500 TON</span>
+                            </div>
+                            <div class="range-slider-wrapper">
+                                <input type="range" id="modal-min-p" min="0" max="500" step="1" value="0">
+                            </div>
+                            <div class="range-slider-wrapper">
+                                <input type="range" id="modal-max-p" min="1" max="1000" step="5" value="500">
+                            </div>
+                        </div>
 
-            <div class="modal-action-row">
-                <button class="btn-reset" id="reset-cols">Сбросить</button>
-                <button class="btn-compact" id="apply-cols">Показать результаты</button>
+                        <!-- Discount -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <span>Минимальная скидка от Floor</span>
+                                <span class="form-section-val" id="form-disc-display">Все лоты</span>
+                            </div>
+                            <div class="discount-grid">
+                                <div class="disc-btn active" onclick="setFormDiscount(0)">Все</div>
+                                <div class="disc-btn" onclick="setFormDiscount(10)">-10%</div>
+                                <div class="disc-btn" onclick="setFormDiscount(15)">-15%</div>
+                                <div class="disc-btn" onclick="setFormDiscount(20)">-20%</div>
+                                <div class="disc-btn" onclick="setFormDiscount(30)">-30%</div>
+                            </div>
+                        </div>
+
+                        <!-- Traits -->
+                        <div class="form-section">
+                            <div class="switch-row">
+                                <div>
+                                    <div class="switch-title">Редкие и красивые ID</div>
+                                    <div class="switch-sub">Low-ID (#1..#999), репдигиты (777), палиндромы</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="modal-rare-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="switch-row">
+                                <div>
+                                    <div class="switch-title">Full-Match & Монохром</div>
+                                    <div class="switch-sub">Цвет в цвет (красный/красный), Black/White</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="modal-mono-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="btn-main-action" onclick="saveNewFilterFromForm()" style="margin-top: 6px;">
+                            💾 Сохранить фильтр
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Backdrops Modal -->
-    <div class="modal-overlay" id="backdrops-modal">
-        <div class="modal-sheet">
-            <div class="modal-header">
-                <h2>Фон</h2>
-                <button class="close-btn" id="close-backs">&times;</button>
-            </div>
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="search-backs" placeholder="Поиск фона...">
-            </div>
-            <div class="list-container" id="backs-list"></div>
-            <div class="modal-action-row">
-                <button class="btn-reset" id="reset-backs">Сбросить</button>
-                <button class="btn-compact" id="apply-backs">Показать результаты</button>
-            </div>
-        </div>
+    <!-- Toast Notification -->
+    <div class="toast-notify" id="toast-bar">
+        <span id="toast-icon">✅</span>
+        <span id="toast-text">Настройки сохранены</span>
     </div>
 
     <script>
         const tg = window.Telegram?.WebApp;
         if (tg) {
-            tg.expand();
             tg.ready();
-        }
-
-        const ALL_COLLECTIONS = [{"name": "Resistance Dog", "title": "Resistance Dog", "floor": 548.15, "vol": 58980.1, "thumb": "gifts/collections/526573697374616e636520446f67-thumb.webp"}, {"name": "Myth Mask", "title": "Myth Mask", "floor": 11.58, "vol": 29140.5, "thumb": "gifts/collections/4d797468204d61736b-thumb.webp"}, {"name": "Astral Shard", "title": "Astral Shard", "floor": 130.05, "vol": 5550.7, "thumb": "gifts/collections/41737472616c205368617264-thumb.webp"}, {"name": "B-Day Candle", "title": "B-Day Candle", "floor": 5.02, "vol": 1181.4, "thumb": "gifts/collections/422d4461792043616e646c65-thumb.webp"}, {"name": "Berry Box", "title": "Berry Box", "floor": 10.13, "vol": 3053.8, "thumb": "gifts/collections/426572727920426f78-thumb.webp"}, {"name": "Big Year", "title": "Big Year", "floor": 4.42, "vol": 1288.2, "thumb": "gifts/collections/4269672059656172-thumb.webp"}, {"name": "Bonded Ring", "title": "Bonded Ring", "floor": 44.88, "vol": 4792.6, "thumb": "gifts/collections/426f6e6465642052696e67-thumb.webp"}, {"name": "Bow Tie", "title": "Bow Tie", "floor": 6.17, "vol": 1219.4, "thumb": "gifts/collections/426f7720546965-thumb.webp"}, {"name": "Bunny Muffin", "title": "Bunny Muffin", "floor": 8.86, "vol": 1276.9, "thumb": "gifts/collections/42756e6e79204d756666696e-thumb.webp"}, {"name": "Candy Cane", "title": "Candy Cane", "floor": 4.45, "vol": 1951.2, "thumb": "gifts/collections/43616e64792043616e65-thumb.webp"}, {"name": "Cookie Heart", "title": "Cookie Heart", "floor": 5.57, "vol": 1107.5, "thumb": "gifts/collections/436f6f6b6965204865617274-thumb.webp"}, {"name": "Crystal Ball", "title": "Crystal Ball", "floor": 14.15, "vol": 2241.5, "thumb": "gifts/collections/4372797374616c2042616c6c-thumb.webp"}, {"name": "Desk Calendar", "title": "Desk Calendar", "floor": 6.31, "vol": 2791.2, "thumb": "gifts/collections/4465736b2043616c656e646172-thumb.webp"}, {"name": "Diamond Ring", "title": "Diamond Ring", "floor": 37.74, "vol": 4809.1, "thumb": "gifts/collections/4469616d6f6e642052696e67-thumb.webp"}, {"name": "Durov’s Cap", "title": "Durov’s Cap", "floor": 436.12, "vol": 6316.4, "thumb": "gifts/collections/4475726f76e280997320436170-thumb.webp"}, {"name": "Easter Egg", "title": "Easter Egg", "floor": 4.82, "vol": 2013.5, "thumb": "gifts/collections/45617374657220456767-thumb.webp"}, {"name": "Electric Skull", "title": "Electric Skull", "floor": 30.54, "vol": 3900.7, "thumb": "gifts/collections/456c65637472696320536b756c6c-thumb.webp"}, {"name": "Eternal Candle", "title": "Eternal Candle", "floor": 6.85, "vol": 1615.9, "thumb": "gifts/collections/457465726e616c2043616e646c65-thumb.webp"}, {"name": "Eternal Rose", "title": "Eternal Rose", "floor": 28.22, "vol": 5140.7, "thumb": "gifts/collections/457465726e616c20526f7365-thumb.webp"}, {"name": "Evil Eye", "title": "Evil Eye", "floor": 8.5, "vol": 1724.9, "thumb": "gifts/collections/4576696c20457965-thumb.webp"}, {"name": "Flying Broom", "title": "Flying Broom", "floor": 13.24, "vol": 2670.0, "thumb": "gifts/collections/466c79696e672042726f6f6d-thumb.webp"}, {"name": "Gem Signet", "title": "Gem Signet", "floor": 66.3, "vol": 3704.7, "thumb": "gifts/collections/47656d205369676e6574-thumb.webp"}, {"name": "Genie Lamp", "title": "Genie Lamp", "floor": 39.76, "vol": 2922.0, "thumb": "gifts/collections/47656e6965204c616d70-thumb.webp"}, {"name": "Ginger Cookie", "title": "Ginger Cookie", "floor": 5.54, "vol": 1558.8, "thumb": "gifts/collections/47696e67657220436f6f6b6965-thumb.webp"}, {"name": "Hanging Star", "title": "Hanging Star", "floor": 10.42, "vol": 2058.0, "thumb": "gifts/collections/48616e67696e672053746172-thumb.webp"}, {"name": "Heart Locket", "title": "Heart Locket", "floor": 1449.99, "vol": 2690.5, "thumb": "gifts/collections/4865617274204c6f636b6574-thumb.webp"}, {"name": "Heroic Helmet", "title": "Heroic Helmet", "floor": 185.54, "vol": 7016.3, "thumb": "gifts/collections/4865726f69632048656c6d6574-thumb.webp"}, {"name": "Hex Pot", "title": "Hex Pot", "floor": 5.51, "vol": 897.1, "thumb": "gifts/collections/48657820506f74-thumb.webp"}, {"name": "Holiday Drink", "title": "Holiday Drink", "floor": 5.33, "vol": 1079.4, "thumb": "gifts/collections/486f6c69646179204472696e6b-thumb.webp"}, {"name": "Homemade Cake", "title": "Homemade Cake", "floor": 5.76, "vol": 1050.0, "thumb": "gifts/collections/486f6d656d6164652043616b65-thumb.webp"}, {"name": "Hypno Lollipop", "title": "Hypno Lollipop", "floor": 4.79, "vol": 811.3, "thumb": "gifts/collections/4879706e6f204c6f6c6c69706f70-thumb.webp"}, {"name": "Ion Gem", "title": "Ion Gem", "floor": 74.35, "vol": 4921.0, "thumb": "gifts/collections/496f6e2047656d-thumb.webp"}, {"name": "Jack-in-the-Box", "title": "Jack-in-the-Box", "floor": 5.24, "vol": 663.8, "thumb": "gifts/collections/4a61636b2d696e2d7468652d426f78-thumb.webp"}, {"name": "Jelly Bunny", "title": "Jelly Bunny", "floor": 9.68, "vol": 2737.8, "thumb": "gifts/collections/4a656c6c792042756e6e79-thumb.webp"}, {"name": "Jester Hat", "title": "Jester Hat", "floor": 4.62, "vol": 1606.3, "thumb": "gifts/collections/4a657374657220486174-thumb.webp"}, {"name": "Jingle Bells", "title": "Jingle Bells", "floor": 10.4, "vol": 1844.9, "thumb": "gifts/collections/4a696e676c652042656c6c73-thumb.webp"}, {"name": "Kissed Frog", "title": "Kissed Frog", "floor": 50.97, "vol": 5122.0, "thumb": "gifts/collections/4b69737365642046726f67-thumb.webp"}, {"name": "Light Sword", "title": "Light Sword", "floor": 6.58, "vol": 2220.6, "thumb": "gifts/collections/4c696768742053776f7264-thumb.webp"}, {"name": "Lol Pop", "title": "Lol Pop", "floor": 4.43, "vol": 2908.8, "thumb": "gifts/collections/4c6f6c20506f70-thumb.webp"}, {"name": "Loot Bag", "title": "Loot Bag", "floor": 138.66, "vol": 7011.3, "thumb": "gifts/collections/4c6f6f7420426167-thumb.webp"}, {"name": "Love Candle", "title": "Love Candle", "floor": 12.57, "vol": 1773.9, "thumb": "gifts/collections/4c6f76652043616e646c65-thumb.webp"}, {"name": "Love Potion", "title": "Love Potion", "floor": 16.6, "vol": 3058.1, "thumb": "gifts/collections/4c6f766520506f74696f6e-thumb.webp"}, {"name": "Lunar Snake", "title": "Lunar Snake", "floor": 4.39, "vol": 3617.2, "thumb": "gifts/collections/4c756e617220536e616b65-thumb.webp"}, {"name": "Lush Bouquet", "title": "Lush Bouquet", "floor": 6.31, "vol": 1168.1, "thumb": "gifts/collections/4c75736820426f7571756574-thumb.webp"}, {"name": "Mad Pumpkin", "title": "Mad Pumpkin", "floor": 14.07, "vol": 2013.3, "thumb": "gifts/collections/4d61642050756d706b696e-thumb.webp"}, {"name": "Magic Potion", "title": "Magic Potion", "floor": 63.24, "vol": 2975.3, "thumb": "gifts/collections/4d6167696320506f74696f6e-thumb.webp"}, {"name": "Mini Oscar", "title": "Mini Oscar", "floor": 72.87, "vol": 3324.0, "thumb": "gifts/collections/4d696e69204f73636172-thumb.webp"}, {"name": "Nail Bracelet", "title": "Nail Bracelet", "floor": 130.55, "vol": 4180.0, "thumb": "gifts/collections/4e61696c2042726163656c6574-thumb.webp"}, {"name": "Neko Helmet", "title": "Neko Helmet", "floor": 41.47, "vol": 4193.5, "thumb": "gifts/collections/4e656b6f2048656c6d6574-thumb.webp"}, {"name": "Party Sparkler", "title": "Party Sparkler", "floor": 5.51, "vol": 1219.7, "thumb": "gifts/collections/506172747920537061726b6c6572-thumb.webp"}, {"name": "Perfume Bottle", "title": "Perfume Bottle", "floor": 84.64, "vol": 6491.0, "thumb": "gifts/collections/50657266756d6520426f74746c65-thumb.webp"}, {"name": "Pet Snake", "title": "Pet Snake", "floor": 4.69, "vol": 1445.2, "thumb": "gifts/collections/50657420536e616b65-thumb.webp"}, {"name": "Plush Pepe", "title": "Plush Pepe", "floor": 7701.0, "vol": 0.0, "thumb": "gifts/collections/506c7573682050657065-thumb.webp"}, {"name": "Precious Peach", "title": "Precious Peach", "floor": 280.79, "vol": 9858.6, "thumb": "gifts/collections/50726563696f7573205065616368-thumb.webp"}, {"name": "Record Player", "title": "Record Player", "floor": 14.67, "vol": 1685.8, "thumb": "gifts/collections/5265636f726420506c61796572-thumb.webp"}, {"name": "Restless Jar", "title": "Restless Jar", "floor": 5.52, "vol": 1313.2, "thumb": "gifts/collections/526573746c657373204a6172-thumb.webp"}, {"name": "Sakura Flower", "title": "Sakura Flower", "floor": 12.03, "vol": 2957.9, "thumb": "gifts/collections/53616b75726120466c6f776572-thumb.webp"}, {"name": "Santa Hat", "title": "Santa Hat", "floor": 8.37, "vol": 1951.7, "thumb": "gifts/collections/53616e746120486174-thumb.webp"}, {"name": "Scared Cat", "title": "Scared Cat", "floor": 301.21, "vol": 23879.1, "thumb": "gifts/collections/53636172656420436174-thumb.webp"}, {"name": "Sharp Tongue", "title": "Sharp Tongue", "floor": 53.96, "vol": 6070.2, "thumb": "gifts/collections/536861727020546f6e677565-thumb.webp"}, {"name": "Signet Ring", "title": "Signet Ring", "floor": 36.58, "vol": 4174.0, "thumb": "gifts/collections/5369676e65742052696e67-thumb.webp"}, {"name": "Skull Flower", "title": "Skull Flower", "floor": 12.68, "vol": 1691.5, "thumb": "gifts/collections/536b756c6c20466c6f776572-thumb.webp"}, {"name": "Sleigh Bell", "title": "Sleigh Bell", "floor": 10.89, "vol": 1460.5, "thumb": "gifts/collections/536c656967682042656c6c-thumb.webp"}, {"name": "Snake Box", "title": "Snake Box", "floor": 4.4, "vol": 1704.4, "thumb": "gifts/collections/536e616b6520426f78-thumb.webp"}, {"name": "Snow Globe", "title": "Snow Globe", "floor": 8.03, "vol": 1011.4, "thumb": "gifts/collections/536e6f7720476c6f6265-thumb.webp"}, {"name": "Snow Mittens", "title": "Snow Mittens", "floor": 9.18, "vol": 1918.8, "thumb": "gifts/collections/536e6f77204d697474656e73-thumb.webp"}, {"name": "Spiced Wine", "title": "Spiced Wine", "floor": 5.23, "vol": 1094.8, "thumb": "gifts/collections/5370696365642057696e65-thumb.webp"}, {"name": "Spy Agaric", "title": "Spy Agaric", "floor": 7.02, "vol": 1315.5, "thumb": "gifts/collections/53707920416761726963-thumb.webp"}, {"name": "Star Notepad", "title": "Star Notepad", "floor": 5.19, "vol": 1316.3, "thumb": "gifts/collections/53746172204e6f7465706164-thumb.webp"}, {"name": "Swiss Watch", "title": "Swiss Watch", "floor": 62.73, "vol": 10484.1, "thumb": "gifts/collections/5377697373205761746368-thumb.webp"}, {"name": "Tama Gadget", "title": "Tama Gadget", "floor": 4.53, "vol": 1430.9, "thumb": "gifts/collections/54616d6120476164676574-thumb.webp"}, {"name": "Top Hat", "title": "Top Hat", "floor": 10.67, "vol": 2569.4, "thumb": "gifts/collections/546f7020486174-thumb.webp"}, {"name": "Toy Bear", "title": "Toy Bear", "floor": 36.87, "vol": 5798.9, "thumb": "gifts/collections/546f792042656172-thumb.webp"}, {"name": "Trapped Heart", "title": "Trapped Heart", "floor": 19.88, "vol": 3848.9, "thumb": "gifts/collections/54726170706564204865617274-thumb.webp"}, {"name": "Vintage Cigar", "title": "Vintage Cigar", "floor": 43.44, "vol": 7486.8, "thumb": "gifts/collections/56696e74616765204369676172-thumb.webp"}, {"name": "Voodoo Doll", "title": "Voodoo Doll", "floor": 40.21, "vol": 2387.7, "thumb": "gifts/collections/566f6f646f6f20446f6c6c-thumb.webp"}, {"name": "Winter Wreath", "title": "Winter Wreath", "floor": 5.75, "vol": 1161.7, "thumb": "gifts/collections/57696e74657220577265617468-thumb.webp"}, {"name": "Witch Hat", "title": "Witch Hat", "floor": 7.04, "vol": 1670.0, "thumb": "gifts/collections/576974636820486174-thumb.webp"}, {"name": "Xmas Stocking", "title": "Xmas Stocking", "floor": 4.44, "vol": 1976.3, "thumb": "gifts/collections/586d61732053746f636b696e67-thumb.webp"}, {"name": "Cupid Charm", "title": "Cupid Charm", "floor": 27.03, "vol": 4514.5, "thumb": "gifts/collections/437570696420436861726d-thumb.webp"}, {"name": "Whip Cupcake", "title": "Whip Cupcake", "floor": 4.4, "vol": 2847.7, "thumb": "gifts/collections/576869702043757063616b65-thumb.webp"}, {"name": "Valentine Box", "title": "Valentine Box", "floor": 13.67, "vol": 1786.0, "thumb": "gifts/collections/56616c656e74696e6520426f78-thumb.webp"}, {"name": "Joyful Bundle", "title": "Joyful Bundle", "floor": 8.99, "vol": 1335.9, "thumb": "gifts/collections/4a6f7966756c2042756e646c65-thumb.webp"}, {"name": "Low Rider", "title": "Low Rider", "floor": 73.22, "vol": 6199.2, "thumb": "gifts/collections/4c6f77205269646572-thumb.webp"}, {"name": "Westside Sign", "title": "Westside Sign", "floor": 127.93, "vol": 4331.4, "thumb": "gifts/collections/5765737473696465205369676e-thumb.webp"}, {"name": "Snoop Cigar", "title": "Snoop Cigar", "floor": 17.39, "vol": 6990.1, "thumb": "gifts/collections/536e6f6f70204369676172-thumb.webp"}, {"name": "Swag Bag", "title": "Swag Bag", "floor": 6.05, "vol": 3243.3, "thumb": "gifts/collections/5377616720426167-thumb.webp"}, {"name": "Snoop Dogg", "title": "Snoop Dogg", "floor": 6.07, "vol": 4993.0, "thumb": "gifts/collections/536e6f6f7020446f6767-thumb.webp"}, {"name": "Ionic Dryer", "title": "Ionic Dryer", "floor": 17.89, "vol": 2574.4, "thumb": "gifts/collections/496f6e6963204472796572-thumb.webp"}, {"name": "Jolly Chimp", "title": "Jolly Chimp", "floor": 8.59, "vol": 3523.2, "thumb": "gifts/collections/4a6f6c6c79204368696d70-thumb.webp"}, {"name": "Moon Pendant", "title": "Moon Pendant", "floor": 7.07, "vol": 825.3, "thumb": "gifts/collections/4d6f6f6e2050656e64616e74-thumb.webp"}, {"name": "Stellar Rocket", "title": "Stellar Rocket", "floor": 5.53, "vol": 1858.6, "thumb": "gifts/collections/5374656c6c617220526f636b6574-thumb.webp"}, {"name": "Artisan Brick", "title": "Artisan Brick", "floor": 76.5, "vol": 3608.7, "thumb": "gifts/collections/4172746973616e20427269636b-thumb.webp"}, {"name": "Input Key", "title": "Input Key", "floor": 6.75, "vol": 3189.9, "thumb": "gifts/collections/496e707574204b6579-thumb.webp"}, {"name": "Mighty Arm", "title": "Mighty Arm", "floor": 124.39, "vol": 6824.6, "thumb": "gifts/collections/4d69676874792041726d-thumb.webp"}, {"name": "Fresh Socks", "title": "Fresh Socks", "floor": 5.3, "vol": 2523.2, "thumb": "gifts/collections/467265736820536f636b73-thumb.webp"}, {"name": "Clover Pin", "title": "Clover Pin", "floor": 5.61, "vol": 1760.3, "thumb": "gifts/collections/436c6f7665722050696e-thumb.webp"}, {"name": "Sky Stilettos", "title": "Sky Stilettos", "floor": 22.67, "vol": 4545.6, "thumb": "gifts/collections/536b79205374696c6574746f73-thumb.webp"}, {"name": "Faith Amulet", "title": "Faith Amulet", "floor": 6.17, "vol": 1182.5, "thumb": "gifts/collections/466169746820416d756c6574-thumb.webp"}, {"name": "Happy Brownie", "title": "Happy Brownie", "floor": 4.87, "vol": 2196.0, "thumb": "gifts/collections/48617070792042726f776e6965-thumb.webp"}, {"name": "Ice Cream", "title": "Ice Cream", "floor": 4.4, "vol": 3440.7, "thumb": "gifts/collections/49636520437265616d-thumb.webp"}, {"name": "Instant Ramen", "title": "Instant Ramen", "floor": 4.41, "vol": 5633.0, "thumb": "gifts/collections/496e7374616e742052616d656e-thumb.webp"}, {"name": "Mousse Cake", "title": "Mousse Cake", "floor": 5.3, "vol": 1326.7, "thumb": "gifts/collections/4d6f757373652043616b65-thumb.webp"}, {"name": "Spring Basket", "title": "Spring Basket", "floor": 6.1, "vol": 1929.8, "thumb": "gifts/collections/537072696e67204261736b6574-thumb.webp"}, {"name": "6001229799790478558", "title": "Durov’s Boots", "floor": 153.3, "vol": 146.0, "thumb": "gifts/collections/36303031323239373939373930343738353538.webp"}, {"name": "6001425315291727333", "title": "Durov’s Coat", "floor": 173.25, "vol": 0.0, "thumb": "gifts/collections/36303031343235333135323931373237333333.webp"}, {"name": "6003477390536213997", "title": "Durov’s Figurine", "floor": 2709.0, "vol": 0.0, "thumb": "gifts/collections/36303033343737333930353336323133393937.webp"}, {"name": "5775955135867913556", "title": "Gravestone", "floor": 88.94, "vol": 253.9, "thumb": "gifts/collections/35373735393535313335383637393133353536.webp"}, {"name": "5776227780391864916", "title": "Coffin", "floor": 38.63, "vol": 288.4, "thumb": "gifts/collections/35373736323237373830333931383634393136.webp"}, {"name": "5775966332847654507", "title": "Mask", "floor": 22.89, "vol": 1448.4, "thumb": "gifts/collections/35373735393636333332383437363534353037.webp"}, {"name": "Bling Binky", "title": "Bling Binky", "floor": 28.24, "vol": 2527.2, "thumb": "gifts/collections/426c696e672042696e6b79-thumb.webp"}, {"name": "Money Pot", "title": "Money Pot", "floor": 5.3, "vol": 1155.6, "thumb": "gifts/collections/4d6f6e657920506f74-thumb.webp"}, {"name": "Pretty Posy", "title": "Pretty Posy", "floor": 5.66, "vol": 1133.5, "thumb": "gifts/collections/50726574747920506f7379-thumb.webp"}, {"name": "5818708013426410448", "title": "Airplane", "floor": 8400.0, "vol": 0.0, "thumb": "gifts/collections/35383138373038303133343236343130343438.webp"}, {"name": "5839094187366024301", "title": "Khabib's Papakha", "floor": 136.5, "vol": 0.0, "thumb": "gifts/collections/35383339303934313837333636303234333031.webp"}, {"name": "Khabib’s Papakha", "title": "Khabib’s Papakha", "floor": 28.78, "vol": 3777.8, "thumb": "gifts/collections/4b6861626962e280997320506170616b6861-thumb.webp"}, {"name": "5882260270843168924", "title": "UFC box", "floor": 108.14, "vol": 0.0, "thumb": "gifts/collections/35383832323630323730383433313638393234.webp"}, {"name": "UFC Strike", "title": "UFC Strike", "floor": 18.26, "vol": 4692.8, "thumb": "gifts/collections/55464320537472696b65-thumb.webp"}, {"name": "5922558454332916696", "title": "Christmas Tree", "floor": 0.0, "vol": 0.0, "thumb": "gifts/collections/35393232353538343534333332393136363936.webp"}, {"name": "5956308547863052791", "title": "Trojan Horse", "floor": 146.99, "vol": 1677.5, "thumb": "gifts/collections/35393536333038353437383633303532373931.webp"}, {"name": "Victory Medal", "title": "Victory Medal", "floor": 5.28, "vol": 1940.6, "thumb": "gifts/collections/566963746f7279204d6564616c-thumb.webp"}, {"name": "Rare Bird", "title": "Rare Bird", "floor": 31.42, "vol": 4630.7, "thumb": "gifts/collections/526172652042697264-thumb.webp"}, {"name": "Mood Pack", "title": "Mood Pack", "floor": 4.9, "vol": 3343.8, "thumb": "gifts/collections/4d6f6f64205061636b-thumb.webp"}, {"name": "Pool Float", "title": "Pool Float", "floor": 4.42, "vol": 2797.8, "thumb": "gifts/collections/506f6f6c20466c6f6174-thumb.webp"}, {"name": "Timeless Book", "title": "Timeless Book", "floor": 5.29, "vol": 1533.1, "thumb": "gifts/collections/54696d656c65737320426f6f6b-thumb.webp"}, {"name": "Chill Flame", "title": "Chill Flame", "floor": 4.41, "vol": 8383.3, "thumb": "gifts/collections/4368696c6c20466c616d65-thumb.webp"}, {"name": "Vice Cream", "title": "Vice Cream", "floor": 4.41, "vol": 6205.5, "thumb": "gifts/collections/5669636520437265616d-thumb.webp"}, {"name": "Surge Board", "title": "Surge Board", "floor": 7.34, "vol": 2693.9, "thumb": "gifts/collections/537572676520426f617264-thumb.webp"}, {"name": "Liberty Figure", "title": "Liberty Figure", "floor": 5.73, "vol": 5315.4, "thumb": "gifts/collections/4c69626572747920466967757265-thumb.webp"}, {"name": "Durov’s Glasses", "title": "Durov’s Glasses", "floor": 139.73, "vol": 6228.9, "thumb": "gifts/collections/4475726f76e280997320476c6173736573-thumb.webp"}, {"name": "Fine Pen", "title": "Fine Pen", "floor": 8.5, "vol": 2799.8, "thumb": "gifts/collections/46696e652050656e-thumb.webp"}, {"name": "Algorithm Cup", "title": "Algorithm Cup", "floor": 1122.0, "vol": 0.0, "thumb": "gifts/collections/416c676f726974686d20437570-thumb.webp"}, {"name": "Intelligence Cup", "title": "Intelligence Cup", "floor": 1424.94, "vol": 0.0, "thumb": "gifts/collections/496e74656c6c6967656e636520437570-thumb.webp"}, {"name": "Mirage Lamp", "title": "Mirage Lamp", "floor": 4.63, "vol": 3173.4, "thumb": "gifts/collections/4d6972616765204c616d70-thumb.webp"}, {"name": "Lucky Locket", "title": "Lucky Locket", "floor": 15.29, "vol": 7467.3, "thumb": "gifts/collections/4c75636b79204c6f636b6574-thumb.webp"}];
-        const ALL_BACKDROPS = [{"name": "Amber", "color": "#dab345"}, {"name": "Aquamarine", "color": "#60b195"}, {"name": "Azure Blue", "color": "#5db1cb"}, {"name": "Battleship Grey", "color": "#8c8c85"}, {"name": "Black", "color": "#363738"}, {"name": "Burgundy", "color": "#a35e66"}, {"name": "Burnt Sienna", "color": "#d66f3c"}, {"name": "Camo Green", "color": "#75944d"}, {"name": "Cappuccino", "color": "#b1907e"}, {"name": "Caramel", "color": "#d09932"}, {"name": "Carmine", "color": "#e0574a"}, {"name": "Carrot Juice", "color": "#db9867"}, {"name": "Celtic Blue", "color": "#45b8ed"}, {"name": "Chestnut", "color": "#be6f54"}, {"name": "Chocolate", "color": "#a46e58"}, {"name": "Cobalt Blue", "color": "#6088cf"}, {"name": "Copper", "color": "#d08656"}, {"name": "Coral Red", "color": "#da896b"}, {"name": "Cyberpunk", "color": "#858ff3"}, {"name": "Dark Green", "color": "#516341"}, {"name": "Dark Lilac", "color": "#b17da5"}, {"name": "Deep Cyan", "color": "#31b5aa"}, {"name": "Desert Sand", "color": "#b39f82"}, {"name": "Electric Indigo", "color": "#a980f3"}, {"name": "Electric Purple", "color": "#ca70c6"}, {"name": "Emerald", "color": "#78c585"}, {"name": "English Violet", "color": "#b186bb"}, {"name": "Fandango", "color": "#e28ab6"}, {"name": "Feldgrau", "color": "#899288"}, {"name": "Fire Engine", "color": "#f05f4f"}, {"name": "French Blue", "color": "#5c9bc4"}, {"name": "French Violet", "color": "#c260e6"}, {"name": "Grape", "color": "#9d74c1"}, {"name": "Gunmetal", "color": "#4c5d63"}, {"name": "Gunship Green", "color": "#558a65"}, {"name": "Hunter Green", "color": "#8fae78"}, {"name": "Indigo Dye", "color": "#537991"}, {"name": "Ivory White", "color": "#bab6b1"}, {"name": "Jade Green", "color": "#55c49c"}, {"name": "Khaki Green", "color": "#adb070"}, {"name": "Lavender", "color": "#b789e4"}, {"name": "Lemongrass", "color": "#aeb85a"}, {"name": "Light Olive", "color": "#c2af64"}, {"name": "Malachite", "color": "#95b457"}, {"name": "Marine Blue", "color": "#4e689c"}, {"name": "Mexican Pink", "color": "#e36692"}, {"name": "Midnight Blue", "color": "#5c6985"}, {"name": "Mint Green", "color": "#7ecb82"}, {"name": "Moonstone", "color": "#7eb1b4"}, {"name": "Mustard", "color": "#d4980d"}, {"name": "Mystic Pearl", "color": "#d08b6d"}, {"name": "Navy Blue", "color": "#6c9edd"}, {"name": "Neon Blue", "color": "#7596f9"}, {"name": "Old Gold", "color": "#b58d38"}, {"name": "Onyx Black", "color": "#4d5254"}, {"name": "Orange", "color": "#d19a3a"}, {"name": "Pacific Cyan", "color": "#5abea6"}, {"name": "Pacific Green", "color": "#6fc793"}, {"name": "Persimmon", "color": "#e7a75a"}, {"name": "Pine Green", "color": "#6ba97c"}, {"name": "Pistachio", "color": "#97b07c"}, {"name": "Platinum", "color": "#b2aea7"}, {"name": "Pure Gold", "color": "#ccab41"}, {"name": "Purple", "color": "#ae6cae"}, {"name": "Ranger Green", "color": "#5f7849"}, {"name": "Raspberry", "color": "#e07b85"}, {"name": "Rifle Green", "color": "#64695c"}, {"name": "Roman Silver", "color": "#a3a8b5"}, {"name": "Rosewood", "color": "#b77a77"}, {"name": "Sapphire", "color": "#58a3c8"}, {"name": "Satin Gold", "color": "#bf9b47"}, {"name": "Seal Brown", "color": "#664d45"}, {"name": "Shamrock Green", "color": "#8ab163"}, {"name": "Silver Blue", "color": "#80a4b8"}, {"name": "Sky Blue", "color": "#58b4c8"}, {"name": "Steel Grey", "color": "#97a2ac"}, {"name": "Strawberry", "color": "#dd8e6f"}, {"name": "Tactical Pine", "color": "#44826b"}, {"name": "Tomato", "color": "#e6793e"}, {"name": "Turquoise", "color": "#5ec0b8"}];
-
-        let selectedCollections = new Set();
-        let selectedBackdrops = new Set();
-        let currentDiscount = 0;
-
-        let sortField = 'vol';
-        let sortDirection = 'desc';
-
-        const minPriceSlider = document.getElementById('min-price-slider');
-        const maxPriceSlider = document.getElementById('max-price-slider');
-        const minValLabel = document.getElementById('min-val-label');
-        const maxValLabel = document.getElementById('max-val-label');
-        const priceRangeVal = document.getElementById('price-range-val');
-        const discountVal = document.getElementById('discount-val');
-        const rareIdToggle = document.getElementById('rare-id-toggle');
-        const monoToggle = document.getElementById('mono-toggle');
-        const activeToggle = document.getElementById('active-toggle');
-
-        function updateSelectedCounts() {
-            const colsCountEl = document.getElementById('selected-cols-count');
-            if (colsCountEl) {
-                colsCountEl.textContent = selectedCollections.size === 0 ? 'Все' : selectedCollections.size + ' шт';
-            }
-            const backsCountEl = document.getElementById('selected-backs-count');
-            if (backsCountEl) {
-                backsCountEl.textContent = selectedBackdrops.size === 0 ? 'Все' : selectedBackdrops.size + ' шт';
-            }
-        }
-
-        function updatePriceRangeUI() {
-            let minP = parseFloat(minPriceSlider.value) || 0;
-            let maxP = parseFloat(maxPriceSlider.value) || 100;
-            if (minP > maxP) {
-                maxP = minP;
-                maxPriceSlider.value = maxP;
-            }
-            minValLabel.textContent = minP + ' TON';
-            maxValLabel.textContent = maxP + ' TON';
-            priceRangeVal.textContent = 'от ' + minP + ' до ' + maxP + ' TON';
-        }
-
-        function applyStateToUI(data) {
-            if (!data) return;
-            if (data.min_price !== undefined) {
-                minPriceSlider.value = data.min_price;
-            }
-            if (data.max_price !== undefined) {
-                maxPriceSlider.value = data.max_price;
-            }
-            updatePriceRangeUI();
-
-            if (data.min_discount !== undefined) {
-                currentDiscount = data.min_discount;
-                document.querySelectorAll('.pill-btn').forEach(b => {
-                    if (parseFloat(b.dataset.discount) === currentDiscount) {
-                        b.classList.add('active');
-                    } else {
-                        b.classList.remove('active');
-                    }
-                });
-                discountVal.textContent = currentDiscount === 0 ? 'Любая (0%)' : '-' + currentDiscount + '%';
-            }
-            if (data.check_rare_id !== undefined) rareIdToggle.checked = data.check_rare_id;
-            if (data.check_monochrome !== undefined) monoToggle.checked = data.check_monochrome;
-            if (data.is_active !== undefined) activeToggle.checked = data.is_active;
-
-            if (Array.isArray(data.selected_collections)) {
-                selectedCollections = new Set(data.selected_collections);
-                updateSelectedCounts();
-            }
-            if (Array.isArray(data.selected_backdrops)) {
-                selectedBackdrops = new Set(data.selected_backdrops);
-                updateSelectedCounts();
-            }
-        }
-
-        // LOAD FROM BOTH TELEGRAM CLOUD STORAGE & LOCALSTORAGE & URL PARAMS
-        function loadSavedState() {
-            // 1. Try URL parameters first if launched with deep link or from bot
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('min_p') || urlParams.has('max_p')) {
-                if (urlParams.has('min_p')) minPriceSlider.value = parseFloat(urlParams.get('min_p')) || 0;
-                if (urlParams.has('max_p')) maxPriceSlider.value = parseFloat(urlParams.get('max_p')) || 100;
-                if (urlParams.has('cols')) {
-                    const rawCols = urlParams.get('cols');
-                    if (rawCols && rawCols !== 'all') {
-                        const cList = rawCols.split(',').map(s => decodeURIComponent(s.trim())).filter(Boolean);
-                        selectedCollections = new Set(cList);
-                    } else {
-                        selectedCollections.clear();
-                    }
-                }
-                updatePriceRangeUI();
-                updateSelectedCounts();
-                return;
-            }
-
-            // 2. Try local storage (v3 key)
+            tg.expand();
             try {
-                const localData = localStorage.getItem('mrkt_filters_emerald_v3');
-                if (localData) {
-                    applyStateToUI(JSON.parse(localData));
-                    return;
-                }
-            } catch (e) {
-                console.error("Local storage read error", e);
-            }
-
-            // 3. Try Telegram CloudStorage if available (v3 key)
-            if (tg?.CloudStorage) {
-                tg.CloudStorage.getItem('mrkt_filters_emerald_v3', (err, result) => {
-                    if (!err && result) {
-                        try {
-                            const cloudData = JSON.parse(result);
-                            applyStateToUI(cloudData);
-                        } catch (e) {}
-                    }
-                });
-            }
+                tg.setHeaderColor('#0b0c10');
+                tg.setBackgroundColor('#0b0c10');
+            } catch (e) {}
         }
 
-        function saveStateLocally() {
-            let minP = parseFloat(minPriceSlider.value) || 0;
-            let maxP = parseFloat(maxPriceSlider.value) || 500;
-            if (minP > maxP) maxP = minP;
+        function haptic(type = 'medium') {
+            try {
+                if (tg && tg.HapticFeedback) {
+                    if (type === 'selection') tg.HapticFeedback.selectionChanged();
+                    else tg.HapticFeedback.impactOccurred(type);
+                }
+            } catch (e) {}
+        }
+
+        function showToast(msg, icon = '✅') {
+            const toast = document.getElementById('toast-bar');
+            document.getElementById('toast-icon').innerText = icon;
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        // ================== DATA STORE ==================
+        const ALL_COLLECTIONS = [{"name": "Resistance Dog", "title": "Resistance Dog", "floor": 548.15, "vol": 58980.1, "thumb": "gifts/collections/526573697374616e636520446f67-thumb.webp"}, {"name": "Myth Mask", "title": "Myth Mask", "floor": 11.58, "vol": 29140.5, "thumb": "gifts/collections/4d797468204d61736b-thumb.webp"}, {"name": "Astral Shard", "title": "Astral Shard", "floor": 130.05, "vol": 5550.7, "thumb": "gifts/collections/41737472616c205368617264-thumb.webp"}, {"name": "B-Day Candle", "title": "B-Day Candle", "floor": 5.02, "vol": 1181.4, "thumb": "gifts/collections/422d4461792043616e646c65-thumb.webp"}, {"name": "Berry Box", "title": "Berry Box", "floor": 10.13, "vol": 3053.8, "thumb": "gifts/collections/426572727920426f78-thumb.webp"}, {"name": "Big Year", "title": "Big Year", "floor": 4.42, "vol": 1288.2, "thumb": "gifts/collections/4269672059656172-thumb.webp"}, {"name": "Bonded Ring", "title": "Bonded Ring", "floor": 44.88, "vol": 4792.6, "thumb": "gifts/collections/426f6e6465642052696e67-thumb.webp"}, {"name": "Bow Tie", "title": "Bow Tie", "floor": 6.17, "vol": 1219.4, "thumb": "gifts/collections/426f7720546965-thumb.webp"}, {"name": "Bunny Muffin", "title": "Bunny Muffin", "floor": 8.86, "vol": 1276.9, "thumb": "gifts/collections/42756e6e79204d756666696e-thumb.webp"}, {"name": "Candy Cane", "title": "Candy Cane", "floor": 4.45, "vol": 1951.2, "thumb": "gifts/collections/43616e64792043616e65-thumb.webp"}, {"name": "Cookie Heart", "title": "Cookie Heart", "floor": 5.57, "vol": 1107.5, "thumb": "gifts/collections/436f6f6b6965204865617274-thumb.webp"}, {"name": "Crystal Ball", "title": "Crystal Ball", "floor": 14.15, "vol": 2241.5, "thumb": "gifts/collections/4372797374616c2042616c6c-thumb.webp"}, {"name": "Desk Calendar", "title": "Desk Calendar", "floor": 6.31, "vol": 2791.2, "thumb": "gifts/collections/4465736b2043616c656e646172-thumb.webp"}, {"name": "Diamond Ring", "title": "Diamond Ring", "floor": 37.74, "vol": 4809.1, "thumb": "gifts/collections/4469616d6f6e642052696e67-thumb.webp"}, {"name": "Durov’s Cap", "title": "Durov’s Cap", "floor": 436.12, "vol": 6316.4, "thumb": "gifts/collections/4475726f76e280997320436170-thumb.webp"}, {"name": "Easter Egg", "title": "Easter Egg", "floor": 4.82, "vol": 2013.5, "thumb": "gifts/collections/45617374657220456767-thumb.webp"}, {"name": "Electric Skull", "title": "Electric Skull", "floor": 30.54, "vol": 3900.7, "thumb": "gifts/collections/456c65637472696320536b756c6c-thumb.webp"}, {"name": "Eternal Candle", "title": "Eternal Candle", "floor": 6.85, "vol": 1615.9, "thumb": "gifts/collections/457465726e616c2043616e646c65-thumb.webp"}, {"name": "Eternal Rose", "title": "Eternal Rose", "floor": 28.22, "vol": 5140.7, "thumb": "gifts/collections/457465726e616c20526f7365-thumb.webp"}, {"name": "Evil Eye", "title": "Evil Eye", "floor": 8.5, "vol": 1724.9, "thumb": "gifts/collections/4576696c20457965-thumb.webp"}, {"name": "Flying Broom", "title": "Flying Broom", "floor": 13.24, "vol": 2670.0, "thumb": "gifts/collections/466c79696e672042726f6f6d-thumb.webp"}, {"name": "Gem Signet", "title": "Gem Signet", "floor": 66.3, "vol": 3704.7, "thumb": "gifts/collections/47656d205369676e6574-thumb.webp"}, {"name": "Genie Lamp", "title": "Genie Lamp", "floor": 39.76, "vol": 2922.0, "thumb": "gifts/collections/47656e6965204c616d70-thumb.webp"}, {"name": "Ginger Cookie", "title": "Ginger Cookie", "floor": 5.54, "vol": 1558.8, "thumb": "gifts/collections/47696e67657220436f6f6b6965-thumb.webp"}, {"name": "Hanging Star", "title": "Hanging Star", "floor": 10.42, "vol": 2058.0, "thumb": "gifts/collections/48616e67696e672053746172-thumb.webp"}, {"name": "Heart Locket", "title": "Heart Locket", "floor": 1449.99, "vol": 2690.5, "thumb": "gifts/collections/4865617274204c6f636b6574-thumb.webp"}, {"name": "Heroic Helmet", "title": "Heroic Helmet", "floor": 185.54, "vol": 7016.3, "thumb": "gifts/collections/4865726f69632048656c6d6574-thumb.webp"}, {"name": "Hex Pot", "title": "Hex Pot", "floor": 5.51, "vol": 897.1, "thumb": "gifts/collections/48657820506f74-thumb.webp"}, {"name": "Holiday Drink", "title": "Holiday Drink", "floor": 5.33, "vol": 1079.4, "thumb": "gifts/collections/486f6c69646179204472696e6b-thumb.webp"}, {"name": "Homemade Cake", "title": "Homemade Cake", "floor": 5.76, "vol": 1050.0, "thumb": "gifts/collections/486f6d656d6164652043616b65-thumb.webp"}, {"name": "Hypno Lollipop", "title": "Hypno Lollipop", "floor": 4.79, "vol": 811.3, "thumb": "gifts/collections/4879706e6f204c6f6c6c69706f70-thumb.webp"}, {"name": "Ion Gem", "title": "Ion Gem", "floor": 74.35, "vol": 4921.0, "thumb": "gifts/collections/496f6e2047656d-thumb.webp"}, {"name": "Jack-in-the-Box", "title": "Jack-in-the-Box", "floor": 5.24, "vol": 663.8, "thumb": "gifts/collections/4a61636b2d696e2d7468652d426f78-thumb.webp"}, {"name": "Jelly Bunny", "title": "Jelly Bunny", "floor": 9.68, "vol": 2737.8, "thumb": "gifts/collections/4a656c6c792042756e6e79-thumb.webp"}, {"name": "Jester Hat", "title": "Jester Hat", "floor": 4.62, "vol": 1606.3, "thumb": "gifts/collections/4a657374657220486174-thumb.webp"}, {"name": "Jingle Bells", "title": "Jingle Bells", "floor": 10.4, "vol": 1844.9, "thumb": "gifts/collections/4a696e676c652042656c6c73-thumb.webp"}, {"name": "Kissed Frog", "title": "Kissed Frog", "floor": 50.97, "vol": 5122.0, "thumb": "gifts/collections/4b69737365642046726f67-thumb.webp"}, {"name": "Light Sword", "title": "Light Sword", "floor": 6.58, "vol": 2220.6, "thumb": "gifts/collections/4c696768742053776f7264-thumb.webp"}, {"name": "Lol Pop", "title": "Lol Pop", "floor": 4.43, "vol": 2908.8, "thumb": "gifts/collections/4c6f6c20506f70-thumb.webp"}, {"name": "Loot Bag", "title": "Loot Bag", "floor": 138.66, "vol": 7011.3, "thumb": "gifts/collections/4c6f6f7420426167-thumb.webp"}, {"name": "Love Candle", "title": "Love Candle", "floor": 12.57, "vol": 1773.9, "thumb": "gifts/collections/4c6f76652043616e646c65-thumb.webp"}, {"name": "Love Potion", "title": "Love Potion", "floor": 16.6, "vol": 3058.1, "thumb": "gifts/collections/4c6f766520506f74696f6e-thumb.webp"}, {"name": "Lunar Snake", "title": "Lunar Snake", "floor": 4.39, "vol": 3617.2, "thumb": "gifts/collections/4c756e617220536e616b65-thumb.webp"}, {"name": "Lush Bouquet", "title": "Lush Bouquet", "floor": 6.31, "vol": 1168.1, "thumb": "gifts/collections/4c75736820426f7571756574-thumb.webp"}, {"name": "Mad Pumpkin", "title": "Mad Pumpkin", "floor": 14.07, "vol": 2013.3, "thumb": "gifts/collections/4d61642050756d706b696e-thumb.webp"}, {"name": "Magic Potion", "title": "Magic Potion", "floor": 63.24, "vol": 2975.3, "thumb": "gifts/collections/4d6167696320506f74696f6e-thumb.webp"}, {"name": "Mini Oscar", "title": "Mini Oscar", "floor": 72.87, "vol": 3324.0, "thumb": "gifts/collections/4d696e69204f73636172-thumb.webp"}, {"name": "Nail Bracelet", "title": "Nail Bracelet", "floor": 130.55, "vol": 4180.0, "thumb": "gifts/collections/4e61696c2042726163656c6574-thumb.webp"}, {"name": "Neko Helmet", "title": "Neko Helmet", "floor": 41.47, "vol": 4193.5, "thumb": "gifts/collections/4e656b6f2048656c6d6574-thumb.webp"}, {"name": "Party Sparkler", "title": "Party Sparkler", "floor": 5.51, "vol": 1219.7, "thumb": "gifts/collections/506172747920537061726b6c6572-thumb.webp"}, {"name": "Perfume Bottle", "title": "Perfume Bottle", "floor": 84.64, "vol": 6491.0, "thumb": "gifts/collections/50657266756d6520426f74746c65-thumb.webp"}, {"name": "Pet Snake", "title": "Pet Snake", "floor": 4.69, "vol": 1445.2, "thumb": "gifts/collections/50657420536e616b65-thumb.webp"}, {"name": "Plush Pepe", "title": "Plush Pepe", "floor": 7701.0, "vol": 0.0, "thumb": "gifts/collections/506c7573682050657065-thumb.webp"}, {"name": "Precious Peach", "title": "Precious Peach", "floor": 280.79, "vol": 9858.6, "thumb": "gifts/collections/50726563696f7573205065616368-thumb.webp"}, {"name": "Record Player", "title": "Record Player", "floor": 14.67, "vol": 1685.8, "thumb": "gifts/collections/5265636f726420506c61796572-thumb.webp"}, {"name": "Restless Jar", "title": "Restless Jar", "floor": 5.52, "vol": 1313.2, "thumb": "gifts/collections/526573746c657373204a6172-thumb.webp"}, {"name": "Sakura Flower", "title": "Sakura Flower", "floor": 12.03, "vol": 2957.9, "thumb": "gifts/collections/53616b75726120466c6f776572-thumb.webp"}, {"name": "Santa Hat", "title": "Santa Hat", "floor": 8.37, "vol": 1951.7, "thumb": "gifts/collections/53616e746120486174-thumb.webp"}, {"name": "Scared Cat", "title": "Scared Cat", "floor": 301.21, "vol": 23879.1, "thumb": "gifts/collections/53636172656420436174-thumb.webp"}, {"name": "Sharp Tongue", "title": "Sharp Tongue", "floor": 53.96, "vol": 6070.2, "thumb": "gifts/collections/536861727020546f6e677565-thumb.webp"}, {"name": "Signet Ring", "title": "Signet Ring", "floor": 36.58, "vol": 4174.0, "thumb": "gifts/collections/5369676e65742052696e67-thumb.webp"}, {"name": "Skull Flower", "title": "Skull Flower", "floor": 12.68, "vol": 1691.5, "thumb": "gifts/collections/536b756c6c20466c6f776572-thumb.webp"}, {"name": "Sleigh Bell", "title": "Sleigh Bell", "floor": 10.89, "vol": 1460.5, "thumb": "gifts/collections/536c656967682042656c6c-thumb.webp"}, {"name": "Snake Box", "title": "Snake Box", "floor": 4.4, "vol": 1704.4, "thumb": "gifts/collections/536e616b6520426f78-thumb.webp"}, {"name": "Snow Globe", "title": "Snow Globe", "floor": 8.03, "vol": 1011.4, "thumb": "gifts/collections/536e6f7720476c6f6265-thumb.webp"}, {"name": "Snow Mittens", "title": "Snow Mittens", "floor": 9.18, "vol": 1918.8, "thumb": "gifts/collections/536e6f77204d697474656e73-thumb.webp"}, {"name": "Spiced Wine", "title": "Spiced Wine", "floor": 5.23, "vol": 1094.8, "thumb": "gifts/collections/5370696365642057696e65-thumb.webp"}, {"name": "Spy Agaric", "title": "Spy Agaric", "floor": 7.02, "vol": 1315.5, "thumb": "gifts/collections/53707920416761726963-thumb.webp"}, {"name": "Star Notepad", "title": "Star Notepad", "floor": 5.19, "vol": 1316.3, "thumb": "gifts/collections/53746172204e6f7465706164-thumb.webp"}, {"name": "Swiss Watch", "title": "Swiss Watch", "floor": 62.73, "vol": 10484.1, "thumb": "gifts/collections/5377697373205761746368-thumb.webp"}, {"name": "Tama Gadget", "title": "Tama Gadget", "floor": 4.53, "vol": 1430.9, "thumb": "gifts/collections/54616d6120476164676574-thumb.webp"}, {"name": "Top Hat", "title": "Top Hat", "floor": 10.67, "vol": 2569.4, "thumb": "gifts/collections/546f7020486174-thumb.webp"}, {"name": "Toy Bear", "title": "Toy Bear", "floor": 36.87, "vol": 5798.9, "thumb": "gifts/collections/546f792042656172-thumb.webp"}, {"name": "Trapped Heart", "title": "Trapped Heart", "floor": 19.88, "vol": 3848.9, "thumb": "gifts/collections/54726170706564204865617274-thumb.webp"}, {"name": "Vintage Cigar", "title": "Vintage Cigar", "floor": 43.44, "vol": 7486.8, "thumb": "gifts/collections/56696e74616765204369676172-thumb.webp"}, {"name": "Voodoo Doll", "title": "Voodoo Doll", "floor": 40.21, "vol": 2387.7, "thumb": "gifts/collections/566f6f646f6f20446f6c6c-thumb.webp"}, {"name": "Winter Wreath", "title": "Winter Wreath", "floor": 5.75, "vol": 1161.7, "thumb": "gifts/collections/57696e74657220577265617468-thumb.webp"}, {"name": "Witch Hat", "title": "Witch Hat", "floor": 7.04, "vol": 1670.0, "thumb": "gifts/collections/576974636820486174-thumb.webp"}, {"name": "Xmas Stocking", "title": "Xmas Stocking", "floor": 4.44, "vol": 1976.3, "thumb": "gifts/collections/586d61732053746f636b696e67-thumb.webp"}, {"name": "Cupid Charm", "title": "Cupid Charm", "floor": 27.03, "vol": 4514.5, "thumb": "gifts/collections/437570696420436861726d-thumb.webp"}, {"name": "Whip Cupcake", "title": "Whip Cupcake", "floor": 4.4, "vol": 2847.7, "thumb": "gifts/collections/576869702043757063616b65-thumb.webp"}, {"name": "Valentine Box", "title": "Valentine Box", "floor": 13.67, "vol": 1786.0, "thumb": "gifts/collections/56616c656e74696e6520426f78-thumb.webp"}, {"name": "Joyful Bundle", "title": "Joyful Bundle", "floor": 8.99, "vol": 1335.9, "thumb": "gifts/collections/4a6f7966756c2042756e646c65-thumb.webp"}, {"name": "Low Rider", "title": "Low Rider", "floor": 73.22, "vol": 6199.2, "thumb": "gifts/collections/4c6f77205269646572-thumb.webp"}, {"name": "Westside Sign", "title": "Westside Sign", "floor": 127.93, "vol": 4331.4, "thumb": "gifts/collections/5765737473696465205369676e-thumb.webp"}, {"name": "Snoop Cigar", "title": "Snoop Cigar", "floor": 17.39, "vol": 6990.1, "thumb": "gifts/collections/536e6f6f70204369676172-thumb.webp"}, {"name": "Swag Bag", "title": "Swag Bag", "floor": 6.05, "vol": 3243.3, "thumb": "gifts/collections/5377616720426167-thumb.webp"}, {"name": "Snoop Dogg", "title": "Snoop Dogg", "floor": 6.07, "vol": 4993.0, "thumb": "gifts/collections/536e6f6f7020446f6767-thumb.webp"}, {"name": "Ionic Dryer", "title": "Ionic Dryer", "floor": 17.89, "vol": 2574.4, "thumb": "gifts/collections/496f6e6963204472796572-thumb.webp"}, {"name": "Jolly Chimp", "title": "Jolly Chimp", "floor": 8.59, "vol": 3523.2, "thumb": "gifts/collections/4a6f6c6c79204368696d70-thumb.webp"}, {"name": "Moon Pendant", "title": "Moon Pendant", "floor": 7.07, "vol": 825.3, "thumb": "gifts/collections/4d6f6f6e2050656e64616e74-thumb.webp"}, {"name": "Stellar Rocket", "title": "Stellar Rocket", "floor": 5.53, "vol": 1858.6, "thumb": "gifts/collections/5374656c6c617220526f636b6574-thumb.webp"}, {"name": "Artisan Brick", "title": "Artisan Brick", "floor": 76.5, "vol": 3608.7, "thumb": "gifts/collections/4172746973616e20427269636b-thumb.webp"}, {"name": "Input Key", "title": "Input Key", "floor": 6.75, "vol": 3189.9, "thumb": "gifts/collections/496e707574204b6579-thumb.webp"}, {"name": "Mighty Arm", "title": "Mighty Arm", "floor": 124.39, "vol": 6824.6, "thumb": "gifts/collections/4d69676874792041726d-thumb.webp"}, {"name": "Fresh Socks", "title": "Fresh Socks", "floor": 5.3, "vol": 2523.2, "thumb": "gifts/collections/467265736820536f636b73-thumb.webp"}, {"name": "Clover Pin", "title": "Clover Pin", "floor": 5.61, "vol": 1760.3, "thumb": "gifts/collections/436c6f7665722050696e-thumb.webp"}, {"name": "Sky Stilettos", "title": "Sky Stilettos", "floor": 22.67, "vol": 4545.6, "thumb": "gifts/collections/536b79205374696c6574746f73-thumb.webp"}, {"name": "Faith Amulet", "title": "Faith Amulet", "floor": 6.17, "vol": 1182.5, "thumb": "gifts/collections/466169746820416d756c6574-thumb.webp"}, {"name": "Happy Brownie", "title": "Happy Brownie", "floor": 4.87, "vol": 2196.0, "thumb": "gifts/collections/48617070792042726f776e6965-thumb.webp"}, {"name": "Ice Cream", "title": "Ice Cream", "floor": 4.4, "vol": 3440.7, "thumb": "gifts/collections/49636520437265616d-thumb.webp"}, {"name": "Instant Ramen", "title": "Instant Ramen", "floor": 4.41, "vol": 5633.0, "thumb": "gifts/collections/496e7374616e742052616d656e-thumb.webp"}, {"name": "Mousse Cake", "title": "Mousse Cake", "floor": 5.3, "vol": 1326.7, "thumb": "gifts/collections/4d6f757373652043616b65-thumb.webp"}, {"name": "Spring Basket", "title": "Spring Basket", "floor": 6.1, "vol": 1929.8, "thumb": "gifts/collections/537072696e67204261736b6574-thumb.webp"}, {"name": "6001229799790478558", "title": "Durov’s Boots", "floor": 153.3, "vol": 146.0, "thumb": "gifts/collections/36303031323239373939373930343738353538.webp"}, {"name": "6001425315291727333", "title": "Durov’s Coat", "floor": 173.25, "vol": 0.0, "thumb": "gifts/collections/36303031343235333135323931373237333333.webp"}, {"name": "6003477390536213997", "title": "Durov’s Figurine", "floor": 2709.0, "vol": 0.0, "thumb": "gifts/collections/36303033343737333930353336323133393937.webp"}, {"name": "5775955135867913556", "title": "Gravestone", "floor": 88.94, "vol": 253.9, "thumb": "gifts/collections/35373735393535313335383637393133353536.webp"}, {"name": "5776227780391864916", "title": "Coffin", "floor": 38.63, "vol": 288.4, "thumb": "gifts/collections/35373736323237373830333931383634393136.webp"}, {"name": "5775966332847654507", "title": "Mask", "floor": 22.89, "vol": 1448.4, "thumb": "gifts/collections/35373735393636333332383437363534353037.webp"}, {"name": "Bling Binky", "title": "Bling Binky", "floor": 28.24, "vol": 2527.2, "thumb": "gifts/collections/426c696e672042696e6b79-thumb.webp"}, {"name": "Money Pot", "title": "Money Pot", "floor": 5.3, "vol": 1155.6, "thumb": "gifts/collections/4d6f6e657920506f74-thumb.webp"}, {"name": "Pretty Posy", "title": "Pretty Posy", "floor": 5.66, "vol": 1133.5, "thumb": "gifts/collections/50726574747920506f7379-thumb.webp"}, {"name": "5818708013426410448", "title": "Airplane", "floor": 8400.0, "vol": 0.0, "thumb": "gifts/collections/35383138373038303133343236343130343438.webp"}, {"name": "5839094187366024301", "title": "Khabib's Papakha", "floor": 136.5, "vol": 0.0, "thumb": "gifts/collections/35383339303934313837333636303234333031.webp"}, {"name": "Khabib’s Papakha", "title": "Khabib’s Papakha", "floor": 28.78, "vol": 3777.8, "thumb": "gifts/collections/4b6861626962e280997320506170616b6861-thumb.webp"}, {"name": "5882260270843168924", "title": "UFC box", "floor": 108.14, "vol": 0.0, "thumb": "gifts/collections/35383832323630323730383433313638393234.webp"}, {"name": "UFC Strike", "title": "UFC Strike", "floor": 18.26, "vol": 4692.8, "thumb": "gifts/collections/55464320537472696b65-thumb.webp"}, {"name": "5922558454332916696", "title": "Christmas Tree", "floor": 0.0, "vol": 0.0, "thumb": "gifts/collections/35393232353538343534333332393136363936.webp"}, {"name": "5956308547863052791", "title": "Trojan Horse", "floor": 146.99, "vol": 1677.5, "thumb": "gifts/collections/35393536333038353437383633303532373931.webp"}, {"name": "Victory Medal", "title": "Victory Medal", "floor": 5.28, "vol": 1940.6, "thumb": "gifts/collections/566963746f7279204d6564616c-thumb.webp"}, {"name": "Rare Bird", "title": "Rare Bird", "floor": 31.42, "vol": 4630.7, "thumb": "gifts/collections/526172652042697264-thumb.webp"}, {"name": "Mood Pack", "title": "Mood Pack", "floor": 4.9, "vol": 3343.8, "thumb": "gifts/collections/4d6f6f64205061636b-thumb.webp"}, {"name": "Pool Float", "title": "Pool Float", "floor": 4.42, "vol": 2797.8, "thumb": "gifts/collections/506f6f6c20466c6f6174-thumb.webp"}, {"name": "Timeless Book", "title": "Timeless Book", "floor": 5.29, "vol": 1533.1, "thumb": "gifts/collections/54696d656c65737320426f6f6b-thumb.webp"}, {"name": "Chill Flame", "title": "Chill Flame", "floor": 4.41, "vol": 8383.3, "thumb": "gifts/collections/4368696c6c20466c616d65-thumb.webp"}, {"name": "Vice Cream", "title": "Vice Cream", "floor": 4.41, "vol": 6205.5, "thumb": "gifts/collections/5669636520437265616d-thumb.webp"}, {"name": "Surge Board", "title": "Surge Board", "floor": 7.34, "vol": 2693.9, "thumb": "gifts/collections/537572676520426f617264-thumb.webp"}, {"name": "Liberty Figure", "title": "Liberty Figure", "floor": 5.73, "vol": 5315.4, "thumb": "gifts/collections/4c69626572747920466967757265-thumb.webp"}, {"name": "Durov’s Glasses", "title": "Durov’s Glasses", "floor": 139.73, "vol": 6228.9, "thumb": "gifts/collections/4475726f76e280997320476c6173736573-thumb.webp"}, {"name": "Fine Pen", "title": "Fine Pen", "floor": 8.5, "vol": 2799.8, "thumb": "gifts/collections/46696e652050656e-thumb.webp"}, {"name": "Algorithm Cup", "title": "Algorithm Cup", "floor": 1122.0, "vol": 0.0, "thumb": "gifts/collections/416c676f726974686d20437570-thumb.webp"}, {"name": "Intelligence Cup", "title": "Intelligence Cup", "floor": 1424.94, "vol": 0.0, "thumb": "gifts/collections/496e74656c6c6967656e636520437570-thumb.webp"}, {"name": "Mirage Lamp", "title": "Mirage Lamp", "floor": 4.63, "vol": 3173.4, "thumb": "gifts/collections/4d6972616765204c616d70-thumb.webp"}, {"name": "Lucky Locket", "title": "Lucky Locket", "floor": 15.29, "vol": 7467.3, "thumb": "gifts/collections/4c75636b79204c6f636b6574-thumb.webp"}];
+
+        let appState = {
+            isActive: true,
+            activeTab: 'filters',
+            marketSort: 'vol',
+            filters: []
+        };
+
+        const STORAGE_KEY = 'mrkt_gift_notice_v4';
+
+        function loadLocalState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed.filters && Array.isArray(parsed.filters)) appState.filters = parsed.filters;
+                    if (parsed.isActive !== undefined) appState.isActive = parsed.isActive;
+                }
+            } catch (e) {}
+
+            // Если фильтров нет — создаем один дефолтный на все коллекции
+            if (!appState.filters || appState.filters.length === 0) {
+                appState.filters = [
+                    {
+                        id: 'f_default',
+                        collection: 'all',
+                        collectionTitle: 'Любой подарок (все коллекции)',
+                        minPrice: 0,
+                        maxPrice: 500,
+                        discount: 15,
+                        rareId: true,
+                        mono: true,
+                        enabled: true
+                    }
+                ];
+            }
+            updateStatusUI();
+            renderFiltersList();
+            renderMarketList();
+        }
+
+        function saveLocalState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {}
+            syncWithBot();
+        }
+
+        function syncWithBot() {
+            // Агрегируем параметры для передачи в бэкенд снайпера бота
+            const enabledFilters = appState.filters.filter(f => f.enabled);
+            let minP = 0, maxP = 500, minD = 0, rare = true, mono = true;
+            let selCols = [];
+
+            if (enabledFilters.length > 0) {
+                minP = Math.min(...enabledFilters.map(f => f.minPrice));
+                maxP = Math.max(...enabledFilters.map(f => f.maxPrice));
+                minD = Math.min(...enabledFilters.map(f => f.discount));
+                rare = enabledFilters.some(f => f.rareId);
+                mono = enabledFilters.some(f => f.mono);
+                const hasAll = enabledFilters.some(f => f.collection === 'all');
+                if (hasAll) {
+                    selCols = ['all'];
+                } else {
+                    selCols = [...new Set(enabledFilters.map(f => f.collection))];
+                }
+            }
 
             const payload = {
                 min_price: minP,
                 max_price: maxP,
-                min_discount: currentDiscount,
-                check_rare_id: rareIdToggle.checked,
-                check_monochrome: monoToggle.checked,
-                is_active: activeToggle.checked,
-                selected_collections: Array.from(selectedCollections),
-                selected_backdrops: Array.from(selectedBackdrops)
+                min_discount: minD,
+                check_rare_id: rare,
+                check_monochrome: mono,
+                is_active: appState.isActive,
+                selected_collections: selCols
             };
-            const jsonStr = JSON.stringify(payload);
 
-            try {
-                localStorage.setItem('mrkt_filters_emerald_v3', jsonStr);
-            } catch (e) {}
-
-            if (tg?.CloudStorage) {
-                tg.CloudStorage.setItem('mrkt_filters_emerald_v3', jsonStr, () => {});
-            }
-
-            return payload;
-        }
-
-        minPriceSlider.addEventListener('input', () => {
-            let minP = parseFloat(minPriceSlider.value);
-            let maxP = parseFloat(maxPriceSlider.value);
-            if (minP > maxP) {
-                maxPriceSlider.value = minP;
-            }
-            updatePriceRangeUI();
-            saveStateLocally();
-        });
-
-        maxPriceSlider.addEventListener('input', () => {
-            let minP = parseFloat(minPriceSlider.value);
-            let maxP = parseFloat(maxPriceSlider.value);
-            if (maxP < minP) {
-                minPriceSlider.value = maxP;
-            }
-            updatePriceRangeUI();
-            saveStateLocally();
-        });
-
-        document.querySelectorAll('.pill-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentDiscount = parseFloat(btn.dataset.discount);
-                discountVal.textContent = currentDiscount === 0 ? 'Любая (0%)' : '-' + currentDiscount + '%';
-                saveStateLocally();
-            });
-        });
-
-        rareIdToggle.addEventListener('change', saveStateLocally);
-        monoToggle.addEventListener('change', saveStateLocally);
-        activeToggle.addEventListener('change', saveStateLocally);
-
-        const colsModal = document.getElementById('collections-modal');
-        const backsModal = document.getElementById('backdrops-modal');
-
-        document.getElementById('open-collections-btn').addEventListener('click', () => {
-            colsModal.style.display = 'flex';
-            renderCollections();
-        });
-
-        document.getElementById('close-cols').addEventListener('click', () => {
-            colsModal.style.display = 'none';
-            updateSelectedCounts();
-        });
-
-        document.getElementById('apply-cols').addEventListener('click', () => {
-            colsModal.style.display = 'none';
-            updateSelectedCounts();
-            saveStateLocally();
-        });
-
-        document.getElementById('reset-cols').addEventListener('click', () => {
-            selectedCollections.clear();
-            renderCollections(document.getElementById('search-cols').value);
-            updateSelectedCounts();
-            saveStateLocally();
-        });
-
-        document.getElementById('open-backdrops-btn').addEventListener('click', () => {
-            backsModal.style.display = 'flex';
-            renderBackdrops();
-        });
-
-        document.getElementById('close-backs').addEventListener('click', () => {
-            backsModal.style.display = 'none';
-            updateSelectedCounts();
-        });
-
-        document.getElementById('apply-backs').addEventListener('click', () => {
-            backsModal.style.display = 'none';
-            updateSelectedCounts();
-            saveStateLocally();
-        });
-
-        document.getElementById('reset-backs').addEventListener('click', () => {
-            selectedBackdrops.clear();
-            renderBackdrops(document.getElementById('search-backs').value);
-            updateSelectedCounts();
-            saveStateLocally();
-        });
-
-        // Toggle Sort by Volume
-        document.getElementById('sort-vol').addEventListener('click', () => {
-            if (sortField === 'vol') {
-                sortDirection = (sortDirection === 'desc') ? 'asc' : 'desc';
-            } else {
-                sortField = 'vol';
-                sortDirection = 'desc';
-            }
-            updateSortHeaders();
-            renderCollections(document.getElementById('search-cols').value);
-        });
-
-        // Toggle Sort by Floor
-        document.getElementById('sort-floor').addEventListener('click', () => {
-            if (sortField === 'floor') {
-                sortDirection = (sortDirection === 'desc') ? 'asc' : 'desc';
-            } else {
-                sortField = 'floor';
-                sortDirection = 'asc';
-            }
-            updateSortHeaders();
-            renderCollections(document.getElementById('search-cols').value);
-        });
-
-        function updateSortHeaders() {
-            const volBtn = document.getElementById('sort-vol');
-            const floorBtn = document.getElementById('sort-floor');
-            const volArrow = document.getElementById('sort-vol-arrow');
-            const floorArrow = document.getElementById('sort-floor-arrow');
-
-            if (sortField === 'vol') {
-                volBtn.classList.add('active');
-                floorBtn.classList.remove('active');
-                volArrow.textContent = sortDirection === 'desc' ? '↓' : '↑';
-                floorArrow.textContent = '⇅';
-            } else if (sortField === 'floor') {
-                floorBtn.classList.add('active');
-                volBtn.classList.remove('active');
-                floorArrow.textContent = sortDirection === 'desc' ? '↓' : '↑';
-                volArrow.textContent = '⇅';
+            // Отправляем в Telegram WebApp
+            if (tg) {
+                try {
+                    tg.sendData(JSON.stringify(payload));
+                } catch (e) {}
             }
         }
 
-        function toggleSelectAll() {
-            const filter = document.getElementById('search-cols').value;
-            const currentList = ALL_COLLECTIONS.filter(c => (c.title || c.name).toLowerCase().includes(filter.toLowerCase()));
-            const allSelected = currentList.every(c => selectedCollections.has(c.title || c.name));
+        // ================== NAVIGATION ==================
+        function switchMainTab(tab) {
+            haptic('selection');
+            appState.activeTab = tab;
+            document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}-btn`).classList.add('active');
 
-            if (allSelected) {
-                currentList.forEach(c => selectedCollections.delete(c.title || c.name));
-            } else {
-                currentList.forEach(c => selectedCollections.add(c.title || c.name));
-            }
-            renderCollections(filter);
-            updateSelectedCounts();
-            saveStateLocally();
+            document.getElementById('screen-filters').style.display = (tab === 'filters') ? 'block' : 'none';
+            document.getElementById('screen-market').style.display = (tab === 'market') ? 'block' : 'none';
+            document.getElementById('screen-sub').style.display = (tab === 'sub') ? 'block' : 'none';
         }
 
-        document.getElementById('select-all-cols-btn').addEventListener('click', toggleSelectAll);
-        document.getElementById('label-select-all').addEventListener('click', toggleSelectAll);
+        // Toggle Pause
+        document.getElementById('btn-toggle-pause').addEventListener('click', () => {
+            haptic('medium');
+            appState.isActive = !appState.isActive;
+            updateStatusUI();
+            saveLocalState();
+            showToast(appState.isActive ? 'Снайпер запущен!' : 'Снайпер поставлен на паузу', appState.isActive ? '🟢' : '⏸');
+        });
 
-        function renderCollections(filter = '') {
-            const container = document.getElementById('cols-list');
-            container.innerHTML = '';
-            let filtered = ALL_COLLECTIONS.filter(c => (c.title || c.name).toLowerCase().includes(filter.toLowerCase()));
+        function updateStatusUI() {
+            const dot = document.getElementById('status-pulse');
+            const title = document.getElementById('status-text');
+            const sub = document.getElementById('status-sub');
+            const icon = document.getElementById('pause-icon');
+            const label = document.getElementById('pause-label');
 
-            filtered.sort((a, b) => {
-                const valA = a[sortField] || 0;
-                const valB = b[sortField] || 0;
-                return sortDirection === 'desc' ? (valB - valA) : (valA - valB);
-            });
-
-            const selectAllBtn = document.getElementById('select-all-cols-btn');
-            if (filtered.length > 0 && filtered.every(c => selectedCollections.has(c.title || c.name))) {
-                selectAllBtn.classList.add('checked');
+            if (appState.isActive) {
+                dot.className = 'pulse-dot';
+                title.innerText = 'Снайпер активен';
+                sub.innerText = 'MRKT Live Radar • Быстрый перехват';
+                icon.innerText = '🔕';
+                label.innerText = 'Пауза';
             } else {
-                selectAllBtn.classList.remove('checked');
+                dot.className = 'pulse-dot paused';
+                title.innerText = 'Снайпер на паузе';
+                sub.innerText = 'Мониторинг временно приостановлен';
+                icon.innerText = '🔔';
+                label.innerText = 'Включить';
             }
+        }
 
-            filtered.forEach(c => {
-                const colKey = c.title || c.name;
-                const isChecked = selectedCollections.has(colKey);
-                const row = document.createElement('div');
-                row.className = 'mrkt-grid-row';
-                
-                const floorDisplay = c.floor > 0 ? c.floor.toFixed(2) : '—';
-                const volDisplay = c.vol >= 1000 ? (c.vol).toLocaleString('ru-RU', {maximumFractionDigits: 1}) : (c.vol || 0).toFixed(1);
-                const imgUrl = c.thumb ? ('https://cdn.tgmrkt.io/' + c.thumb) : '';
+        // ================== FILTERS RENDER ==================
+        function renderFiltersList() {
+            const container = document.getElementById('filters-list-container');
+            const activeCountLabel = document.getElementById('filters-active-count');
+            const listingsBadge = document.getElementById('listings-count-badge');
 
-                row.innerHTML = `
-                    <div class="checkbox-custom ${isChecked ? 'checked' : ''}"></div>
-                    <div class="col-main">
-                        <img src="${imgUrl}" class="mini-thumb" loading="lazy" alt="">
-                        <span class="col-name">${colKey}</span>
+            const total = appState.filters.length;
+            activeCountLabel.innerText = total;
+            listingsBadge.innerText = total;
+
+            if (total === 0) {
+                container.innerHTML = `
+                    <div class="empty-card">
+                        <div class="empty-icon">🎯</div>
+                        <div class="empty-title">Фильтров пока нет</div>
+                        <div class="empty-desc">Создай первый — и бот напишет, как только нужный подарок выставят на продажу на MRKT.</div>
                     </div>
-                    <div class="col-floor"><span class="diamond-icon">💎</span> ${floorDisplay}</div>
-                    <div class="col-vol"><span class="diamond-icon">💎</span> ${volDisplay}</div>
                 `;
-                row.addEventListener('click', () => {
-                    if (selectedCollections.has(colKey)) {
-                        selectedCollections.delete(colKey);
-                    } else {
-                        selectedCollections.add(colKey);
-                    }
-                    renderCollections(document.getElementById('search-cols').value);
-                    updateSelectedCounts();
-                    saveStateLocally();
-                });
-                container.appendChild(row);
-            });
-        }
-
-        document.getElementById('search-cols').addEventListener('input', (e) => {
-            renderCollections(e.target.value);
-        });
-
-        function renderBackdrops(filter = '') {
-            const container = document.getElementById('backs-list');
-            container.innerHTML = '';
-            const filtered = ALL_BACKDROPS.filter(b => b.name.toLowerCase().includes(filter.toLowerCase()));
-
-            filtered.forEach(b => {
-                const isChecked = selectedBackdrops.has(b.name);
-                const row = document.createElement('div');
-                row.className = 'mrkt-grid-row';
-                row.style.gridTemplateColumns = '24px 1fr 30px';
-                row.innerHTML = `
-                    <div class="checkbox-custom ${isChecked ? 'checked' : ''}"></div>
-                    <div class="col-name">${b.name}</div>
-                    <div class="backdrop-circle" style="background: ${b.color}"></div>
-                `;
-                row.addEventListener('click', () => {
-                    if (selectedBackdrops.has(b.name)) {
-                        selectedBackdrops.delete(b.name);
-                    } else {
-                        selectedBackdrops.add(b.name);
-                    }
-                    renderBackdrops(document.getElementById('search-backs').value);
-                    updateSelectedCounts();
-                    saveStateLocally();
-                });
-                container.appendChild(row);
-            });
-        }
-
-        document.getElementById('search-backs').addEventListener('input', (e) => {
-            renderBackdrops(e.target.value);
-        });
-
-        function getCompactConfigParam(payload) {
-            const colIndices = [];
-            payload.selected_collections.forEach(name => {
-                const idx = ALL_COLLECTIONS.findIndex(c => (c.title === name || c.name === name));
-                if (idx !== -1) colIndices.push(idx);
-            });
-            const colsPart = colIndices.length > 0 ? colIndices.join('_') : 'all';
-            const rareBit = payload.check_rare_id ? 1 : 0;
-            const monoBit = payload.check_monochrome ? 1 : 0;
-            return `c_${Math.round(payload.min_price)}_${Math.round(payload.max_price)}_${Math.round(payload.min_discount)}_${rareBit}_${monoBit}_${colsPart}`;
-        }
-
-        // MAIN SAVE BUTTON ACTION
-        document.getElementById('save-btn').addEventListener('click', () => {
-            const payload = saveStateLocally();
-            const jsonStr = JSON.stringify(payload);
-
-            // 1. Try native tg.sendData (for keyboard button launch)
-            try {
-                if (tg && typeof tg.sendData === 'function') {
-                    tg.sendData(jsonStr);
-                }
-            } catch (e) {}
-
-            // 2. Always trigger openTelegramLink deep-link for 100% reliability in Menu / Inline modes
-            try {
-                const compact = getCompactConfigParam(payload);
-                const deepLink = "https://t.me/mrkt_loot_radar_bot?start=" + compact;
-                if (tg && typeof tg.openTelegramLink === 'function') {
-                    tg.openTelegramLink(deepLink);
-                } else {
-                    window.location.href = deepLink;
-                }
-            } catch (err) {
-                console.error("Deep link error:", err);
+                return;
             }
 
-            setTimeout(() => {
-                try { tg?.close(); } catch(e) {}
-            }, 300);
+            let html = '';
+            appState.filters.forEach((f, idx) => {
+                const thumbImg = f.thumb ? `<img src="https://cdn.tgmrkt.io/${f.thumb}">` : (f.collection === 'all' ? '🌐' : '🎁');
+                const discText = f.discount > 0 ? `· Скидка -${f.discount}%` : '';
+                const traitsText = [f.rareId ? 'Low-ID' : '', f.mono ? 'Монохром' : ''].filter(Boolean).join(' + ');
+
+                html += `
+                    <div class="filter-item-card">
+                        <div class="filter-item-left">
+                            <div class="filter-item-icon">${thumbImg}</div>
+                            <div class="filter-item-info">
+                                <div class="filter-item-title">${f.collectionTitle}</div>
+                                <div class="filter-item-desc">${f.minPrice}–${f.maxPrice} TON ${discText} ${traitsText ? '· ' + traitsText : ''}</div>
+                            </div>
+                        </div>
+                        <div class="filter-item-actions">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${f.enabled ? 'checked' : ''} onchange="toggleFilterEnabled(${idx})">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <button class="btn-delete-filter" onclick="deleteFilter(${idx})">🗑</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function toggleFilterEnabled(idx) {
+            haptic('selection');
+            appState.filters[idx].enabled = !appState.filters[idx].enabled;
+            saveLocalState();
+            renderFiltersList();
+        }
+
+        function deleteFilter(idx) {
+            haptic('medium');
+            appState.filters.splice(idx, 1);
+            saveLocalState();
+            renderFiltersList();
+            showToast('Фильтр удален');
+        }
+
+        // Budget Presets
+        document.getElementById('btn-toggle-budget').addEventListener('click', () => {
+            haptic('selection');
+            const box = document.getElementById('budget-presets-box');
+            box.classList.toggle('open');
         });
 
-        loadSavedState();
-        updateSortHeaders();
-        updateSelectedCounts();
+        function applyBudgetPreset(maxBudget) {
+            haptic('medium');
+            const newF = {
+                id: 'f_' + Date.now(),
+                collection: 'all',
+                collectionTitle: `Любой подарок (до ${maxBudget === 9999 ? '650+' : maxBudget} TON)`,
+                minPrice: 0,
+                maxPrice: maxBudget === 9999 ? 2000 : maxBudget,
+                discount: 15,
+                rareId: true,
+                mono: true,
+                enabled: true
+            };
+            appState.filters.push(newF);
+            saveLocalState();
+            renderFiltersList();
+            document.getElementById('budget-presets-box').classList.remove('open');
+            showToast(`Пресет до ${maxBudget === 9999 ? '650+' : maxBudget} TON добавлен!`);
+        }
+
+        // ================== MARKET RENDER ==================
+        function sortMarketBy(field) {
+            haptic('selection');
+            appState.marketSort = field;
+            document.getElementById('market-sort-vol').classList.toggle('active', field === 'vol');
+            document.getElementById('market-sort-sales').classList.toggle('active', field === 'sales');
+            document.getElementById('market-sort-floor').classList.toggle('active', field === 'floor');
+            renderMarketList();
+        }
+
+        function renderMarketList() {
+            const container = document.getElementById('market-rows-container');
+            let sorted = [...ALL_COLLECTIONS];
+
+            if (appState.marketSort === 'vol') {
+                sorted.sort((a, b) => (b.vol || 0) - (a.vol || 0));
+            } else if (appState.marketSort === 'floor') {
+                sorted.sort((a, b) => (b.floor || 0) - (a.floor || 0));
+            } else if (appState.marketSort === 'sales') {
+                sorted.sort((a, b) => ((b.vol || 0) / (b.floor || 1)) - ((a.vol || 0) / (a.floor || 1)));
+            }
+
+            let html = '';
+            sorted.forEach((c, idx) => {
+                const estSales = Math.round((c.vol || 500) / Math.max(c.floor || 10, 5) * 1.8) + 12;
+                const onSaleCount = Math.round(estSales * 6.5) + 30;
+                const volStr = Math.round(c.vol || 0).toLocaleString('ru-RU');
+                const floorStr = c.floor > 0 ? (c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(1)) + ' TON' : 'Новинка';
+
+                html += `
+                    <div class="market-item-row" onclick="openCreateFilterForCollection('${c.name.replace(/'/g, "\\'")}')">
+                        <div class="market-rank">${idx + 1}</div>
+                        <div class="market-thumb">
+                            <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'40\' height=\'40\' fill=\'%231e2333\'/><text x=\'50%\' y=\'55%\' font-size=\'18\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                        </div>
+                        <div class="market-info">
+                            <div class="market-name">${c.title || c.name}</div>
+                            <div class="market-sub">${estSales} продаж · ${onSaleCount} на витрине</div>
+                        </div>
+                        <div class="market-right">
+                            <div class="market-floor">${floorStr}</div>
+                            <div class="market-vol">объём ${volStr}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ================== FILTER MODAL & CREATOR ==================
+        let curFormCol = 'all';
+        let curFormColTitle = 'Любой подарок (все коллекции)';
+        let curFormColThumb = '';
+        let curFormDiscount = 15;
+
+        document.getElementById('btn-open-create-filter').addEventListener('click', () => {
+            haptic('medium');
+            openFilterModal();
+        });
+
+        function openFilterModal() {
+            document.getElementById('filter-modal').classList.add('open');
+            backToStepCollections();
+            renderGiftsGrid();
+        }
+
+        function closeFilterModal() {
+            document.getElementById('filter-modal').classList.remove('open');
+        }
+
+        function renderGiftsGrid(searchQuery = '') {
+            const grid = document.getElementById('gifts-grid-container');
+            let list = [...ALL_COLLECTIONS];
+
+            if (searchQuery.trim()) {
+                const q = searchQuery.toLowerCase().trim();
+                list = list.filter(c => c.name.toLowerCase().includes(q) || (c.title && c.title.toLowerCase().includes(q)));
+            }
+
+            let html = `
+                <div class="gift-grid-card ${curFormCol === 'all' ? 'selected' : ''}" onclick="selectCollectionForFilter('all', 'Любой подарок (все коллекции)', '')">
+                    <div class="gift-thumb-box" style="background: rgba(99, 102, 241, 0.2);">🎁</div>
+                    <div class="gift-card-title">Любой подарок</div>
+                    <div class="gift-card-floor">все коллекции</div>
+                </div>
+            `;
+
+            list.forEach(c => {
+                const floorStr = c.floor > 0 ? `${c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(1)} TON` : 'новинка';
+                html += `
+                    <div class="gift-grid-card ${curFormCol === c.name ? 'selected' : ''}" onclick="selectCollectionForFilter('${c.name.replace(/'/g, "\\'")}', '${(c.title || c.name).replace(/'/g, "\\'")}', '${c.thumb}')">
+                        <div class="gift-thumb-box">
+                            <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'40\' height=\'40\' fill=\'%231e2333\'/><text x=\'50%\' y=\'55%\' font-size=\'18\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                        </div>
+                        <div class="gift-card-title">${c.title || c.name}</div>
+                        <div class="gift-card-floor">${floorStr}</div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        document.getElementById('gift-search-input').addEventListener('input', (e) => {
+            renderGiftsGrid(e.target.value);
+        });
+
+        function selectCollectionForFilter(colName, colTitle, thumb) {
+            haptic('selection');
+            curFormCol = colName;
+            curFormColTitle = colTitle;
+            curFormColThumb = thumb;
+
+            // Переход к шагу 2: Настройка цен
+            document.getElementById('modal-step-collections').style.display = 'none';
+            document.getElementById('modal-step-params').style.display = 'block';
+            document.getElementById('modal-screen-title').innerText = 'Настройка фильтра';
+            document.getElementById('modal-screen-sub').innerText = 'Задай цену и условия для уведомления';
+            document.getElementById('form-col-name').innerText = colTitle;
+
+            // Если у коллекции есть floor — ставим ползунки с умом
+            const found = ALL_COLLECTIONS.find(c => c.name === colName);
+            if (found && found.floor > 0) {
+                const fp = found.floor;
+                document.getElementById('modal-min-p').value = Math.max(0, Math.round(fp * 0.7));
+                document.getElementById('modal-max-p').value = Math.round(fp * 1.3);
+            }
+            updatePriceDisplay();
+        }
+
+        function backToStepCollections() {
+            haptic('selection');
+            document.getElementById('modal-step-collections').style.display = 'block';
+            document.getElementById('modal-step-params').style.display = 'none';
+            document.getElementById('modal-screen-title').innerText = 'Выбери подарок';
+            document.getElementById('modal-screen-sub').innerText = 'Под каждым подарком — текущий флор на MRKT';
+        }
+
+        function openCreateFilterForCollection(colName) {
+            openFilterModal();
+            const found = ALL_COLLECTIONS.find(c => c.name === colName);
+            if (found) {
+                selectCollectionForFilter(found.name, found.title || found.name, found.thumb);
+            }
+        }
+
+        // Form Sliders & Discount
+        const minPSlider = document.getElementById('modal-min-p');
+        const maxPSlider = document.getElementById('modal-max-p');
+        const priceDisplay = document.getElementById('form-price-display');
+
+        function updatePriceDisplay() {
+            let minV = parseInt(minPSlider.value);
+            let maxV = parseInt(maxPSlider.value);
+            if (minV > maxV) {
+                maxV = minV;
+                maxPSlider.value = maxV;
+            }
+            priceDisplay.innerText = `от ${minV} до ${maxV} TON`;
+        }
+
+        minPSlider.addEventListener('input', updatePriceDisplay);
+        maxPSlider.addEventListener('input', updatePriceDisplay);
+
+        function setFormDiscount(val) {
+            haptic('selection');
+            curFormDiscount = val;
+            document.querySelectorAll('.disc-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('form-disc-display').innerText = val === 0 ? 'Все лоты' : `-${val}%`;
+        }
+
+        function saveNewFilterFromForm() {
+            haptic('medium');
+            const minV = parseInt(minPSlider.value);
+            const maxV = parseInt(maxPSlider.value);
+            const isRare = document.getElementById('modal-rare-toggle').checked;
+            const isMono = document.getElementById('modal-mono-toggle').checked;
+
+            const newF = {
+                id: 'f_' + Date.now(),
+                collection: curFormCol,
+                collectionTitle: curFormColTitle,
+                thumb: curFormColThumb,
+                minPrice: minV,
+                maxPrice: maxV,
+                discount: curFormDiscount,
+                rareId: isRare,
+                mono: isMono,
+                enabled: true
+            };
+
+            appState.filters.unshift(newF);
+            saveLocalState();
+            renderFiltersList();
+            closeFilterModal();
+            showToast('Фильтр успешно добавлен!');
+        }
+
+        function selectTariff(name, priceUsd) {
+            haptic('medium');
+            showToast(`Тариф ${name} (${priceUsd}$): ссылка отправлена в бота!`, '💎');
+            if (tg) {
+                try {
+                    tg.sendData(JSON.stringify({ action: 'buy_tariff', tariff: name, price: priceUsd }));
+                } catch (e) {}
+            }
+        }
+
+        // Init
+        loadLocalState();
     </script>
 </body>
 </html>
