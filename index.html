@@ -888,6 +888,127 @@
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
+    
+        /* Extra styles matching screenshots */
+        .param-section-title {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            margin-top: 14px;
+        }
+        .param-section-title:first-child {
+            margin-top: 0;
+        }
+        .param-card {
+            background: #141722;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 14px;
+        }
+        .dual-inputs-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .dual-input-box {
+            background: #1b1f2e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            width: 100%;
+        }
+        .dual-input-box::placeholder {
+            color: #64748b;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .dual-input-box:focus {
+            border-color: var(--primary);
+        }
+        .sub-help-text {
+            font-size: 11.5px;
+            color: #94a3b8;
+            line-height: 1.45;
+            margin-top: 6px;
+        }
+        .discount-pills-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            margin-bottom: 6px;
+        }
+        .disc-pill-btn {
+            flex: 1;
+            min-width: 58px;
+            background: #1b1f2e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            padding: 9px 4px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .disc-pill-btn.active {
+            background: #6366f1;
+            color: #fff;
+            border-color: #6366f1;
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+        }
+        .markets-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .market-badge-btn {
+            background: #1b1f2e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .market-badge-btn.active {
+            background: #252b3e;
+            color: #fff;
+            border-color: #6366f1;
+        }
+        .btn-submit-filter {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            color: #ffffff;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 14.5px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            margin-top: 14px;
+            transition: all 0.2s;
+        }
+        .btn-submit-filter:active {
+            transform: scale(0.98);
+        }
+
     </style>
 </head>
 <body>
@@ -1082,77 +1203,103 @@
                 </div>
 
                 <!-- STEP 2: Configure Price & Traits -->
+                                <!-- STEP 2: Configure Price & Traits matching user screenshots -->
                 <div id="modal-step-params" style="display: none;">
-                    <div class="filter-form-box">
-                        <!-- Target Collection Banner -->
-                        <div style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <div style="font-size: 11px; color: var(--text-sub);">Выбранная коллекция:</div>
-                                <div style="font-size: 14px; font-weight: 800; color: #fff;" id="form-col-name">Любой подарок</div>
-                            </div>
-                            <button onclick="backToStepCollections()" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;">Изменить</button>
+                    <div style="background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 14px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div>
+                            <div style="font-size: 11px; color: var(--text-sub);">Выбранный подарок:</div>
+                            <div style="font-size: 14px; font-weight: 800; color: #fff;" id="form-col-name">Любой подарок</div>
                         </div>
-
-                        <!-- Price Sliders -->
-                        <div class="form-section">
-                            <div class="form-section-title">
-                                <span>Диапазон цены покупки</span>
-                                <span class="form-section-val" id="form-price-display">от 0 до 500 TON</span>
-                            </div>
-                            <div class="range-slider-wrapper">
-                                <input type="range" id="modal-min-p" min="0" max="500" step="1" value="0">
-                            </div>
-                            <div class="range-slider-wrapper">
-                                <input type="range" id="modal-max-p" min="1" max="1000" step="5" value="500">
-                            </div>
-                        </div>
-
-                        <!-- Discount -->
-                        <div class="form-section">
-                            <div class="form-section-title">
-                                <span>Минимальная скидка от Floor</span>
-                                <span class="form-section-val" id="form-disc-display">Все лоты</span>
-                            </div>
-                            <div class="discount-grid">
-                                <div class="disc-btn active" onclick="setFormDiscount(0)">Все</div>
-                                <div class="disc-btn" onclick="setFormDiscount(10)">-10%</div>
-                                <div class="disc-btn" onclick="setFormDiscount(15)">-15%</div>
-                                <div class="disc-btn" onclick="setFormDiscount(20)">-20%</div>
-                                <div class="disc-btn" onclick="setFormDiscount(30)">-30%</div>
-                            </div>
-                        </div>
-
-                        <!-- Traits -->
-                        <div class="form-section">
-                            <div class="switch-row">
-                                <div>
-                                    <div class="switch-title">Редкие и красивые ID</div>
-                                    <div class="switch-sub">Low-ID (#1..#999), репдигиты (777), палиндромы</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="modal-rare-toggle" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="switch-row">
-                                <div>
-                                    <div class="switch-title">Full-Match & Монохром</div>
-                                    <div class="switch-sub">Цвет в цвет (красный/красный), Black/White</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="modal-mono-toggle" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <button class="btn-main-action" onclick="saveNewFilterFromForm()" style="margin-top: 6px;">
-                            💾 Сохранить фильтр
-                        </button>
+                        <button onclick="backToStepCollections()" style="background: #1e2436; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 12px; border-radius: 10px; font-size: 11.5px; font-weight: 600; cursor: pointer;">Изменить</button>
                     </div>
+
+                    <!-- ЧТО ПРИСЫЛАТЬ -->
+                    <div class="param-section-title">ЧТО ПРИСЫЛАТЬ</div>
+                    <div class="param-card">
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <button class="sub-pill-btn active" id="btn-type-listing" style="flex: 1; padding: 10px;">🟢 Листинги</button>
+                            <button class="sub-pill-btn" id="btn-type-sales" style="flex: 1; padding: 10px;" onclick="showToast('Продажи отслеживаются вместе с листингами')">💸 Продажи</button>
+                        </div>
+                        <div class="switch-row">
+                            <div>
+                                <div class="switch-title">➕ Заодно следить и за продажами</div>
+                                <div class="switch-sub">Создам 2 фильтра с одинаковыми условиями: один пришлёт, когда такой подарок выставят, второй — когда такой подарок купят</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="modal-watch-sales">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="sub-help-text">Уведомление придёт, когда подходящий подарок ВЫСТАВЯТ на продажу или снизят на него цену.</div>
+                    </div>
+
+                    <!-- ХАРАКТЕРИСТИКИ -->
+                    <div class="param-section-title">ХАРАКТЕРИСТИКИ</div>
+                    <div class="param-card">
+                        <div class="sub-help-text" style="margin-top: 0; color: #cbd5e1;">Для «Любого подарка» модель, фон и узор не выбираются. Ограничь цену или включи «ниже флора», иначе уведомлений будет очень много.</div>
+                    </div>
+
+                    <!-- ТОЛЬКО НИЖЕ ФЛОРА -->
+                    <div class="param-section-title">🔥 ТОЛЬКО НИЖЕ ФЛОРА</div>
+                    <div class="param-card">
+                        <div class="discount-pills-row">
+                            <div class="disc-pill-btn active" onclick="setDiscountPill(0, this)">Выкл</div>
+                            <div class="disc-pill-btn" onclick="setDiscountPill(5, this)">от -5%</div>
+                            <div class="disc-pill-btn" onclick="setDiscountPill(10, this)">от -10%</div>
+                            <div class="disc-pill-btn" onclick="setDiscountPill(15, this)">от -15%</div>
+                            <div class="disc-pill-btn" onclick="setDiscountPill(20, this)">от -20%</div>
+                            <div class="disc-pill-btn" onclick="setDiscountPill(30, this)">от -30%</div>
+                        </div>
+                        <div class="sub-help-text">«Выкл» — скидка не важна, пришлю все лоты, подходящие под остальные условия. Выбери -5%...-30%, чтобы получать только подарки дешевле флора.</div>
+                    </div>
+
+                    <!-- НОМЕР ПОДАРКА (#) -->
+                    <div class="param-section-title">НОМЕР ПОДАРКА (#)</div>
+                    <div class="param-card">
+                        <div class="dual-inputs-row">
+                            <input type="number" class="dual-input-box" id="num-from-input" placeholder="ОТ">
+                            <input type="number" class="dual-input-box" id="num-to-input" placeholder="ДО">
+                        </div>
+                        <div class="switch-row" style="padding-top: 4px;">
+                            <div>
+                                <div class="switch-title">💎 Только красивые номера</div>
+                                <div class="switch-sub">#1–100, #777, #1000, #1221, #1234, трёхзначные</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="modal-rare-toggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- ЦЕНА, TON -->
+                    <div class="param-section-title">ЦЕНА, TON</div>
+                    <div class="param-card">
+                        <div class="dual-inputs-row" style="margin-bottom: 0;">
+                            <input type="number" class="dual-input-box" id="price-from-input" placeholder="ОТ" value="0">
+                            <input type="number" class="dual-input-box" id="price-to-input" placeholder="ДО" value="500">
+                        </div>
+                    </div>
+
+                    <!-- МАРКЕТЫ -->
+                    <div class="param-section-title">МАРКЕТЫ</div>
+                    <div class="param-card">
+                        <div class="markets-row">
+                            <div class="market-badge-btn active">MRKT</div>
+                            <div class="market-badge-btn" style="opacity: 0.5;" title="В разработке">Portals</div>
+                            <div class="market-badge-btn" style="opacity: 0.5;" title="В разработке">Fragment</div>
+                        </div>
+                        <div class="sub-help-text">Снайпер мониторит MRKT в реальном времени без задержек.</div>
+                    </div>
+
+                    <!-- СОХРАНИТЬ ФИЛЬТР -->
+                    <button class="btn-submit-filter" onclick="saveNewFilterFromForm()">
+                        СОХРАНИТЬ ФИЛЬТР
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Toast Notification -->
@@ -1464,61 +1611,16 @@
 
         // ================== FILTER MODAL & CREATOR ==================
         let curFormCol = 'all';
-        let curFormColTitle = 'Любой подарок (все коллекции)';
+        let curFormColTitle = 'Любой подарок';
         let curFormColThumb = '';
-        let curFormDiscount = 15;
+        let curFormDiscount = 0;
 
-        document.getElementById('btn-open-create-filter').addEventListener('click', () => {
-            haptic('medium');
-            openFilterModal();
-        });
-
-        function openFilterModal() {
-            document.getElementById('filter-modal').classList.add('open');
-            backToStepCollections();
-            renderGiftsGrid();
+        function setDiscountPill(val, el) {
+            haptic('selection');
+            curFormDiscount = val;
+            document.querySelectorAll('.disc-pill-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
         }
-
-        function closeFilterModal() {
-            document.getElementById('filter-modal').classList.remove('open');
-        }
-
-        function renderGiftsGrid(searchQuery = '') {
-            const grid = document.getElementById('gifts-grid-container');
-            let list = [...ALL_COLLECTIONS];
-
-            if (searchQuery.trim()) {
-                const q = searchQuery.toLowerCase().trim();
-                list = list.filter(c => c.name.toLowerCase().includes(q) || (c.title && c.title.toLowerCase().includes(q)));
-            }
-
-            let html = `
-                <div class="gift-grid-card ${curFormCol === 'all' ? 'selected' : ''}" onclick="selectCollectionForFilter('all', 'Любой подарок (все коллекции)', '')">
-                    <div class="gift-thumb-box" style="background: rgba(99, 102, 241, 0.2);">🎁</div>
-                    <div class="gift-card-title">Любой подарок</div>
-                    <div class="gift-card-floor">все коллекции</div>
-                </div>
-            `;
-
-            list.forEach(c => {
-                const floorStr = c.floor > 0 ? `${c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(1)} TON` : 'новинка';
-                html += `
-                    <div class="gift-grid-card ${curFormCol === c.name ? 'selected' : ''}" onclick="selectCollectionForFilter('${c.name.replace(/'/g, "\\'")}', '${(c.title || c.name).replace(/'/g, "\\'")}', '${c.thumb}')">
-                        <div class="gift-thumb-box">
-                            <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'40\' height=\'40\' fill=\'%231e2333\'/><text x=\'50%\' y=\'55%\' font-size=\'18\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
-                        </div>
-                        <div class="gift-card-title">${c.title || c.name}</div>
-                        <div class="gift-card-floor">${floorStr}</div>
-                    </div>
-                `;
-            });
-
-            grid.innerHTML = html;
-        }
-
-        document.getElementById('gift-search-input').addEventListener('input', (e) => {
-            renderGiftsGrid(e.target.value);
-        });
 
         function selectCollectionForFilter(colName, colTitle, thumb) {
             haptic('selection');
@@ -1526,71 +1628,29 @@
             curFormColTitle = colTitle;
             curFormColThumb = thumb;
 
-            // Переход к шагу 2: Настройка цен
             document.getElementById('modal-step-collections').style.display = 'none';
             document.getElementById('modal-step-params').style.display = 'block';
             document.getElementById('modal-screen-title').innerText = 'Настройка фильтра';
-            document.getElementById('modal-screen-sub').innerText = 'Задай цену и условия для уведомления';
+            document.getElementById('modal-screen-sub').innerText = 'Задай условия для мгновенных уведомлений';
             document.getElementById('form-col-name').innerText = colTitle;
 
-            // Если у коллекции есть floor — ставим ползунки с умом
             const found = ALL_COLLECTIONS.find(c => c.name === colName);
             if (found && found.floor > 0) {
-                const fp = found.floor;
-                document.getElementById('modal-min-p').value = Math.max(0, Math.round(fp * 0.7));
-                document.getElementById('modal-max-p').value = Math.round(fp * 1.3);
+                document.getElementById('price-from-input').value = Math.max(0, Math.round(found.floor * 0.7));
+                document.getElementById('price-to-input').value = Math.round(found.floor * 1.4);
+            } else {
+                document.getElementById('price-from-input').value = '0';
+                document.getElementById('price-to-input').value = '500';
             }
-            updatePriceDisplay();
-        }
-
-        function backToStepCollections() {
-            haptic('selection');
-            document.getElementById('modal-step-collections').style.display = 'block';
-            document.getElementById('modal-step-params').style.display = 'none';
-            document.getElementById('modal-screen-title').innerText = 'Выбери подарок';
-            document.getElementById('modal-screen-sub').innerText = 'Под каждым подарком — текущий флор на MRKT';
-        }
-
-        function openCreateFilterForCollection(colName) {
-            openFilterModal();
-            const found = ALL_COLLECTIONS.find(c => c.name === colName);
-            if (found) {
-                selectCollectionForFilter(found.name, found.title || found.name, found.thumb);
-            }
-        }
-
-        // Form Sliders & Discount
-        const minPSlider = document.getElementById('modal-min-p');
-        const maxPSlider = document.getElementById('modal-max-p');
-        const priceDisplay = document.getElementById('form-price-display');
-
-        function updatePriceDisplay() {
-            let minV = parseInt(minPSlider.value);
-            let maxV = parseInt(maxPSlider.value);
-            if (minV > maxV) {
-                maxV = minV;
-                maxPSlider.value = maxV;
-            }
-            priceDisplay.innerText = `от ${minV} до ${maxV} TON`;
-        }
-
-        minPSlider.addEventListener('input', updatePriceDisplay);
-        maxPSlider.addEventListener('input', updatePriceDisplay);
-
-        function setFormDiscount(val) {
-            haptic('selection');
-            curFormDiscount = val;
-            document.querySelectorAll('.disc-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('form-disc-display').innerText = val === 0 ? 'Все лоты' : `-${val}%`;
         }
 
         function saveNewFilterFromForm() {
             haptic('medium');
-            const minV = parseInt(minPSlider.value);
-            const maxV = parseInt(maxPSlider.value);
+            const minV = parseFloat(document.getElementById('price-from-input').value) || 0;
+            const maxV = parseFloat(document.getElementById('price-to-input').value) || 500;
             const isRare = document.getElementById('modal-rare-toggle').checked;
-            const isMono = document.getElementById('modal-mono-toggle').checked;
+            const numFrom = document.getElementById('num-from-input').value;
+            const numTo = document.getElementById('num-to-input').value;
 
             const newF = {
                 id: 'f_' + Date.now(),
@@ -1601,7 +1661,9 @@
                 maxPrice: maxV,
                 discount: curFormDiscount,
                 rareId: isRare,
-                mono: isMono,
+                mono: true,
+                numFrom: numFrom || null,
+                numTo: numTo || null,
                 enabled: true
             };
 
@@ -1609,7 +1671,7 @@
             saveLocalState();
             renderFiltersList();
             closeFilterModal();
-            showToast('Фильтр успешно добавлен!');
+            showToast('Фильтр сохранён!');
         }
 
         function selectTariff(name, priceUsd) {
