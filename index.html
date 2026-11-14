@@ -1071,7 +1071,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <button class="btn-main-action" id="btn-open-create-filter">
+        <button class="btn-main-action" id="btn-open-create-filter" onclick="openFilterModal()">
             + Новый фильтр
         </button>
         <button class="btn-secondary-action" id="btn-toggle-budget">
@@ -1615,6 +1615,74 @@
         let curFormColThumb = '';
         let curFormDiscount = 0;
 
+        function openFilterModal() {
+            haptic('medium');
+            const modal = document.getElementById('filter-modal');
+            if (modal) modal.classList.add('open');
+            backToStepCollections();
+            renderGiftsGrid();
+        }
+
+        function closeFilterModal() {
+            haptic('selection');
+            const modal = document.getElementById('filter-modal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        function backToStepCollections() {
+            haptic('selection');
+            const stepCol = document.getElementById('modal-step-collections');
+            const stepParam = document.getElementById('modal-step-params');
+            if (stepCol) stepCol.style.display = 'block';
+            if (stepParam) stepParam.style.display = 'none';
+            const mTitle = document.getElementById('modal-screen-title');
+            const mSub = document.getElementById('modal-screen-sub');
+            if (mTitle) mTitle.innerText = 'Выбери подарок';
+            if (mSub) mSub.innerText = 'Под каждым подарком — текущий флор на MRKT';
+        }
+
+        function renderGiftsGrid(searchQuery = '') {
+            const grid = document.getElementById('gifts-grid-container');
+            if (!grid) return;
+            let list = [...ALL_COLLECTIONS];
+
+            if (searchQuery.trim()) {
+                const q = searchQuery.toLowerCase().trim();
+                list = list.filter(c => c.name.toLowerCase().includes(q) || (c.title && c.title.toLowerCase().includes(q)));
+            }
+
+            let html = `
+                <div class="gift-grid-card ${curFormCol === 'all' ? 'selected' : ''}" onclick="selectCollectionForFilter('all', 'Любой подарок', '')">
+                    <div class="gift-thumb-box" style="background: rgba(99, 102, 241, 0.2);">🎁</div>
+                    <div class="gift-card-title">Любой подарок</div>
+                    <div class="gift-card-floor">все коллекции</div>
+                </div>
+            `;
+
+            list.forEach(c => {
+                const floorStr = c.floor > 0 ? `${c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(1)} TON` : 'новинка';
+                html += `
+                    <div class="gift-grid-card ${curFormCol === c.name ? 'selected' : ''}" onclick="selectCollectionForFilter('${c.name.replace(/'/g, "\\'")}', '${(c.title || c.name).replace(/'/g, "\\'")}', '${c.thumb}')">
+                        <div class="gift-thumb-box">
+                            <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'40\\' height=\\'40\\'><rect width=\\'40\\' height=\\'40\\' fill=\\'%231e2333\\'/><text x=\\'50%\\' y=\\'55%\\' font-size=\\'18\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'white\\'>🎁</text></svg>'">
+                        </div>
+                        <div class="gift-card-title">${c.title || c.name}</div>
+                        <div class="gift-card-floor">${floorStr}</div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        function openCreateFilterForCollection(colName) {
+            openFilterModal();
+            const found = ALL_COLLECTIONS.find(c => c.name === colName);
+            if (found) {
+                selectCollectionForFilter(found.name, found.title || found.name, found.thumb);
+            }
+        }
+
         function setDiscountPill(val, el) {
             haptic('selection');
             curFormDiscount = val;
@@ -1685,6 +1753,15 @@
         }
 
         // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            const giftSearchInput = document.getElementById('gift-search-input');
+            if (giftSearchInput) {
+                giftSearchInput.addEventListener('input', (e) => {
+                    renderGiftsGrid(e.target.value);
+                });
+            }
+        });
+
         loadLocalState();
     </script>
 </body>
