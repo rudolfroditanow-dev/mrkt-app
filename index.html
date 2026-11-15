@@ -4127,7 +4127,7 @@ function getCleanCollectionSlug(title) {
         function shareRefLink() {
             haptic('medium');
             const link = `https://t.me/radar_loot_bot?start=ref_${currentUserId}`;
-            const text = encodeURIComponent('🔥 Присоединяйся к Radar Loot — быстрому радар-снайперу редких NFT подарков на Portals, MRKT и Fragment!');
+            const text = encodeURIComponent('🔥 Присоединяйся к Radar Loot — быстрому радар-снайперу редких NFT подарков на MRKT, Portals и Tonnel!');
             const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`;
             if (tg) {
                 tg.openTelegramLink(shareUrl);
