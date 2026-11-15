@@ -64,11 +64,14 @@
                             </div>
                         </div>
                         <div class="live-drop-actions">
-                            <button class="live-drop-btn primary" onclick="openExternalUrl('${nftUrl}')">
-                                🎁 Telegram NFT
+                            <button class="live-drop-btn primary" onclick="openMarketWithCollection('mrkt', '', '${randPick}', event)">
+                                🛒 MRKT
                             </button>
-                            <button class="live-drop-btn" onclick="openExternalUrl('${buyUrl}')">
-                                🛒 Открыть на ${mktName}
+                            <button class="live-drop-btn" onclick="openMarketWithCollection('portals', '', '${randPick}', event)">
+                                🔮 Portals
+                            </button>
+                            <button class="live-drop-btn" onclick="openMarketWithCollection('tonnel', '', '${randPick}', event)">
+                                ⚡️ Tonnel
                             </button>
                         </div>
                     </div>
@@ -3037,11 +3040,14 @@ function getCleanCollectionSlug(title) {
                             </div>
                         </div>
                         <div class="live-drop-actions">
-                            <button class="live-drop-btn primary" onclick="openTelegramOrBrowser('${nftUrl}')">
-                                🎁 Telegram NFT
+                            <button class="live-drop-btn primary" onclick="openMarketWithCollection('mrkt', '', '${item.title}', event)">
+                                🛒 MRKT
                             </button>
-                            <button class="live-drop-btn" onclick="openMarketWithCollection('${mktClass}', '', '${item.title}', event)">
-                                🔍 Найти на ${mktName}
+                            <button class="live-drop-btn" onclick="openMarketWithCollection('portals', '', '${item.title}', event)">
+                                🔮 Portals
+                            </button>
+                            <button class="live-drop-btn" onclick="openMarketWithCollection('tonnel', '', '${item.title}', event)">
+                                ⚡️ Tonnel
                             </button>
                         </div>
                     </div>
@@ -3694,10 +3700,7 @@ function getCleanCollectionSlug(title) {
                                         <span class="arb-m-name">TONNEL ↗</span>
                                         <span class="arb-m-price">${c.arbPrices.tonnel} TON</span>
                                     </div>
-                                    <div class="arb-m-chip" style="background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.4);" onclick="openMarketWithCollection('nft', '${cleanSlug}', '${colTitle.replace(/'/g, "\\'")}', event)">
-                                        <span class="arb-m-name" style="color:#c7d2fe;">TG NFT ↗</span>
-                                        <span class="arb-m-price" style="color:#a5b4fc;">Каталог</span>
-                                    </div>
+
                                 </div>
                             </div>
                         ` : ''}
@@ -4397,11 +4400,14 @@ function getCleanCollectionSlug(title) {
                             </div>
                         </div>
                         <div class="live-drop-actions">
-                            <button class="live-drop-btn primary" onclick="openExternalUrl('${nftUrl}')">
-                                🎁 Telegram NFT
+                            <button class="live-drop-btn primary" onclick="openMarketWithCollection('mrkt', '', '${randPick}', event)">
+                                🛒 MRKT
                             </button>
-                            <button class="live-drop-btn" onclick="openExternalUrl('${buyUrl}')">
-                                🛒 Открыть на ${mktName}
+                            <button class="live-drop-btn" onclick="openMarketWithCollection('portals', '', '${randPick}', event)">
+                                🔮 Portals
+                            </button>
+                            <button class="live-drop-btn" onclick="openMarketWithCollection('tonnel', '', '${randPick}', event)">
+                                ⚡️ Tonnel
                             </button>
                         </div>
                     </div>
