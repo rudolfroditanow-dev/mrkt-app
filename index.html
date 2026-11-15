@@ -1812,7 +1812,7 @@
             if (tg) {
                 try {
                     const action = appState.isActive ? 'resume' : 'pause';
-                    tg.openTelegramLink(`https://t.me/mrkt_loot_radar_bot?start=${action}`);
+                    tg.openTelegramLink(`https://t.me/radar_loot_bot?start=${action}`);
                     setTimeout(() => {
                         try { tg.close(); } catch(err) {}
                     }, 200);
