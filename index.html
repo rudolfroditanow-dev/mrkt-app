@@ -1901,23 +1901,31 @@
             </div>
         </div>
 
-        <!-- Support & Disclaimer Card -->
+        <!-- Support, Community & Disclaimer Card -->
         <div class="profile-section-card">
-            <div class="profile-section-title">⚙️ ПОЛЕЗНОЕ</div>
+            <div class="profile-section-title">⚙️ ПОЛЕЗНОЕ & СООБЩЕСТВО</div>
             <div class="profile-actions-list">
+                <div class="profile-action-item" onclick="openSupportModal()">
+                    <span class="action-item-icon">🎧</span>
+                    <div class="action-item-text">
+                        <div class="action-item-title">Служба поддержки & Тикеты</div>
+                        <div class="action-item-sub">Сообщить о баге, задать вопрос или предложить идею</div>
+                    </div>
+                    <span class="action-item-arrow">›</span>
+                </div>
+                <div class="profile-action-item" onclick="openCommunityChat()">
+                    <span class="action-item-icon">💬</span>
+                    <div class="action-item-text">
+                        <div class="action-item-title">Чат сообщества Radar Loot</div>
+                        <div class="action-item-sub">Общение охотников за NFT, флипы и профит</div>
+                    </div>
+                    <span class="action-item-arrow">›</span>
+                </div>
                 <div class="profile-action-item" onclick="openDisclaimerModal()">
                     <span class="action-item-icon">⚠️</span>
                     <div class="action-item-text">
                         <div class="action-item-title">Памятка: Как избежать спама?</div>
                         <div class="action-item-sub">Рекомендации по настройке диапазонов и скидок</div>
-                    </div>
-                    <span class="action-item-arrow">›</span>
-                </div>
-                <div class="profile-action-item" onclick="if (window.Telegram?.WebApp) { window.Telegram.WebApp.openTelegramLink('https://t.me/rudolfroditanow'); } else { window.open('https://t.me/rudolfroditanow', '_blank'); }">
-                    <span class="action-item-icon">💬</span>
-                    <div class="action-item-text">
-                        <div class="action-item-title">Служба поддержки & Обратная связь</div>
-                        <div class="action-item-sub">Предложения, баги и идеи для бота</div>
                     </div>
                     <span class="action-item-arrow">›</span>
                 </div>
@@ -2105,6 +2113,55 @@
                     Я ознакомился 👍
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- ==================== SUPPORT POPUP MODAL ==================== -->
+    <div class="disclaimer-overlay" id="support-modal" onclick="onSupportOverlayClick(event)">
+        <div class="disclaimer-card" onclick="event.stopPropagation()" style="max-height: 90vh; overflow-y: auto;">
+            <button class="disclaimer-close-btn" onclick="closeSupportModal()" title="Закрыть">✕</button>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 38px; margin-bottom: 8px;">🎧</div>
+                <div style="font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 0.5px;">Служба поддержки & Чат</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Radar Loot • Помощь, тикеты и комьюнити</div>
+            </div>
+
+            <div class="profile-actions-list" style="margin-bottom: 16px;">
+                <!-- 1. Написать тикет в боте -->
+                <div class="profile-action-item" onclick="startBotSupport()">
+                    <span class="action-item-icon">🤖</span>
+                    <div class="action-item-text">
+                        <div class="action-item-title">Создать тикет через бота</div>
+                        <div class="action-item-sub">Скриншоты, баги, вопросы. Ответ прямо в чат бота</div>
+                    </div>
+                    <span class="action-item-arrow">›</span>
+                </div>
+
+                <!-- 2. Чат сообщества -->
+                <div class="profile-action-item" onclick="openCommunityChat()">
+                    <span class="action-item-icon">💬</span>
+                    <div class="action-item-text">
+                        <div class="action-item-title">Чат сообщества Radar Loot</div>
+                        <div class="action-item-sub">Общение охотников, обсуждение цен и дропов</div>
+                    </div>
+                    <span class="action-item-arrow">›</span>
+                </div>
+
+                <!-- 3. Напрямую админу -->
+                <div class="profile-action-item" onclick="openDirectAdmin()">
+                    <span class="action-item-icon">👤</span>
+                    <div class="action-item-text">
+                        <div class="action-item-title">Написать администратору</div>
+                        <div class="action-item-sub">Личные сообщения в Telegram (@rudolfroditanow)</div>
+                    </div>
+                    <span class="action-item-arrow">›</span>
+                </div>
+            </div>
+
+            <button class="disclaimer-ack-btn" onclick="closeSupportModal()" style="margin-top: 10px;">
+                Понятно, закрыть
+            </button>
         </div>
     </div>
 <!-- Toast Notification -->
@@ -2852,6 +2909,56 @@
         function onDisclaimerOverlayClick(e) {
             if (e.target && e.target.id === 'disclaimer-modal') {
                 closeDisclaimerModal();
+            }
+        }
+
+        // ==================== SUPPORT MODAL LOGIC ====================
+        function openSupportModal() {
+            haptic('medium');
+            const el = document.getElementById('support-modal');
+            if (el) el.classList.add('open');
+        }
+
+        function closeSupportModal() {
+            haptic('light');
+            const el = document.getElementById('support-modal');
+            if (el) el.classList.remove('open');
+        }
+
+        function onSupportOverlayClick(e) {
+            if (e.target && e.target.id === 'support-modal') {
+                closeSupportModal();
+            }
+        }
+
+        function startBotSupport() {
+            haptic('medium');
+            closeSupportModal();
+            const url = 'https://t.me/radar_loot_bot?start=support';
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.openTelegramLink(url);
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+
+        function openCommunityChat() {
+            haptic('medium');
+            const url = 'https://t.me/radar_loot_chat';
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.openTelegramLink(url);
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+
+        function openDirectAdmin() {
+            haptic('medium');
+            const url = 'https://t.me/rudolfroditanow';
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.openTelegramLink(url);
+            } else {
+                window.open(url, '_blank');
             }
         }
 
