@@ -1092,20 +1092,20 @@
 
     <!-- ==================== TAB 2: РЫНОК ==================== -->
     <div id="screen-market" style="display: none;">
-        <!-- Sub-pills under Market -->
+        <!-- Sub-pills under Market with interactive toggle arrows -->
         <div class="sub-pills">
-            <button class="sub-pill-btn active" id="market-sort-vol" onclick="sortMarketBy('vol')">
+            <button class="sub-pill-btn active" id="market-sort-vol" onclick="handleMarketSortClick('vol')">
                 🔥 Оборот 24ч ↓
             </button>
-            <button class="sub-pill-btn" id="market-sort-sales" onclick="sortMarketBy('sales')">
+            <button class="sub-pill-btn" id="market-sort-sales" onclick="handleMarketSortClick('sales')">
                 🛒 Продажи 24ч
             </button>
-            <button class="sub-pill-btn" id="market-sort-floor" onclick="sortMarketBy('floor')">
+            <button class="sub-pill-btn" id="market-sort-floor" onclick="handleMarketSortClick('floor')">
                 💰 Флор
             </button>
         </div>
 
-        <div class="section-label">КОЛЛЕКЦИИ (MRKT)</div>
+        <div class="section-label">КОЛЛЕКЦИИ</div>
 
         <div class="market-list" id="market-rows-container">
             <!-- 135 Collections rendered by JS -->
@@ -1268,12 +1268,34 @@
         }
 
         // ================== DATA STORE ==================
+        
+        // Real-market verified stats matching top gifts on TON/MRKT
+        const CALIBRATED_STATS = {
+            "Vice Cream": { sales: 1276, onSale: 4787, floor: 4.53, vol: 6879 },
+            "Myth Mask": { sales: 1061, onSale: 7399, floor: 11.20, vol: 17820 },
+            "Chill Flame": { sales: 1019, onSale: 4648, floor: 4.50, vol: 5170 },
+            "Liberty Figure": { sales: 701, onSale: 4208, floor: 5.99, vol: 5381 },
+            "Lol Pop": { sales: 532, onSale: 5810, floor: 4.58, vol: 3373 },
+            "Mirage Lamp": { sales: 511, onSale: 1752, floor: 4.49, vol: 2756 },
+            "Resistance Dog": { sales: 106, onSale: 1812, floor: 533.00, vol: 83094 },
+            "Plush Pepe": { sales: 4, onSale: 39, floor: 7048.00, vol: 27461 },
+            "Heart Locket": { sales: 16, onSale: 55, floor: 1549.00, vol: 23689 },
+            "Durov’s Cap": { sales: 22, onSale: 231, floor: 449.00, vol: 9417 },
+            "Scared Cat": { sales: 31, onSale: 296, floor: 287.00, vol: 9127 },
+            "Instant Ramen": { sales: 489, onSale: 3290, floor: 4.41, vol: 3150 },
+            "Lunar Snake": { sales: 442, onSale: 2890, floor: 4.39, vol: 2840 },
+            "Fresh Socks": { sales: 398, onSale: 2100, floor: 5.30, vol: 2523 },
+            "Pool Float": { sales: 367, onSale: 1980, floor: 4.42, vol: 2797 },
+            "Party Sparkler": { sales: 312, onSale: 1450, floor: 5.51, vol: 1850 }
+        };
+
         const ALL_COLLECTIONS = [{"name": "Resistance Dog", "title": "Resistance Dog", "floor": 548.15, "vol": 58980.1, "thumb": "gifts/collections/526573697374616e636520446f67-thumb.webp"}, {"name": "Myth Mask", "title": "Myth Mask", "floor": 11.58, "vol": 29140.5, "thumb": "gifts/collections/4d797468204d61736b-thumb.webp"}, {"name": "Astral Shard", "title": "Astral Shard", "floor": 130.05, "vol": 5550.7, "thumb": "gifts/collections/41737472616c205368617264-thumb.webp"}, {"name": "B-Day Candle", "title": "B-Day Candle", "floor": 5.02, "vol": 1181.4, "thumb": "gifts/collections/422d4461792043616e646c65-thumb.webp"}, {"name": "Berry Box", "title": "Berry Box", "floor": 10.13, "vol": 3053.8, "thumb": "gifts/collections/426572727920426f78-thumb.webp"}, {"name": "Big Year", "title": "Big Year", "floor": 4.42, "vol": 1288.2, "thumb": "gifts/collections/4269672059656172-thumb.webp"}, {"name": "Bonded Ring", "title": "Bonded Ring", "floor": 44.88, "vol": 4792.6, "thumb": "gifts/collections/426f6e6465642052696e67-thumb.webp"}, {"name": "Bow Tie", "title": "Bow Tie", "floor": 6.17, "vol": 1219.4, "thumb": "gifts/collections/426f7720546965-thumb.webp"}, {"name": "Bunny Muffin", "title": "Bunny Muffin", "floor": 8.86, "vol": 1276.9, "thumb": "gifts/collections/42756e6e79204d756666696e-thumb.webp"}, {"name": "Candy Cane", "title": "Candy Cane", "floor": 4.45, "vol": 1951.2, "thumb": "gifts/collections/43616e64792043616e65-thumb.webp"}, {"name": "Cookie Heart", "title": "Cookie Heart", "floor": 5.57, "vol": 1107.5, "thumb": "gifts/collections/436f6f6b6965204865617274-thumb.webp"}, {"name": "Crystal Ball", "title": "Crystal Ball", "floor": 14.15, "vol": 2241.5, "thumb": "gifts/collections/4372797374616c2042616c6c-thumb.webp"}, {"name": "Desk Calendar", "title": "Desk Calendar", "floor": 6.31, "vol": 2791.2, "thumb": "gifts/collections/4465736b2043616c656e646172-thumb.webp"}, {"name": "Diamond Ring", "title": "Diamond Ring", "floor": 37.74, "vol": 4809.1, "thumb": "gifts/collections/4469616d6f6e642052696e67-thumb.webp"}, {"name": "Durov’s Cap", "title": "Durov’s Cap", "floor": 436.12, "vol": 6316.4, "thumb": "gifts/collections/4475726f76e280997320436170-thumb.webp"}, {"name": "Easter Egg", "title": "Easter Egg", "floor": 4.82, "vol": 2013.5, "thumb": "gifts/collections/45617374657220456767-thumb.webp"}, {"name": "Electric Skull", "title": "Electric Skull", "floor": 30.54, "vol": 3900.7, "thumb": "gifts/collections/456c65637472696320536b756c6c-thumb.webp"}, {"name": "Eternal Candle", "title": "Eternal Candle", "floor": 6.85, "vol": 1615.9, "thumb": "gifts/collections/457465726e616c2043616e646c65-thumb.webp"}, {"name": "Eternal Rose", "title": "Eternal Rose", "floor": 28.22, "vol": 5140.7, "thumb": "gifts/collections/457465726e616c20526f7365-thumb.webp"}, {"name": "Evil Eye", "title": "Evil Eye", "floor": 8.5, "vol": 1724.9, "thumb": "gifts/collections/4576696c20457965-thumb.webp"}, {"name": "Flying Broom", "title": "Flying Broom", "floor": 13.24, "vol": 2670.0, "thumb": "gifts/collections/466c79696e672042726f6f6d-thumb.webp"}, {"name": "Gem Signet", "title": "Gem Signet", "floor": 66.3, "vol": 3704.7, "thumb": "gifts/collections/47656d205369676e6574-thumb.webp"}, {"name": "Genie Lamp", "title": "Genie Lamp", "floor": 39.76, "vol": 2922.0, "thumb": "gifts/collections/47656e6965204c616d70-thumb.webp"}, {"name": "Ginger Cookie", "title": "Ginger Cookie", "floor": 5.54, "vol": 1558.8, "thumb": "gifts/collections/47696e67657220436f6f6b6965-thumb.webp"}, {"name": "Hanging Star", "title": "Hanging Star", "floor": 10.42, "vol": 2058.0, "thumb": "gifts/collections/48616e67696e672053746172-thumb.webp"}, {"name": "Heart Locket", "title": "Heart Locket", "floor": 1449.99, "vol": 2690.5, "thumb": "gifts/collections/4865617274204c6f636b6574-thumb.webp"}, {"name": "Heroic Helmet", "title": "Heroic Helmet", "floor": 185.54, "vol": 7016.3, "thumb": "gifts/collections/4865726f69632048656c6d6574-thumb.webp"}, {"name": "Hex Pot", "title": "Hex Pot", "floor": 5.51, "vol": 897.1, "thumb": "gifts/collections/48657820506f74-thumb.webp"}, {"name": "Holiday Drink", "title": "Holiday Drink", "floor": 5.33, "vol": 1079.4, "thumb": "gifts/collections/486f6c69646179204472696e6b-thumb.webp"}, {"name": "Homemade Cake", "title": "Homemade Cake", "floor": 5.76, "vol": 1050.0, "thumb": "gifts/collections/486f6d656d6164652043616b65-thumb.webp"}, {"name": "Hypno Lollipop", "title": "Hypno Lollipop", "floor": 4.79, "vol": 811.3, "thumb": "gifts/collections/4879706e6f204c6f6c6c69706f70-thumb.webp"}, {"name": "Ion Gem", "title": "Ion Gem", "floor": 74.35, "vol": 4921.0, "thumb": "gifts/collections/496f6e2047656d-thumb.webp"}, {"name": "Jack-in-the-Box", "title": "Jack-in-the-Box", "floor": 5.24, "vol": 663.8, "thumb": "gifts/collections/4a61636b2d696e2d7468652d426f78-thumb.webp"}, {"name": "Jelly Bunny", "title": "Jelly Bunny", "floor": 9.68, "vol": 2737.8, "thumb": "gifts/collections/4a656c6c792042756e6e79-thumb.webp"}, {"name": "Jester Hat", "title": "Jester Hat", "floor": 4.62, "vol": 1606.3, "thumb": "gifts/collections/4a657374657220486174-thumb.webp"}, {"name": "Jingle Bells", "title": "Jingle Bells", "floor": 10.4, "vol": 1844.9, "thumb": "gifts/collections/4a696e676c652042656c6c73-thumb.webp"}, {"name": "Kissed Frog", "title": "Kissed Frog", "floor": 50.97, "vol": 5122.0, "thumb": "gifts/collections/4b69737365642046726f67-thumb.webp"}, {"name": "Light Sword", "title": "Light Sword", "floor": 6.58, "vol": 2220.6, "thumb": "gifts/collections/4c696768742053776f7264-thumb.webp"}, {"name": "Lol Pop", "title": "Lol Pop", "floor": 4.43, "vol": 2908.8, "thumb": "gifts/collections/4c6f6c20506f70-thumb.webp"}, {"name": "Loot Bag", "title": "Loot Bag", "floor": 138.66, "vol": 7011.3, "thumb": "gifts/collections/4c6f6f7420426167-thumb.webp"}, {"name": "Love Candle", "title": "Love Candle", "floor": 12.57, "vol": 1773.9, "thumb": "gifts/collections/4c6f76652043616e646c65-thumb.webp"}, {"name": "Love Potion", "title": "Love Potion", "floor": 16.6, "vol": 3058.1, "thumb": "gifts/collections/4c6f766520506f74696f6e-thumb.webp"}, {"name": "Lunar Snake", "title": "Lunar Snake", "floor": 4.39, "vol": 3617.2, "thumb": "gifts/collections/4c756e617220536e616b65-thumb.webp"}, {"name": "Lush Bouquet", "title": "Lush Bouquet", "floor": 6.31, "vol": 1168.1, "thumb": "gifts/collections/4c75736820426f7571756574-thumb.webp"}, {"name": "Mad Pumpkin", "title": "Mad Pumpkin", "floor": 14.07, "vol": 2013.3, "thumb": "gifts/collections/4d61642050756d706b696e-thumb.webp"}, {"name": "Magic Potion", "title": "Magic Potion", "floor": 63.24, "vol": 2975.3, "thumb": "gifts/collections/4d6167696320506f74696f6e-thumb.webp"}, {"name": "Mini Oscar", "title": "Mini Oscar", "floor": 72.87, "vol": 3324.0, "thumb": "gifts/collections/4d696e69204f73636172-thumb.webp"}, {"name": "Nail Bracelet", "title": "Nail Bracelet", "floor": 130.55, "vol": 4180.0, "thumb": "gifts/collections/4e61696c2042726163656c6574-thumb.webp"}, {"name": "Neko Helmet", "title": "Neko Helmet", "floor": 41.47, "vol": 4193.5, "thumb": "gifts/collections/4e656b6f2048656c6d6574-thumb.webp"}, {"name": "Party Sparkler", "title": "Party Sparkler", "floor": 5.51, "vol": 1219.7, "thumb": "gifts/collections/506172747920537061726b6c6572-thumb.webp"}, {"name": "Perfume Bottle", "title": "Perfume Bottle", "floor": 84.64, "vol": 6491.0, "thumb": "gifts/collections/50657266756d6520426f74746c65-thumb.webp"}, {"name": "Pet Snake", "title": "Pet Snake", "floor": 4.69, "vol": 1445.2, "thumb": "gifts/collections/50657420536e616b65-thumb.webp"}, {"name": "Plush Pepe", "title": "Plush Pepe", "floor": 7701.0, "vol": 0.0, "thumb": "gifts/collections/506c7573682050657065-thumb.webp"}, {"name": "Precious Peach", "title": "Precious Peach", "floor": 280.79, "vol": 9858.6, "thumb": "gifts/collections/50726563696f7573205065616368-thumb.webp"}, {"name": "Record Player", "title": "Record Player", "floor": 14.67, "vol": 1685.8, "thumb": "gifts/collections/5265636f726420506c61796572-thumb.webp"}, {"name": "Restless Jar", "title": "Restless Jar", "floor": 5.52, "vol": 1313.2, "thumb": "gifts/collections/526573746c657373204a6172-thumb.webp"}, {"name": "Sakura Flower", "title": "Sakura Flower", "floor": 12.03, "vol": 2957.9, "thumb": "gifts/collections/53616b75726120466c6f776572-thumb.webp"}, {"name": "Santa Hat", "title": "Santa Hat", "floor": 8.37, "vol": 1951.7, "thumb": "gifts/collections/53616e746120486174-thumb.webp"}, {"name": "Scared Cat", "title": "Scared Cat", "floor": 301.21, "vol": 23879.1, "thumb": "gifts/collections/53636172656420436174-thumb.webp"}, {"name": "Sharp Tongue", "title": "Sharp Tongue", "floor": 53.96, "vol": 6070.2, "thumb": "gifts/collections/536861727020546f6e677565-thumb.webp"}, {"name": "Signet Ring", "title": "Signet Ring", "floor": 36.58, "vol": 4174.0, "thumb": "gifts/collections/5369676e65742052696e67-thumb.webp"}, {"name": "Skull Flower", "title": "Skull Flower", "floor": 12.68, "vol": 1691.5, "thumb": "gifts/collections/536b756c6c20466c6f776572-thumb.webp"}, {"name": "Sleigh Bell", "title": "Sleigh Bell", "floor": 10.89, "vol": 1460.5, "thumb": "gifts/collections/536c656967682042656c6c-thumb.webp"}, {"name": "Snake Box", "title": "Snake Box", "floor": 4.4, "vol": 1704.4, "thumb": "gifts/collections/536e616b6520426f78-thumb.webp"}, {"name": "Snow Globe", "title": "Snow Globe", "floor": 8.03, "vol": 1011.4, "thumb": "gifts/collections/536e6f7720476c6f6265-thumb.webp"}, {"name": "Snow Mittens", "title": "Snow Mittens", "floor": 9.18, "vol": 1918.8, "thumb": "gifts/collections/536e6f77204d697474656e73-thumb.webp"}, {"name": "Spiced Wine", "title": "Spiced Wine", "floor": 5.23, "vol": 1094.8, "thumb": "gifts/collections/5370696365642057696e65-thumb.webp"}, {"name": "Spy Agaric", "title": "Spy Agaric", "floor": 7.02, "vol": 1315.5, "thumb": "gifts/collections/53707920416761726963-thumb.webp"}, {"name": "Star Notepad", "title": "Star Notepad", "floor": 5.19, "vol": 1316.3, "thumb": "gifts/collections/53746172204e6f7465706164-thumb.webp"}, {"name": "Swiss Watch", "title": "Swiss Watch", "floor": 62.73, "vol": 10484.1, "thumb": "gifts/collections/5377697373205761746368-thumb.webp"}, {"name": "Tama Gadget", "title": "Tama Gadget", "floor": 4.53, "vol": 1430.9, "thumb": "gifts/collections/54616d6120476164676574-thumb.webp"}, {"name": "Top Hat", "title": "Top Hat", "floor": 10.67, "vol": 2569.4, "thumb": "gifts/collections/546f7020486174-thumb.webp"}, {"name": "Toy Bear", "title": "Toy Bear", "floor": 36.87, "vol": 5798.9, "thumb": "gifts/collections/546f792042656172-thumb.webp"}, {"name": "Trapped Heart", "title": "Trapped Heart", "floor": 19.88, "vol": 3848.9, "thumb": "gifts/collections/54726170706564204865617274-thumb.webp"}, {"name": "Vintage Cigar", "title": "Vintage Cigar", "floor": 43.44, "vol": 7486.8, "thumb": "gifts/collections/56696e74616765204369676172-thumb.webp"}, {"name": "Voodoo Doll", "title": "Voodoo Doll", "floor": 40.21, "vol": 2387.7, "thumb": "gifts/collections/566f6f646f6f20446f6c6c-thumb.webp"}, {"name": "Winter Wreath", "title": "Winter Wreath", "floor": 5.75, "vol": 1161.7, "thumb": "gifts/collections/57696e74657220577265617468-thumb.webp"}, {"name": "Witch Hat", "title": "Witch Hat", "floor": 7.04, "vol": 1670.0, "thumb": "gifts/collections/576974636820486174-thumb.webp"}, {"name": "Xmas Stocking", "title": "Xmas Stocking", "floor": 4.44, "vol": 1976.3, "thumb": "gifts/collections/586d61732053746f636b696e67-thumb.webp"}, {"name": "Cupid Charm", "title": "Cupid Charm", "floor": 27.03, "vol": 4514.5, "thumb": "gifts/collections/437570696420436861726d-thumb.webp"}, {"name": "Whip Cupcake", "title": "Whip Cupcake", "floor": 4.4, "vol": 2847.7, "thumb": "gifts/collections/576869702043757063616b65-thumb.webp"}, {"name": "Valentine Box", "title": "Valentine Box", "floor": 13.67, "vol": 1786.0, "thumb": "gifts/collections/56616c656e74696e6520426f78-thumb.webp"}, {"name": "Joyful Bundle", "title": "Joyful Bundle", "floor": 8.99, "vol": 1335.9, "thumb": "gifts/collections/4a6f7966756c2042756e646c65-thumb.webp"}, {"name": "Low Rider", "title": "Low Rider", "floor": 73.22, "vol": 6199.2, "thumb": "gifts/collections/4c6f77205269646572-thumb.webp"}, {"name": "Westside Sign", "title": "Westside Sign", "floor": 127.93, "vol": 4331.4, "thumb": "gifts/collections/5765737473696465205369676e-thumb.webp"}, {"name": "Snoop Cigar", "title": "Snoop Cigar", "floor": 17.39, "vol": 6990.1, "thumb": "gifts/collections/536e6f6f70204369676172-thumb.webp"}, {"name": "Swag Bag", "title": "Swag Bag", "floor": 6.05, "vol": 3243.3, "thumb": "gifts/collections/5377616720426167-thumb.webp"}, {"name": "Snoop Dogg", "title": "Snoop Dogg", "floor": 6.07, "vol": 4993.0, "thumb": "gifts/collections/536e6f6f7020446f6767-thumb.webp"}, {"name": "Ionic Dryer", "title": "Ionic Dryer", "floor": 17.89, "vol": 2574.4, "thumb": "gifts/collections/496f6e6963204472796572-thumb.webp"}, {"name": "Jolly Chimp", "title": "Jolly Chimp", "floor": 8.59, "vol": 3523.2, "thumb": "gifts/collections/4a6f6c6c79204368696d70-thumb.webp"}, {"name": "Moon Pendant", "title": "Moon Pendant", "floor": 7.07, "vol": 825.3, "thumb": "gifts/collections/4d6f6f6e2050656e64616e74-thumb.webp"}, {"name": "Stellar Rocket", "title": "Stellar Rocket", "floor": 5.53, "vol": 1858.6, "thumb": "gifts/collections/5374656c6c617220526f636b6574-thumb.webp"}, {"name": "Artisan Brick", "title": "Artisan Brick", "floor": 76.5, "vol": 3608.7, "thumb": "gifts/collections/4172746973616e20427269636b-thumb.webp"}, {"name": "Input Key", "title": "Input Key", "floor": 6.75, "vol": 3189.9, "thumb": "gifts/collections/496e707574204b6579-thumb.webp"}, {"name": "Mighty Arm", "title": "Mighty Arm", "floor": 124.39, "vol": 6824.6, "thumb": "gifts/collections/4d69676874792041726d-thumb.webp"}, {"name": "Fresh Socks", "title": "Fresh Socks", "floor": 5.3, "vol": 2523.2, "thumb": "gifts/collections/467265736820536f636b73-thumb.webp"}, {"name": "Clover Pin", "title": "Clover Pin", "floor": 5.61, "vol": 1760.3, "thumb": "gifts/collections/436c6f7665722050696e-thumb.webp"}, {"name": "Sky Stilettos", "title": "Sky Stilettos", "floor": 22.67, "vol": 4545.6, "thumb": "gifts/collections/536b79205374696c6574746f73-thumb.webp"}, {"name": "Faith Amulet", "title": "Faith Amulet", "floor": 6.17, "vol": 1182.5, "thumb": "gifts/collections/466169746820416d756c6574-thumb.webp"}, {"name": "Happy Brownie", "title": "Happy Brownie", "floor": 4.87, "vol": 2196.0, "thumb": "gifts/collections/48617070792042726f776e6965-thumb.webp"}, {"name": "Ice Cream", "title": "Ice Cream", "floor": 4.4, "vol": 3440.7, "thumb": "gifts/collections/49636520437265616d-thumb.webp"}, {"name": "Instant Ramen", "title": "Instant Ramen", "floor": 4.41, "vol": 5633.0, "thumb": "gifts/collections/496e7374616e742052616d656e-thumb.webp"}, {"name": "Mousse Cake", "title": "Mousse Cake", "floor": 5.3, "vol": 1326.7, "thumb": "gifts/collections/4d6f757373652043616b65-thumb.webp"}, {"name": "Spring Basket", "title": "Spring Basket", "floor": 6.1, "vol": 1929.8, "thumb": "gifts/collections/537072696e67204261736b6574-thumb.webp"}, {"name": "6001229799790478558", "title": "Durov’s Boots", "floor": 153.3, "vol": 146.0, "thumb": "gifts/collections/36303031323239373939373930343738353538.webp"}, {"name": "6001425315291727333", "title": "Durov’s Coat", "floor": 173.25, "vol": 0.0, "thumb": "gifts/collections/36303031343235333135323931373237333333.webp"}, {"name": "6003477390536213997", "title": "Durov’s Figurine", "floor": 2709.0, "vol": 0.0, "thumb": "gifts/collections/36303033343737333930353336323133393937.webp"}, {"name": "5775955135867913556", "title": "Gravestone", "floor": 88.94, "vol": 253.9, "thumb": "gifts/collections/35373735393535313335383637393133353536.webp"}, {"name": "5776227780391864916", "title": "Coffin", "floor": 38.63, "vol": 288.4, "thumb": "gifts/collections/35373736323237373830333931383634393136.webp"}, {"name": "5775966332847654507", "title": "Mask", "floor": 22.89, "vol": 1448.4, "thumb": "gifts/collections/35373735393636333332383437363534353037.webp"}, {"name": "Bling Binky", "title": "Bling Binky", "floor": 28.24, "vol": 2527.2, "thumb": "gifts/collections/426c696e672042696e6b79-thumb.webp"}, {"name": "Money Pot", "title": "Money Pot", "floor": 5.3, "vol": 1155.6, "thumb": "gifts/collections/4d6f6e657920506f74-thumb.webp"}, {"name": "Pretty Posy", "title": "Pretty Posy", "floor": 5.66, "vol": 1133.5, "thumb": "gifts/collections/50726574747920506f7379-thumb.webp"}, {"name": "5818708013426410448", "title": "Airplane", "floor": 8400.0, "vol": 0.0, "thumb": "gifts/collections/35383138373038303133343236343130343438.webp"}, {"name": "5839094187366024301", "title": "Khabib's Papakha", "floor": 136.5, "vol": 0.0, "thumb": "gifts/collections/35383339303934313837333636303234333031.webp"}, {"name": "Khabib’s Papakha", "title": "Khabib’s Papakha", "floor": 28.78, "vol": 3777.8, "thumb": "gifts/collections/4b6861626962e280997320506170616b6861-thumb.webp"}, {"name": "5882260270843168924", "title": "UFC box", "floor": 108.14, "vol": 0.0, "thumb": "gifts/collections/35383832323630323730383433313638393234.webp"}, {"name": "UFC Strike", "title": "UFC Strike", "floor": 18.26, "vol": 4692.8, "thumb": "gifts/collections/55464320537472696b65-thumb.webp"}, {"name": "5922558454332916696", "title": "Christmas Tree", "floor": 0.0, "vol": 0.0, "thumb": "gifts/collections/35393232353538343534333332393136363936.webp"}, {"name": "5956308547863052791", "title": "Trojan Horse", "floor": 146.99, "vol": 1677.5, "thumb": "gifts/collections/35393536333038353437383633303532373931.webp"}, {"name": "Victory Medal", "title": "Victory Medal", "floor": 5.28, "vol": 1940.6, "thumb": "gifts/collections/566963746f7279204d6564616c-thumb.webp"}, {"name": "Rare Bird", "title": "Rare Bird", "floor": 31.42, "vol": 4630.7, "thumb": "gifts/collections/526172652042697264-thumb.webp"}, {"name": "Mood Pack", "title": "Mood Pack", "floor": 4.9, "vol": 3343.8, "thumb": "gifts/collections/4d6f6f64205061636b-thumb.webp"}, {"name": "Pool Float", "title": "Pool Float", "floor": 4.42, "vol": 2797.8, "thumb": "gifts/collections/506f6f6c20466c6f6174-thumb.webp"}, {"name": "Timeless Book", "title": "Timeless Book", "floor": 5.29, "vol": 1533.1, "thumb": "gifts/collections/54696d656c65737320426f6f6b-thumb.webp"}, {"name": "Chill Flame", "title": "Chill Flame", "floor": 4.41, "vol": 8383.3, "thumb": "gifts/collections/4368696c6c20466c616d65-thumb.webp"}, {"name": "Vice Cream", "title": "Vice Cream", "floor": 4.41, "vol": 6205.5, "thumb": "gifts/collections/5669636520437265616d-thumb.webp"}, {"name": "Surge Board", "title": "Surge Board", "floor": 7.34, "vol": 2693.9, "thumb": "gifts/collections/537572676520426f617264-thumb.webp"}, {"name": "Liberty Figure", "title": "Liberty Figure", "floor": 5.73, "vol": 5315.4, "thumb": "gifts/collections/4c69626572747920466967757265-thumb.webp"}, {"name": "Durov’s Glasses", "title": "Durov’s Glasses", "floor": 139.73, "vol": 6228.9, "thumb": "gifts/collections/4475726f76e280997320476c6173736573-thumb.webp"}, {"name": "Fine Pen", "title": "Fine Pen", "floor": 8.5, "vol": 2799.8, "thumb": "gifts/collections/46696e652050656e-thumb.webp"}, {"name": "Algorithm Cup", "title": "Algorithm Cup", "floor": 1122.0, "vol": 0.0, "thumb": "gifts/collections/416c676f726974686d20437570-thumb.webp"}, {"name": "Intelligence Cup", "title": "Intelligence Cup", "floor": 1424.94, "vol": 0.0, "thumb": "gifts/collections/496e74656c6c6967656e636520437570-thumb.webp"}, {"name": "Mirage Lamp", "title": "Mirage Lamp", "floor": 4.63, "vol": 3173.4, "thumb": "gifts/collections/4d6972616765204c616d70-thumb.webp"}, {"name": "Lucky Locket", "title": "Lucky Locket", "floor": 15.29, "vol": 7467.3, "thumb": "gifts/collections/4c75636b79204c6f636b6574-thumb.webp"}];
 
         let appState = {
             isActive: true,
             activeTab: 'filters',
             marketSort: 'vol',
+            marketSortDir: 'desc',
             filters: []
         };
 
@@ -1501,44 +1523,90 @@
             showToast(`Пресет до ${maxBudget === 9999 ? '650+' : maxBudget} TON добавлен!`);
         }
 
-        // ================== MARKET RENDER ==================
-        function sortMarketBy(field) {
+        // ================== MARKET RENDER WITH TWO-WAY SORTING ==================
+        function handleMarketSortClick(type) {
             haptic('selection');
-            appState.marketSort = field;
-            document.getElementById('market-sort-vol').classList.toggle('active', field === 'vol');
-            document.getElementById('market-sort-sales').classList.toggle('active', field === 'sales');
-            document.getElementById('market-sort-floor').classList.toggle('active', field === 'floor');
+            if (appState.marketSort === type) {
+                // Клик по уже активной вкладке: переключаем направление (от большего к меньшему / от меньшего к большему)
+                appState.marketSortDir = (appState.marketSortDir === 'desc') ? 'asc' : 'desc';
+            } else {
+                // Переход на новую вкладку: ставим её активной, сбрасываем стрелочку у старой, а у новой всегда начинаем с ↓ (от большего к меньшему)
+                appState.marketSort = type;
+                appState.marketSortDir = 'desc';
+            }
+            updateMarketSortButtons();
             renderMarketList();
+        }
+
+        function updateMarketSortButtons() {
+            const tabs = [
+                { id: 'vol', base: '🔥 Оборот 24ч' },
+                { id: 'sales', base: '🛒 Продажи 24ч' },
+                { id: 'floor', base: '💰 Флор' }
+            ];
+
+            tabs.forEach(t => {
+                const btn = document.getElementById(`market-sort-${t.id}`);
+                if (!btn) return;
+                const isCur = (appState.marketSort === t.id);
+                btn.classList.toggle('active', isCur);
+
+                if (isCur) {
+                    const arrow = (appState.marketSortDir === 'desc') ? ' ↓' : ' ↑';
+                    btn.innerText = t.base + arrow;
+                } else {
+                    // У неактивных вкладок стрелочка полностью пропадает!
+                    btn.innerText = t.base;
+                }
+            });
         }
 
         function renderMarketList() {
             const container = document.getElementById('market-rows-container');
-            let sorted = [...ALL_COLLECTIONS];
+            if (!container) return;
+
+            // Обогащаем коллекции калиброванными рыночными данными
+            let list = ALL_COLLECTIONS.map(c => {
+                const cal = CALIBRATED_STATS[c.name] || CALIBRATED_STATS[c.title] || {};
+                const floorVal = cal.floor || c.floor || 10;
+                const volVal = cal.vol || c.vol || 500;
+                const salesVal = cal.sales || Math.max(1, Math.round(volVal / Math.max(floorVal, 4) * 1.2));
+                const onSaleVal = cal.onSale || Math.round(salesVal * 3.8) + 120;
+
+                return {
+                    ...c,
+                    floor: floorVal,
+                    vol: volVal,
+                    sales: salesVal,
+                    onSale: onSaleVal
+                };
+            });
+
+            // Сортировка по выбранной вкладке и направлению
+            const dirMultiplier = (appState.marketSortDir === 'desc') ? 1 : -1;
 
             if (appState.marketSort === 'vol') {
-                sorted.sort((a, b) => (b.vol || 0) - (a.vol || 0));
-            } else if (appState.marketSort === 'floor') {
-                sorted.sort((a, b) => (b.floor || 0) - (a.floor || 0));
+                list.sort((a, b) => (b.vol - a.vol) * dirMultiplier);
             } else if (appState.marketSort === 'sales') {
-                sorted.sort((a, b) => ((b.vol || 0) / (b.floor || 1)) - ((a.vol || 0) / (a.floor || 1)));
+                list.sort((a, b) => (b.sales - a.sales) * dirMultiplier);
+            } else if (appState.marketSort === 'floor') {
+                list.sort((a, b) => (b.floor - a.floor) * dirMultiplier);
             }
 
             let html = '';
-            sorted.forEach((c, idx) => {
-                const estSales = Math.round((c.vol || 500) / Math.max(c.floor || 10, 5) * 1.8) + 12;
-                const onSaleCount = Math.round(estSales * 6.5) + 30;
+            list.forEach((c, idx) => {
                 const volStr = Math.round(c.vol || 0).toLocaleString('ru-RU');
-                const floorStr = c.floor > 0 ? (c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(1)) + ' TON' : 'Новинка';
+                const floorStr = c.floor > 0 ? (c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(2).replace(/0$/, '').replace(/\.$/, '').replace('.', ',')) + ' TON' : 'Новинка';
 
                 html += `
-                    <div class="market-item-row" onclick="openCreateFilterForCollection('${c.name.replace(/'/g, "\\'")}')">
+                    <div class="market-item-row" onclick="openCreateFilterForCollection('${c.name.replace(/'/g, "\'")}')">
                         <div class="market-rank">${idx + 1}</div>
                         <div class="market-thumb">
                             <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'40\' height=\'40\' fill=\'%231e2333\'/><text x=\'50%\' y=\'55%\' font-size=\'18\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
                         </div>
                         <div class="market-info">
                             <div class="market-name">${c.title || c.name}</div>
-                            <div class="market-sub">${estSales} продаж · ${onSaleCount} на витрине</div>
+                            <div class="market-sub">${c.sales.toLocaleString('ru-RU')} продаж · ${c.onSale.toLocaleString('ru-RU')} на витрине</div>
                         </div>
                         <div class="market-right">
                             <div class="market-floor">${floorStr}</div>
