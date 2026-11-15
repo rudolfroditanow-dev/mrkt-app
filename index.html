@@ -44,7 +44,7 @@
                     <div class="live-drop-card">
                         <div class="live-drop-top">
                             <div class="live-drop-thumb">
-                                <img src="https://cdn.tgmrkt.io/${item.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%231a1e2d\'/><text x=\'50%\' y=\'55%\' font-size=\'22\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                                <img src="https://cdn.tgmrkt.io/${getCollectionRealThumb(item.title)}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%231a1e2d\'/><text x=\'50%\' y=\'55%\' font-size=\'22\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
                             </div>
                             <div class="live-drop-info">
                                 <div class="live-drop-title-row">
@@ -537,10 +537,16 @@
             border-radius: 14px;
             padding: 10px 12px;
             display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .market-row-top {
+            display: flex;
             align-items: center;
             gap: 12px;
+            width: 100%;
             cursor: pointer;
-            transition: all 0.2s;
         }
         .market-item-row:active {
             transform: scale(0.99);
@@ -2011,12 +2017,18 @@
             background: #151824;
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 8px;
-            padding: 4px 6px;
+            padding: 6px 6px;
             text-align: center;
             font-size: 10.5px;
             display: flex;
             flex-direction: column;
-            gap: 1px;
+            gap: 2px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .arb-m-chip:hover, .arb-m-chip:active {
+            transform: scale(0.97);
+            filter: brightness(1.2);
         }
         .arb-m-chip .arb-m-name {
             font-size: 9px;
@@ -3340,40 +3352,44 @@
                 const colTitle = c.title || c.name;
                 const isFav = favoritesList && favoritesList.some(f => f.title === colTitle);
 
+                                const cleanSlug = colTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
                 html += `
-                    <div class="market-item-row" onclick="openCreateFilterForCollection('${c.name.replace(/'/g, "\\'")}')">
-                        <div class="market-rank">${idx + 1}</div>
-                        <div class="market-thumb">
-                            <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'40\\' height=\\'40\\'><rect width=\\'40\\' height=\\'40\\' fill=\\'%231e2333\\'/><text x=\\'50%\\' y=\\'55%\\' font-size=\\'18\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'white\\'>🎁</text></svg>'">
+                    <div class="market-item-row">
+                        <div class="market-row-top" onclick="openCreateFilterForCollection('${c.name.replace(/'/g, "\\'")}')">
+                            <div class="market-rank">${idx + 1}</div>
+                            <div class="market-thumb">
+                                <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'40\' height=\'40\' fill=\'%231e2333\'/><text x=\'50%\' y=\'55%\' font-size=\'18\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                            </div>
+                            <div class="market-info">
+                                <div class="market-name">${colTitle}</div>
+                                <div class="market-sub">${c.sales.toLocaleString('ru-RU')} продаж · ${c.onSale.toLocaleString('ru-RU')} на витрине</div>
+                            </div>
+                            <div class="market-right">
+                                <div class="market-floor">${floorStr}</div>
+                                <div class="market-vol">объём ${volStr}</div>
+                            </div>
+                            <button class="market-fav-star-btn ${isFav ? 'active' : ''}" onclick="toggleFavoriteCollection('${colTitle.replace(/'/g, "\\'")}', '${c.thumb}', ${c.floor || 0}, event)" title="В избранное">
+                                ${isFav ? '⭐️' : '☆'}
+                            </button>
                         </div>
-                        <div class="market-info">
-                            <div class="market-name">${colTitle}</div>
-                            <div class="market-sub">${c.sales.toLocaleString('ru-RU')} продаж · ${c.onSale.toLocaleString('ru-RU')} на витрине</div>
-                        </div>
-                        <div class="market-right">
-                            <div class="market-floor">${floorStr}</div>
-                            <div class="market-vol">объём ${volStr}</div>
-                        </div>
-                        <button class="market-fav-star-btn ${isFav ? 'active' : ''}" onclick="toggleFavoriteCollection('${colTitle.replace(/'/g, "\\'")}', '${c.thumb}', ${c.floor || 0}, event)" title="В избранное">
-                            ${isFav ? '⭐️' : '☆'}
-                        </button>
                         ${(appState.marketSort === 'arbitrage' || c.arbSpreadPct >= 15) ? `
-                            <div class="arb-badge-container" style="grid-column: 1 / -1; width: 100%;">
+                            <div class="arb-badge-container">
                                 <div class="arb-top-line">
                                     <div class="arb-spread-tag">⚡️ Спред: +${c.arbSpreadTon} TON (+${c.arbSpreadPct}%)</div>
-                                    <div class="arb-route-text">Купить <strong>${c.arbCheapest.name}</strong> ➔ Слить <strong>${c.arbHighest.name}</strong></div>
+                                    <div class="arb-route-text">Купить <strong>${c.arbCheapest.name}</strong> ➔ Сдать <strong>${c.arbHighest.name}</strong></div>
                                 </div>
                                 <div class="arb-markets-row">
-                                    <div class="arb-m-chip ${c.arbCheapest.key === 'mrkt' ? 'cheapest' : (c.arbHighest.key === 'mrkt' ? 'highest' : '')}">
-                                        <span class="arb-m-name">MRKT</span>
+                                    <div class="arb-m-chip ${c.arbCheapest.key === 'mrkt' ? 'cheapest' : (c.arbHighest.key === 'mrkt' ? 'highest' : '')}" onclick="openMarketWithCollection('mrkt', '${cleanSlug}', '${colTitle.replace(/'/g, "\\'")}', event)">
+                                        <span class="arb-m-name">MRKT ↗</span>
                                         <span class="arb-m-price">${c.arbPrices.mrkt} TON</span>
                                     </div>
-                                    <div class="arb-m-chip ${c.arbCheapest.key === 'portals' ? 'cheapest' : (c.arbHighest.key === 'portals' ? 'highest' : '')}">
-                                        <span class="arb-m-name">Portals</span>
+                                    <div class="arb-m-chip ${c.arbCheapest.key === 'portals' ? 'cheapest' : (c.arbHighest.key === 'portals' ? 'highest' : '')}" onclick="openMarketWithCollection('portals', '${cleanSlug}', '${colTitle.replace(/'/g, "\\'")}', event)">
+                                        <span class="arb-m-name">PORTALS ↗</span>
                                         <span class="arb-m-price">${c.arbPrices.portals} TON</span>
                                     </div>
-                                    <div class="arb-m-chip ${c.arbCheapest.key === 'tonnel' ? 'cheapest' : (c.arbHighest.key === 'tonnel' ? 'highest' : '')}">
-                                        <span class="arb-m-name">Tonnel</span>
+                                    <div class="arb-m-chip ${c.arbCheapest.key === 'tonnel' ? 'cheapest' : (c.arbHighest.key === 'tonnel' ? 'highest' : '')}" onclick="openMarketWithCollection('tonnel', '${cleanSlug}', '${colTitle.replace(/'/g, "\\'")}', event)">
+                                        <span class="arb-m-name">TONNEL ↗</span>
                                         <span class="arb-m-price">${c.arbPrices.tonnel} TON</span>
                                     </div>
                                 </div>
@@ -4055,7 +4071,7 @@
                     <div class="live-drop-card">
                         <div class="live-drop-top">
                             <div class="live-drop-thumb">
-                                <img src="https://cdn.tgmrkt.io/${item.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%231a1e2d\'/><text x=\'50%\' y=\'55%\' font-size=\'22\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                                <img src="https://cdn.tgmrkt.io/${getCollectionRealThumb(item.title)}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%231a1e2d\'/><text x=\'50%\' y=\'55%\' font-size=\'22\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
                             </div>
                             <div class="live-drop-info">
                                 <div class="live-drop-title-row">
