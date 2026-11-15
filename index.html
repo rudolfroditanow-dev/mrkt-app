@@ -1229,16 +1229,389 @@
             transform: scale(0.98);
             filter: brightness(0.95);
         }
+
+        /* ==================== USER PROFILE HEADER PILL ==================== */
+        .brand-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+        .user-header-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 3px 10px 3px 3px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+        }
+        .user-header-pill:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .user-pill-avatar-box {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid #22c55e;
+        }
+        .user-pill-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .user-pill-avatar-initial {
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .user-pill-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #f1f3f9;
+            max-width: 90px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ==================== SCREEN PROFILE ==================== */
+        .profile-hero-card {
+            background: linear-gradient(135deg, #181b29 0%, #11131e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .profile-avatar-box {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid #6366f1;
+            box-shadow: 0 4px 18px rgba(99, 102, 241, 0.4);
+        }
+        .profile-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-avatar-initial {
+            font-size: 28px;
+            font-weight: 900;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-online-badge {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #22c55e;
+            border: 2px solid #11131e;
+        }
+        .profile-hero-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .profile-hero-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .profile-badges-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        .profile-user-tag {
+            font-size: 12px;
+            font-weight: 700;
+            color: #a5b4fc;
+            background: rgba(99, 102, 241, 0.15);
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
+        .profile-id-tag {
+            font-size: 11px;
+            color: #71768b;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .profile-sub-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            background: linear-gradient(135deg, rgba(245, 166, 35, 0.15), rgba(245, 166, 35, 0.05));
+            border: 1px solid rgba(245, 166, 35, 0.3);
+            color: #f7b731;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+        .sub-sep {
+            opacity: 0.5;
+        }
+        .sub-status-text {
+            color: #ffd166;
+        }
+
+        /* Profile Section Card */
+        .profile-section-card {
+            background: #141722;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .profile-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .profile-section-title {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #8c92a4;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+        .profile-ref-count-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.12);
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+        .profile-card-desc {
+            font-size: 12px;
+            line-height: 1.45;
+            color: #9da3b4;
+            margin-bottom: 12px;
+        }
+        .profile-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .profile-status-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile-status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+        }
+        .profile-status-indicator.paused {
+            background: #f59e0b;
+            box-shadow: 0 0 10px #f59e0b;
+        }
+        .profile-status-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .profile-status-desc {
+            font-size: 11px;
+            color: #71768b;
+        }
+        .profile-toggle-btn {
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .profile-toggle-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Ref Link */
+        .profile-ref-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .profile-ref-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #e2e8f0;
+            font-size: 12px;
+            outline: none;
+        }
+        .profile-ref-copy-btn {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 0 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .profile-ref-copy-btn:active {
+            transform: scale(0.95);
+            background: rgba(99, 102, 241, 0.3);
+        }
+        .profile-invite-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+        }
+        .profile-invite-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Stats Mini Grid */
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .stat-mini-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-mini-val {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .stat-mini-lbl {
+            font-size: 10px;
+            color: #8c92a4;
+            margin-top: 2px;
+        }
+
+        /* Actions list */
+        .profile-actions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .profile-action-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .profile-action-item:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .action-item-icon {
+            font-size: 18px;
+        }
+        .action-item-text {
+            flex: 1;
+        }
+        .action-item-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .action-item-sub {
+            font-size: 11px;
+            color: #71768b;
+        }
+        .action-item-arrow {
+            font-size: 18px;
+            color: #71768b;
+        }
 </style>
 </head>
 <body>
 
     <!-- Top Brand Header -->
     <div class="brand-header">
-        <div class="brand-icon">🔔</div>
-        <div>
-            <div class="brand-title">Radar Loot</div>
-            <div class="brand-sub">Мгновенные уведомления о NFT-подарках • MRKT • Portals • Tonnel</div>
+        <div class="brand-header-left">
+            <div class="brand-icon">🔔</div>
+            <div>
+                <div class="brand-title">Radar Loot</div>
+                <div class="brand-sub">Мгновенные уведомления о NFT-подарках</div>
+            </div>
+        </div>
+        <!-- User Profile Pill in Header -->
+        <div class="user-header-pill" id="header-user-pill" onclick="switchMainTab('profile')">
+            <div class="user-pill-avatar-box">
+                <img class="user-pill-avatar-img" id="header-user-avatar" src="" alt="avatar" style="display:none;" onload="this.style.display='block'; document.getElementById('header-avatar-initial').style.display='none';">
+                <span class="user-pill-avatar-initial" id="header-avatar-initial">👤</span>
+            </div>
+            <span class="user-pill-name" id="header-user-name">Профиль</span>
         </div>
     </div>
 
@@ -1264,7 +1637,9 @@
         <button class="nav-tab-btn" id="tab-market-btn" onclick="switchMainTab('market')">
             📊 Рынок
         </button>
-        
+        <button class="nav-tab-btn" id="tab-profile-btn" onclick="switchMainTab('profile')">
+            👤 Профиль
+        </button>
     </div>
 
     <!-- ==================== TAB 1: ФИЛЬТРЫ ==================== -->
@@ -1343,6 +1718,113 @@
             <!-- 135 Collections rendered by JS -->
         </div>
     </div>
+    <!-- ==================== TAB 3: ПРОФИЛЬ ==================== -->
+    <div id="screen-profile" style="display: none;">
+        <!-- Profile Hero Card -->
+        <div class="profile-hero-card">
+            <div class="profile-avatar-wrap">
+                <div class="profile-avatar-box">
+                    <img id="profile-avatar-img" class="profile-avatar-img" src="" alt="avatar" style="display:none;" onload="this.style.display='block'; document.getElementById('profile-avatar-initial').style.display='none';">
+                    <div id="profile-avatar-initial" class="profile-avatar-initial">👤</div>
+                </div>
+                <div class="profile-online-badge"></div>
+            </div>
+            
+            <div class="profile-hero-info">
+                <div class="profile-hero-name" id="profile-full-name">Пользователь</div>
+                <div class="profile-badges-row">
+                    <span class="profile-user-tag" id="profile-username-tag">@username</span>
+                    <span class="profile-id-tag" id="profile-user-id">ID: 6607029329</span>
+                </div>
+                <div class="profile-sub-badge">
+                    <span>💎 PRO Снайпер</span>
+                    <span class="sub-sep">•</span>
+                    <span class="sub-status-text">Без ограничений</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Sniper Status Card in Profile -->
+        <div class="profile-section-card">
+            <div class="profile-section-title">⚡️ СТАТУС МОНИТОРИНГА</div>
+            <div class="profile-status-row">
+                <div class="profile-status-info">
+                    <div class="profile-status-indicator" id="profile-status-dot"></div>
+                    <div>
+                        <div class="profile-status-name" id="profile-status-name">Снайпер активен</div>
+                        <div class="profile-status-desc">MRKT • Portals • Tonnel сканируются 24/7</div>
+                    </div>
+                </div>
+                <button class="profile-toggle-btn" id="profile-btn-toggle" onclick="togglePauseFromProfile()">
+                    Пауза 🔕
+                </button>
+            </div>
+        </div>
+
+        <!-- Referral Program Card -->
+        <div class="profile-section-card">
+            <div class="profile-section-header">
+                <div class="profile-section-title">🚀 РЕФЕРАЛЬНАЯ ПРОГРАММА</div>
+                <div class="profile-ref-count-badge" id="profile-ref-count">Приглашено: 0</div>
+            </div>
+            <div class="profile-card-desc">
+                Приглашайте друзей в Radar Loot и получайте дополнительные дни PRO доступа и эксклюзивные функции!
+            </div>
+            
+            <div class="profile-ref-box">
+                <input type="text" class="profile-ref-input" id="profile-ref-link" readonly value="https://t.me/radar_loot_bot">
+                <button class="profile-ref-copy-btn" onclick="copyRefLink()">
+                    📋 Копировать
+                </button>
+            </div>
+            <button class="profile-invite-btn" onclick="shareRefLink()">
+                ✈️ Пригласить друга в Telegram
+            </button>
+        </div>
+
+        <!-- Activity & Stats Card -->
+        <div class="profile-section-card">
+            <div class="profile-section-title">📊 СТАТИСТИКА & МАРКЕТЫ</div>
+            <div class="profile-stats-grid">
+                <div class="stat-mini-box">
+                    <div class="stat-mini-val" id="profile-active-filters-count">1</div>
+                    <div class="stat-mini-lbl">Активных фильтров</div>
+                </div>
+                <div class="stat-mini-box">
+                    <div class="stat-mini-val">3</div>
+                    <div class="stat-mini-lbl">Маркетплейса</div>
+                </div>
+                <div class="stat-mini-box">
+                    <div class="stat-mini-val">&lt; 0.5s</div>
+                    <div class="stat-mini-lbl">Скорость радара</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support & Disclaimer Card -->
+        <div class="profile-section-card">
+            <div class="profile-section-title">⚙️ ПОЛЕЗНОЕ</div>
+            <div class="profile-actions-list">
+                <div class="profile-action-item" onclick="openDisclaimerModal()">
+                    <span class="action-item-icon">⚠️</span>
+                    <div class="action-item-text">
+                        <div class="action-item-title">Памятка: Как избежать спама?</div>
+                        <div class="action-item-sub">Рекомендации по настройке диапазонов и скидок</div>
+                    </div>
+                    <span class="action-item-arrow">›</span>
+                </div>
+                <div class="profile-action-item" onclick="if (window.Telegram?.WebApp) { window.Telegram.WebApp.openTelegramLink('https://t.me/rudolfroditanow'); } else { window.open('https://t.me/rudolfroditanow', '_blank'); }">
+                    <span class="action-item-icon">💬</span>
+                    <div class="action-item-text">
+                        <div class="action-item-title">Служба поддержки & Обратная связь</div>
+                        <div class="action-item-sub">Предложения, баги и идеи для бота</div>
+                    </div>
+                    <span class="action-item-arrow">›</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- ==================== MODAL: ВЫБЕРИ ПОДАРОК & ФИЛЬТР ==================== -->
     <div class="modal-overlay" id="filter-modal">
@@ -2267,7 +2749,129 @@
                     openDisclaimerModal();
                 }, 400);
             }
-    loadLocalState();
+    
+        // ==================== USER PROFILE LOGIC ====================
+        let currentUserId = '6607029329';
+
+        function initUserProfile() {
+            const u = tg?.initDataUnsafe?.user;
+            const urlParams = new URLSearchParams(window.location.search);
+            const uidFromUrl = urlParams.get('uid');
+            const refFromUrl = urlParams.get('ref');
+
+            currentUserId = u?.id ? String(u.id) : (uidFromUrl || '6607029329');
+            const userHandle = u?.username ? `@${u.username}` : (u?.first_name || 'Пользователь');
+            const fullName = [u?.first_name, u?.last_name].filter(Boolean).join(' ') || (u?.username ? `@${u.username}` : 'Трейдер');
+            const photo = u?.photo_url || null;
+
+            // 1. Header Pill
+            const hName = document.getElementById('header-user-name');
+            const hAvatar = document.getElementById('header-user-avatar');
+            const hInitial = document.getElementById('header-avatar-initial');
+
+            if (hName) hName.innerText = userHandle;
+            if (photo && hAvatar) {
+                hAvatar.src = photo;
+            } else if (hInitial) {
+                hInitial.innerText = (u?.first_name || 'U').charAt(0).toUpperCase();
+            }
+
+            // 2. Profile Screen
+            const pName = document.getElementById('profile-full-name');
+            const pUser = document.getElementById('profile-username-tag');
+            const pId = document.getElementById('profile-user-id');
+            const pAvatar = document.getElementById('profile-avatar-img');
+            const pInitial = document.getElementById('profile-avatar-initial');
+            const pRefLink = document.getElementById('profile-ref-link');
+            const pRefCount = document.getElementById('profile-ref-count');
+
+            if (pName) pName.innerText = fullName;
+            if (pUser) pUser.innerText = u?.username ? `@${u.username}` : `id${currentUserId}`;
+            if (pId) pId.innerText = `ID: ${currentUserId}`;
+            if (pRefLink) pRefLink.value = `https://t.me/radar_loot_bot?start=ref_${currentUserId}`;
+            if (pRefCount && refFromUrl) pRefCount.innerText = `Приглашено: ${refFromUrl}`;
+
+            if (photo && pAvatar) {
+                pAvatar.src = photo;
+            } else if (pInitial) {
+                pInitial.innerText = (u?.first_name || 'U').charAt(0).toUpperCase();
+            }
+
+            updateProfileStats();
+        }
+
+        function updateProfileStats() {
+            const pDot = document.getElementById('profile-status-dot');
+            const pStatusName = document.getElementById('profile-status-name');
+            const pToggleBtn = document.getElementById('profile-btn-toggle');
+            const pFilterCount = document.getElementById('profile-active-filters-count');
+
+            if (pDot && pStatusName && pToggleBtn) {
+                if (appState.isActive) {
+                    pDot.classList.remove('paused');
+                    pStatusName.innerText = 'Снайпер активен 🟢';
+                    pToggleBtn.innerText = 'Пауза 🔕';
+                } else {
+                    pDot.classList.add('paused');
+                    pStatusName.innerText = 'На паузе ⏸';
+                    pToggleBtn.innerText = 'Включить 🟢';
+                }
+            }
+
+            if (pFilterCount) {
+                const activeCount = appState.filters ? appState.filters.filter(f => f.enabled).length : 0;
+                pFilterCount.innerText = activeCount;
+            }
+        }
+
+        function togglePauseFromProfile() {
+            haptic('medium');
+            appState.isActive = !appState.isActive;
+            updateStatusUI();
+            updateProfileStats();
+            saveLocalState();
+            showToast(appState.isActive ? 'Снайпер запущен!' : 'Снайпер поставлен на паузу', appState.isActive ? '🟢' : '⏸');
+
+            if (tg) {
+                try {
+                    const action = appState.isActive ? 'resume' : 'pause';
+                    tg.openTelegramLink(`https://t.me/radar_loot_bot?start=${action}`);
+                    setTimeout(() => {
+                        try { tg.close(); } catch(err) {}
+                    }, 200);
+                } catch (e) {}
+            }
+        }
+
+        function copyRefLink() {
+            haptic('selection');
+            const linkInput = document.getElementById('profile-ref-link');
+            if (linkInput) {
+                linkInput.select();
+                linkInput.setSelectionRange(0, 99999);
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(linkInput.value);
+                } else {
+                    document.execCommand('copy');
+                }
+                showToast('Реферальная ссылка скопирована! 📋');
+            }
+        }
+
+        function shareRefLink() {
+            haptic('medium');
+            const link = `https://t.me/radar_loot_bot?start=ref_${currentUserId}`;
+            const text = encodeURIComponent('🔥 Присоединяйся к Radar Loot — быстрому радар-снайперу редких NFT подарков на Portals, MRKT и Fragment!');
+            const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`;
+            if (tg) {
+                tg.openTelegramLink(shareUrl);
+            } else {
+                window.open(shareUrl, '_blank');
+            }
+        }
+
+        initUserProfile();
+        loadLocalState();
     </script>
 </body>
 </html>
