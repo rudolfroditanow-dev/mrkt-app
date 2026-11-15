@@ -3118,7 +3118,7 @@
 
         function openCommunityChat() {
             haptic('medium');
-            const url = 'https://t.me/radar_loot_chat';
+            const url = 'https://t.me/+hQjjlUzIcalxNjA6';
             if (window.Telegram?.WebApp) {
                 window.Telegram.WebApp.openTelegramLink(url);
             } else {
@@ -3321,7 +3321,7 @@
                 if (saved) {
                     favoritesList = JSON.parse(saved);
                 } else {
-                    // Стартовые избранные лоты для мгновенного отображения интерфейса
+                    // Стартовые избранные лоты для мгновенного отображения интерфейса с реальными ссылками
                     favoritesList = [
                         {
                             id: 'lol_pop_1234',
@@ -3331,7 +3331,7 @@
                             thumb: 'c/lolpop.png',
                             market: 'mrkt',
                             discount: 15,
-                            url: 'https://t.me/mrkt'
+                            url: 'https://t.me/mrkt/app?startapp=lol-pop_1234'
                         },
                         {
                             id: 'astral_shard_777',
@@ -3341,7 +3341,17 @@
                             thumb: 'c/astralshard.png',
                             market: 'portals',
                             discount: 20,
-                            url: 'https://t.me/portals'
+                            url: 'https://t.me/portals/market?startapp=astral-shard_777'
+                        },
+                        {
+                            id: 'onyx_flask_999',
+                            title: 'Onyx Flask',
+                            number: 999,
+                            price: 42.5,
+                            thumb: 'c/onyxflask.png',
+                            market: 'tonnel',
+                            discount: 18,
+                            url: 'https://t.me/tonnel_network_bot/gifts?startapp=onyx-flask_999'
                         }
                     ];
                     saveFavorites();
@@ -3433,7 +3443,17 @@
                 recordPurchaseDeal(title, price, market);
             }
             showToast(`Переход к покупке ${title} 🛍️`);
-            const targetUrl = url || 'https://t.me/mrkt';
+            let targetUrl = (url && url.trim().length > 0) ? url : '';
+            const m = (market || 'mrkt').toLowerCase();
+            if (!targetUrl) {
+                if (m === 'portals') {
+                    targetUrl = 'https://t.me/portals/market';
+                } else if (m === 'tonnel') {
+                    targetUrl = 'https://t.me/tonnel_network_bot/gifts';
+                } else {
+                    targetUrl = 'https://t.me/mrkt/app';
+                }
+            }
             if (window.Telegram?.WebApp) {
                 window.Telegram.WebApp.openTelegramLink(targetUrl);
             } else {
@@ -3463,15 +3483,27 @@
                 renderMarketList();
                 showToast(`Удалено из избранного: ${title}`);
             } else {
+                const curMkt = (typeof curMarketFilter !== 'undefined' && curMarketFilter !== 'all') ? curMarketFilter : 'mrkt';
+                const cleanSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                const randNum = Math.floor(Math.random() * 8000 + 100);
+                let directUrl = 'https://t.me/mrkt/app';
+                if (curMkt === 'portals') {
+                    directUrl = `https://t.me/portals/market?startapp=${cleanSlug}_${randNum}`;
+                } else if (curMkt === 'tonnel') {
+                    directUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}_${randNum}`;
+                } else {
+                    directUrl = `https://t.me/mrkt/app?startapp=${cleanSlug}_${randNum}`;
+                }
+
                 favoritesList.unshift({
                     id: 'fav_' + Date.now(),
                     title: title,
-                    number: Math.floor(Math.random() * 8000 + 100),
+                    number: randNum,
                     price: floorPrice || 5.0,
                     thumb: thumb,
-                    market: 'mrkt',
-                    discount: 10,
-                    url: 'https://t.me/mrkt'
+                    market: curMkt,
+                    discount: 12,
+                    url: directUrl
                 });
                 saveFavorites();
                 renderFavoritesList();
