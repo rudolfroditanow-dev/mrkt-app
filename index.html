@@ -3332,22 +3332,14 @@ function getCleanCollectionSlug(title) {
                 selected_markets: selMkts
             };
 
-            // Отправляем в Telegram WebApp
-            if (tg) {
-                try {
-                    tg.sendData(JSON.stringify(payload));
-                } catch (e) {}
-
-                // Надежная синхронизация фильтров через deep-link бота
-                try {
-                    const syncParam = `set_${Math.round(minP)}_${Math.round(maxP)}_${appState.isActive ? 1 : 0}`;
-                    tg.openTelegramLink(`https://t.me/radar_loot_bot?start=${syncParam}`);
-                } catch (e) {}
-
-                if (tg.MainButton) {
-                    tg.MainButton.hide();
-                }
-            }
+            // Бесшовная синхронизация в локальный бот без закрытия окна Mini App
+            try {
+                fetch('http://127.0.0.1:8088/api/sync', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(() => {});
+            } catch (e) {}
         }
 
         // ================== NAVIGATION ==================
@@ -3388,17 +3380,6 @@ function getCleanCollectionSlug(title) {
             updateStatusUI();
             saveLocalState();
             showToast(appState.isActive ? 'Снайпер запущен!' : 'Снайпер поставлен на паузу', appState.isActive ? '🟢' : '⏸');
-
-            // Мгновенная синхронизация статуса с ботом
-            if (tg) {
-                try {
-                    const action = appState.isActive ? 'resume' : 'pause';
-                    tg.openTelegramLink(`https://t.me/radar_loot_bot?start=${action}`);
-                    setTimeout(() => {
-                        try { tg.close(); } catch(err) {}
-                    }, 200);
-                } catch (e) {}
-            }
         });
 
         function updateStatusUI() {
@@ -4101,16 +4082,6 @@ function getCleanCollectionSlug(title) {
             updateProfileStats();
             saveLocalState();
             showToast(appState.isActive ? 'Снайпер запущен!' : 'Снайпер поставлен на паузу', appState.isActive ? '🟢' : '⏸');
-
-            if (tg) {
-                try {
-                    const action = appState.isActive ? 'resume' : 'pause';
-                    tg.openTelegramLink(`https://t.me/radar_loot_bot?start=${action}`);
-                    setTimeout(() => {
-                        try { tg.close(); } catch(err) {}
-                    }, 200);
-                } catch (e) {}
-            }
         }
 
         function copyRefLink() {
