@@ -141,7 +141,7 @@
         /* Main Navigation Tabs */
         .nav-tabs {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             background: #10121b;
             padding: 4px;
             border-radius: 14px;
@@ -1018,7 +1018,7 @@
         <div class="brand-icon">🔔</div>
         <div>
             <div class="brand-title">Loot Radar</div>
-            <div class="brand-sub">Мгновенные уведомления о NFT-подарках • MRKT</div>
+            <div class="brand-sub">Мгновенные уведомления о NFT-подарках • MRKT • Portals • Tonnel</div>
         </div>
     </div>
 
@@ -1028,7 +1028,7 @@
             <div class="pulse-dot" id="status-pulse"></div>
             <div>
                 <div class="status-title" id="status-text">Снайпер активен</div>
-                <div class="status-date" id="status-sub">MRKT Live Radar • Быстрый перехват</div>
+                <div class="status-date" id="status-sub">MRKT • Portals • Tonnel Live Radar • Быстрый перехват</div>
             </div>
         </div>
         <button class="btn-pause" id="btn-toggle-pause">
@@ -1044,9 +1044,7 @@
         <button class="nav-tab-btn" id="tab-market-btn" onclick="switchMainTab('market')">
             📊 Рынок
         </button>
-        <button class="nav-tab-btn" id="tab-sub-btn" onclick="switchMainTab('sub')">
-            💎 Подписка
-        </button>
+        
     </div>
 
     <!-- ==================== TAB 1: ФИЛЬТРЫ ==================== -->
@@ -1111,72 +1109,6 @@
 
         <div class="market-list" id="market-rows-container">
             <!-- 135 Collections rendered by JS -->
-        </div>
-    </div>
-
-    <!-- ==================== TAB 3: ПОДПИСКА ==================== -->
-    <div id="screen-sub" style="display: none;">
-        <div class="section-label">ЧТО ДАЁТ ПОДПИСКА</div>
-        <div class="perks-card">
-            <div class="perk-row">
-                <div class="perk-icon">⚡️</div>
-                <div class="perk-text"><b>Узнаёшь первым</b> — уведомление через секунды после листинга на MRKT</div>
-            </div>
-            <div class="perk-row">
-                <div class="perk-icon">🔥</div>
-                <div class="perk-text"><b>Видишь скидку к флору</b> — бот сам сравнивает цену с рынком</div>
-            </div>
-            <div class="perk-row">
-                <div class="perk-icon">📊</div>
-                <div class="perk-text"><b>Флоры, продажи, изменение цены</b> — прямо в уведомлении</div>
-            </div>
-            <div class="perk-row">
-                <div class="perk-icon">🎯</div>
-                <div class="perk-text"><b>Точные фильтры:</b> модель, фон, узор, номер, цена, «ниже флора на N%», красивые номера</div>
-            </div>
-            <div class="perk-row">
-                <div class="perk-icon">🛒</div>
-                <div class="perk-text"><b>MRKT снайпер</b> — прямой переход к выкупу лота в 1 клик</div>
-            </div>
-        </div>
-
-        <div class="section-label">ТАРИФЫ</div>
-        <div class="tariff-info-banner">
-            👇 <b>Нажми на тариф</b> — откроется выбор способа оплаты:<br>
-            💎 криптовалютой · ⭐️ звёздами Telegram · 💳 банковской картой / СБП
-        </div>
-
-        <div class="tariff-card" onclick="selectTariff('1 месяц', 17)">
-            <div>
-                <div class="tariff-title">1 месяц</div>
-                <div class="tariff-sub">≈0.57 $ в день</div>
-            </div>
-            <div class="tariff-price">
-                <div class="tariff-main-p">17 $</div>
-                <div class="tariff-alt-p">или 1 350 ⭐️ · 1 490 ₽</div>
-            </div>
-        </div>
-
-        <div class="tariff-card" onclick="selectTariff('3 месяца', 41)">
-            <div>
-                <div class="tariff-title">3 месяца <span style="color: var(--accent-green); font-size: 11px;">(-20%)</span></div>
-                <div class="tariff-sub">≈0.45 $ в день</div>
-            </div>
-            <div class="tariff-price">
-                <div class="tariff-main-p">41 $</div>
-                <div class="tariff-alt-p">или 3 200 ⭐️ · 3 590 ₽</div>
-            </div>
-        </div>
-
-        <div class="tariff-card" onclick="selectTariff('VIP Навсегда', 99)">
-            <div>
-                <div class="tariff-title">VIP Навсегда</div>
-                <div class="tariff-sub">Все функции без ограничений</div>
-            </div>
-            <div class="tariff-price">
-                <div class="tariff-main-p">99 $</div>
-                <div class="tariff-alt-p">или 7 800 ⭐️ · 8 990 ₽</div>
-            </div>
         </div>
     </div>
 
@@ -1281,15 +1213,15 @@
                         </div>
                     </div>
 
-                    <!-- МАРКЕТЫ -->
+                                        <!-- МАРКЕТЫ -->
                     <div class="param-section-title">МАРКЕТЫ</div>
                     <div class="param-card">
                         <div class="markets-row">
-                            <div class="market-badge-btn active">MRKT</div>
-                            <div class="market-badge-btn" style="opacity: 0.5;" title="В разработке">Portals</div>
-                            <div class="market-badge-btn" style="opacity: 0.5;" title="В разработке">Fragment</div>
+                            <div class="market-badge-btn active" id="market-btn-mrkt" onclick="toggleMarketOption('mrkt', this)">MRKT</div>
+                            <div class="market-badge-btn active" id="market-btn-portals" onclick="toggleMarketOption('portals', this)">Portals</div>
+                            <div class="market-badge-btn active" id="market-btn-tonnel" onclick="toggleMarketOption('tonnel', this)">Tonnel</div>
                         </div>
-                        <div class="sub-help-text">Снайпер мониторит MRKT в реальном времени без задержек.</div>
+                        <div class="sub-help-text" id="markets-help-caption">Следим за всеми маркетами: MRKT, Portals, Tonnel.</div>
                     </div>
 
                     <!-- СОХРАНИТЬ ФИЛЬТР -->
@@ -1406,6 +1338,13 @@
                 }
             }
 
+            let selMkts = [];
+            if (enabledFilters.length > 0) {
+                const flatM = enabledFilters.flatMap(f => f.markets || ['mrkt', 'portals', 'tonnel']);
+                selMkts = [...new Set(flatM)];
+            }
+            if (selMkts.length === 0) selMkts = ['mrkt', 'portals', 'tonnel'];
+
             const payload = {
                 min_price: minP,
                 max_price: maxP,
@@ -1413,7 +1352,8 @@
                 check_rare_id: rare,
                 check_monochrome: mono,
                 is_active: appState.isActive,
-                selected_collections: selCols
+                selected_collections: selCols,
+                selected_markets: selMkts
             };
 
             // Отправляем в Telegram WebApp
@@ -1425,15 +1365,17 @@
         }
 
         // ================== NAVIGATION ==================
-        function switchMainTab(tab) {
+                function switchMainTab(tab) {
             haptic('selection');
             appState.activeTab = tab;
             document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tab-${tab}-btn`).classList.add('active');
+            const activeBtn = document.getElementById(`tab-${tab}-btn`);
+            if (activeBtn) activeBtn.classList.add('active');
 
-            document.getElementById('screen-filters').style.display = (tab === 'filters') ? 'block' : 'none';
-            document.getElementById('screen-market').style.display = (tab === 'market') ? 'block' : 'none';
-            document.getElementById('screen-sub').style.display = (tab === 'sub') ? 'block' : 'none';
+            const sFilters = document.getElementById('screen-filters');
+            const sMarket = document.getElementById('screen-market');
+            if (sFilters) sFilters.style.display = (tab === 'filters') ? 'block' : 'none';
+            if (sMarket) sMarket.style.display = (tab === 'market') ? 'block' : 'none';
         }
 
         // Toggle Pause
@@ -1493,6 +1435,7 @@
                 const thumbImg = f.thumb ? `<img src="https://cdn.tgmrkt.io/${f.thumb}">` : (f.collection === 'all' ? '🌐' : '🎁');
                 const discText = f.discount > 0 ? `· Скидка -${f.discount}%` : '';
                 const traitsText = [f.rareId ? 'Low-ID' : '', f.mono ? 'Монохром' : ''].filter(Boolean).join(' + ');
+                const mktsText = (f.markets && f.markets.length > 0) ? f.markets.map(m => m.toUpperCase()).join(' · ') : 'MRKT · Portals · Tonnel';
 
                 html += `
                     <div class="filter-item-card">
@@ -1500,7 +1443,7 @@
                             <div class="filter-item-icon">${thumbImg}</div>
                             <div class="filter-item-info">
                                 <div class="filter-item-title">${f.collectionTitle}</div>
-                                <div class="filter-item-desc">${f.minPrice}–${f.maxPrice} TON ${discText} ${traitsText ? '· ' + traitsText : ''}</div>
+                                <div class="filter-item-desc">${f.minPrice}–${f.maxPrice} TON ${discText} ${traitsText ? '· ' + traitsText : ''}<br><span style='color: #818cf8; font-size: 10.5px;'>🏛 ${mktsText}</span></div>
                             </div>
                         </div>
                         <div class="filter-item-actions">
@@ -1614,6 +1557,31 @@
         let curFormColTitle = 'Любой подарок';
         let curFormColThumb = '';
         let curFormDiscount = 0;
+        let curFormMarkets = ['mrkt', 'portals', 'tonnel'];
+
+        function toggleMarketOption(mName, el) {
+            haptic('selection');
+            if (curFormMarkets.includes(mName)) {
+                if (curFormMarkets.length > 1) {
+                    curFormMarkets = curFormMarkets.filter(m => m !== mName);
+                    el.classList.remove('active');
+                } else {
+                    showToast('Хотя бы один маркет должен быть выбран', 'ℹ️');
+                    return;
+                }
+            } else {
+                curFormMarkets.push(mName);
+                el.classList.add('active');
+            }
+
+            const caption = document.getElementById('markets-help-caption');
+            if (curFormMarkets.length === 3) {
+                caption.innerText = 'Следим за всеми маркетами: MRKT, Portals, Tonnel.';
+            } else {
+                const names = curFormMarkets.map(m => m.toUpperCase()).join(', ');
+                caption.innerText = `Следим за выбранными: ${names}.`;
+            }
+        }
 
         function openFilterModal() {
             haptic('medium');
@@ -1732,6 +1700,7 @@
                 mono: true,
                 numFrom: numFrom || null,
                 numTo: numTo || null,
+                markets: [...curFormMarkets],
                 enabled: true
             };
 
@@ -1742,13 +1711,7 @@
             showToast('Фильтр сохранён!');
         }
 
-        function selectTariff(name, priceUsd) {
-            haptic('medium');
-            showToast(`Тариф ${name} (${priceUsd}$): ссылка отправлена в бота!`, '💎');
-            if (tg) {
-                try {
-                    tg.sendData(JSON.stringify({ action: 'buy_tariff', tariff: name, price: priceUsd }));
-                } catch (e) {}
+         catch (e) {}
             }
         }
 
