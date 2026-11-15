@@ -2369,7 +2369,7 @@
         }
 
         // ================== NAVIGATION ==================
-                function switchMainTab(tab) {
+        function switchMainTab(tab) {
             haptic('selection');
             appState.activeTab = tab;
             document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
@@ -2391,13 +2391,6 @@
             } else {
                 if (navTabs) navTabs.style.display = 'flex';
             }
-        }-btn`);
-            if (activeBtn) activeBtn.classList.add('active');
-
-            const sFilters = document.getElementById('screen-filters');
-            const sMarket = document.getElementById('screen-market');
-            if (sFilters) sFilters.style.display = (tab === 'filters') ? 'block' : 'none';
-            if (sMarket) sMarket.style.display = (tab === 'market') ? 'block' : 'none';
         }
 
         // Toggle Pause
@@ -2826,6 +2819,7 @@
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
+            initUserProfile();
             const giftSearchInput = document.getElementById('gift-search-input');
             if (giftSearchInput) {
                 giftSearchInput.addEventListener('input', (e) => {
@@ -2872,50 +2866,63 @@
         let currentUserId = '6607029329';
 
         function initUserProfile() {
-            const u = tg?.initDataUnsafe?.user;
-            const urlParams = new URLSearchParams(window.location.search);
-            const uidFromUrl = urlParams.get('uid');
-            const refFromUrl = urlParams.get('ref');
+            try {
+                const u = tg?.initDataUnsafe?.user;
+                const urlParams = new URLSearchParams(window.location.search);
+                const uidFromUrl = urlParams.get('uid');
+                const refFromUrl = urlParams.get('ref');
 
-            currentUserId = u?.id ? String(u.id) : (uidFromUrl || '6607029329');
-            const userHandle = u?.username ? `@${u.username}` : (u?.first_name || 'Пользователь');
-            const fullName = [u?.first_name, u?.last_name].filter(Boolean).join(' ') || (u?.username ? `@${u.username}` : 'Трейдер');
-            const photo = u?.photo_url || null;
+                currentUserId = u?.id ? String(u.id) : (uidFromUrl || '6607029329');
+                const userHandle = u?.username ? `@${u.username}` : (u?.first_name ? `@${u.first_name}` : 'Профиль');
+                const fullName = [u?.first_name, u?.last_name].filter(Boolean).join(' ') || (u?.username ? `@${u.username}` : 'Пользователь');
+                const photo = u?.photo_url || null;
+                const letter = (u?.first_name || u?.username || 'U').charAt(0).toUpperCase();
 
-            // 1. Header Pill
-            const hName = document.getElementById('header-user-name');
-            const hAvatar = document.getElementById('header-user-avatar');
-            const hInitial = document.getElementById('header-avatar-initial');
+                // 1. Header Pill
+                const hName = document.getElementById('header-user-name');
+                const hAvatar = document.getElementById('header-user-avatar');
+                const hInitial = document.getElementById('header-avatar-initial');
 
-            if (hName) hName.innerText = userHandle;
-            if (photo && hAvatar) {
-                hAvatar.src = photo;
-            } else if (hInitial) {
-                hInitial.innerText = (u?.first_name || 'U').charAt(0).toUpperCase();
+                if (hName) hName.innerText = userHandle;
+                if (photo && hAvatar) {
+                    hAvatar.src = photo;
+                    hAvatar.style.display = 'block';
+                    if (hInitial) hInitial.style.display = 'none';
+                } else if (hInitial) {
+                    hInitial.innerText = letter;
+                    hInitial.style.display = 'flex';
+                    if (hAvatar) hAvatar.style.display = 'none';
+                }
+
+                // 2. Profile Screen
+                const pName = document.getElementById('profile-full-name');
+                const pUser = document.getElementById('profile-username-tag');
+                const pId = document.getElementById('profile-user-id');
+                const pAvatar = document.getElementById('profile-avatar-img');
+                const pInitial = document.getElementById('profile-avatar-initial');
+                const pRefLink = document.getElementById('profile-ref-link');
+                const pRefCount = document.getElementById('profile-ref-count');
+
+                if (pName) pName.innerText = fullName;
+                if (pUser) pUser.innerText = u?.username ? `@${u.username}` : `@id${currentUserId}`;
+                if (pId) pId.innerText = `ID: ${currentUserId}`;
+                if (pRefLink) pRefLink.value = `https://t.me/radar_loot_bot?start=ref_${currentUserId}`;
+                if (pRefCount && refFromUrl) pRefCount.innerText = `Приглашено: ${refFromUrl}`;
+
+                if (photo && pAvatar) {
+                    pAvatar.src = photo;
+                    pAvatar.style.display = 'block';
+                    if (pInitial) pInitial.style.display = 'none';
+                } else if (pInitial) {
+                    pInitial.innerText = letter;
+                    pInitial.style.display = 'flex';
+                    if (pAvatar) pAvatar.style.display = 'none';
+                }
+
+                updateProfileStats();
+            } catch (err) {
+                console.error('Error in initUserProfile:', err);
             }
-
-            // 2. Profile Screen
-            const pName = document.getElementById('profile-full-name');
-            const pUser = document.getElementById('profile-username-tag');
-            const pId = document.getElementById('profile-user-id');
-            const pAvatar = document.getElementById('profile-avatar-img');
-            const pInitial = document.getElementById('profile-avatar-initial');
-            const pRefLink = document.getElementById('profile-ref-link');
-            const pRefCount = document.getElementById('profile-ref-count');
-
-            if (pName) pName.innerText = fullName;
-            if (pUser) pUser.innerText = u?.username ? `@${u.username}` : `id${currentUserId}`;
-            if (pId) pId.innerText = `ID: ${currentUserId}`;
-            if (pRefLink) pRefLink.value = `https://t.me/radar_loot_bot?start=ref_${currentUserId}`;
-            if (pRefCount && refFromUrl) pRefCount.innerText = `Приглашено: ${refFromUrl}`;
-
-            if (photo && pAvatar) {
-                pAvatar.src = photo;
-            } else if (pInitial) {
-                pInitial.innerText = (u?.first_name || 'U').charAt(0).toUpperCase();
-            }
-
-            updateProfileStats();
         }
 
         function updateProfileStats() {
