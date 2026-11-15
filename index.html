@@ -3340,7 +3340,7 @@ function getCleanCollectionSlug(title) {
 
                 // Надежная синхронизация фильтров через deep-link бота
                 try {
-                    const syncParam = `set_${Math.round(minP)}_${Math.round(maxP)}`;
+                    const syncParam = `set_${Math.round(minP)}_${Math.round(maxP)}_${appState.isActive ? 1 : 0}`;
                     tg.openTelegramLink(`https://t.me/radar_loot_bot?start=${syncParam}`);
                 } catch (e) {}
 
