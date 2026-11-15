@@ -2428,28 +2428,6 @@
             <!-- Rendered by JS: either empty state or real purchased lots -->
         </div>
     </div>
-            <div class="live-stat-card">
-                <div class="live-stat-val profit-val" id="live-stat-saved">+4 120 TON</div>
-                <div class="live-stat-label">Сэкономлено</div>
-            </div>
-            <div class="live-stat-card">
-                <div class="live-stat-val highlight-val" id="live-stat-top">+380%</div>
-                <div class="live-stat-label">Топ профит</div>
-            </div>
-        </div>
-
-        <div class="live-header-bar">
-            <div class="live-header-left">
-                <span class="live-radar-pulse"></span>
-                <span class="live-header-title">LIVE ПЕРЕХВАТЫ РАДАРА</span>
-            </div>
-            <span class="live-header-sub">MRKT • Portals • Tonnel</span>
-        </div>
-
-        <div class="live-feed-list" id="live-feed-container">
-            <!-- Dynamic sniped items with prices, profits, and links -->
-        </div>
-    </div>
 
     <!-- ==================== TAB 3: ПРОФИЛЬ ==================== -->
     <div id="screen-profile" style="display: none;">
@@ -2862,6 +2840,20 @@
             openTelegramOrBrowser(url);
         };
 
+        function getCleanCollectionSlug(title) {
+            if (!title) return '';
+            return title
+                .replace(/['’]/g, '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function getPascalCaseKey(title) {
+            if (!title) return '';
+            return title.replace(/[^a-zA-Z0-9]/g, '');
+        }
+
         window.openMarketWithCollection = function(market, slug, title, event) {
             if (event) {
                 event.stopPropagation();
@@ -2869,10 +2861,13 @@
             }
             haptic('impact_heavy');
 
-            let url = 'https://t.me/mrkt/app';
-            const cleanSlug = slug || (title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            const cleanSlug = slug || getCleanCollectionSlug(title);
+            const pascalKey = getPascalCaseKey(title);
 
-            if (market === 'portals') {
+            let url = 'https://t.me/mrkt/app';
+            if (market === 'nft') {
+                url = `https://t.me/nft/${pascalKey}`;
+            } else if (market === 'portals') {
                 url = cleanSlug ? `https://t.me/portals/market?startapp=${cleanSlug}` : 'https://t.me/portals/market';
             } else if (market === 'tonnel') {
                 url = cleanSlug ? `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}` : 'https://t.me/tonnel_network_bot/gifts';
@@ -2880,7 +2875,8 @@
                 url = cleanSlug ? `https://t.me/mrkt/app?startapp=${cleanSlug}` : 'https://t.me/mrkt/app';
             }
 
-            showToast(`Переход в ${market.toUpperCase()}: ${title || ''} 🛍️`);
+            const label = market === 'nft' ? 'Telegram NFT' : market.toUpperCase();
+            showToast(`Переход в ${label}: ${title || ''} 🛍️`);
             openTelegramOrBrowser(url);
         };
 
@@ -3584,7 +3580,7 @@
                 const colTitle = c.title || c.name;
                 const isFav = favoritesList && favoritesList.some(f => f.title === colTitle);
 
-                                const cleanSlug = colTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                                const cleanSlug = getCleanCollectionSlug(colTitle);
 
                 html += `
                     <div class="market-item-row">
@@ -3623,6 +3619,10 @@
                                     <div class="arb-m-chip ${c.arbCheapest.key === 'tonnel' ? 'cheapest' : (c.arbHighest.key === 'tonnel' ? 'highest' : '')}" onclick="openMarketWithCollection('tonnel', '${cleanSlug}', '${colTitle.replace(/'/g, "\\'")}', event)">
                                         <span class="arb-m-name">TONNEL ↗</span>
                                         <span class="arb-m-price">${c.arbPrices.tonnel} TON</span>
+                                    </div>
+                                    <div class="arb-m-chip" style="background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.4);" onclick="openMarketWithCollection('nft', '${cleanSlug}', '${colTitle.replace(/'/g, "\\'")}', event)">
+                                        <span class="arb-m-name" style="color:#c7d2fe;">TG NFT ↗</span>
+                                        <span class="arb-m-price" style="color:#a5b4fc;">Каталог</span>
                                     </div>
                                 </div>
                             </div>
