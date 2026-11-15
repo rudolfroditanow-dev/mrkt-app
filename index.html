@@ -2958,12 +2958,14 @@ function getCleanCollectionSlug(title) {
             if (appState && Array.isArray(appState.filters)) {
                 const enabled = appState.filters.filter(f => f.enabled);
                 if (enabled.length > 0) {
-                    const mins = enabled.map(f => typeof f.minPrice === 'number' ? f.minPrice : (parseFloat(f.minPrice) || 0));
-                    const maxs = enabled.map(f => typeof f.maxPrice === 'number' ? f.maxPrice : (parseFloat(f.maxPrice) || 6));
-                    return {
-                        min: Math.min(...mins),
-                        max: Math.max(...maxs)
-                    };
+                    const mins = enabled.map(f => typeof f.minPrice === 'number' ? f.minPrice : (parseFloat(f.minPrice) || 0)).filter(x => !isNaN(x));
+                    const maxs = enabled.map(f => typeof f.maxPrice === 'number' ? f.maxPrice : (parseFloat(f.maxPrice) || 6)).filter(x => !isNaN(x));
+                    if (mins.length > 0 && maxs.length > 0) {
+                        return {
+                            min: Math.min(...mins),
+                            max: Math.max(...maxs)
+                        };
+                    }
                 }
             }
             return { min: 0, max: 6 };
@@ -2975,6 +2977,8 @@ function getCleanCollectionSlug(title) {
 
             loadUserPurchases();
             const pRange = getUserPriceRange();
+            const minV = (pRange && typeof pRange.min === 'number' && !isNaN(pRange.min)) ? pRange.min : 0;
+            const maxV = (pRange && typeof pRange.max === 'number' && !isNaN(pRange.max)) ? pRange.max : 6;
 
             // Stats
             const countEl = document.getElementById('my-drops-count');
@@ -2982,7 +2986,7 @@ function getCleanCollectionSlug(title) {
             const filterEl = document.getElementById('my-drops-filter');
 
             if (countEl) countEl.innerText = userPurchasesList.length;
-            if (filterEl) filterEl.innerText = `${pRange.min}–${pRange.max}`;
+            if (filterEl) filterEl.innerText = `${minV}–${maxV}`;
 
             const totalSpent = userPurchasesList.reduce((acc, x) => acc + (parseFloat(x.price) || 0), 0);
             if (spentEl) spentEl.innerText = totalSpent > 0 ? `+${totalSpent.toFixed(1)} TON` : '0 TON';
