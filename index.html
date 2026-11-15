@@ -587,14 +587,23 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .market-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
         .market-sub {
             font-size: 11px;
             color: var(--text-sub);
             margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .market-right {
             text-align: right;
             flex-shrink: 0;
+            white-space: nowrap;
         }
         .market-floor {
             font-size: 14px;
@@ -2411,7 +2420,7 @@
                 <div class="live-stat-label">Инвестировано</div>
             </div>
             <div class="live-stat-card">
-                <div class="live-stat-val highlight-val" id="my-drops-filter">100–500</div>
+                <div class="live-stat-val highlight-val" id="my-drops-filter">0–6</div>
                 <div class="live-stat-label">Фильтр TON</div>
             </div>
         </div>
@@ -2840,7 +2849,17 @@
             openTelegramOrBrowser(url);
         };
 
-        function getCleanCollectionSlug(title) {
+                function getCollectionRealThumb(title) {
+            if (!title) return '';
+            const clean = title.toLowerCase().trim();
+            const found = ALL_COLLECTIONS.find(c => 
+                (c.name && c.name.toLowerCase() === clean) || 
+                (c.title && c.title.toLowerCase() === clean)
+            );
+            return (found && found.thumb) ? found.thumb : '';
+        }
+
+function getCleanCollectionSlug(title) {
             if (!title) return '';
             return title
                 .replace(/['’]/g, '')
@@ -2906,19 +2925,25 @@
             const urlParams = new URLSearchParams(window.location.search);
             const minP = urlParams.get('min_p');
             const maxP = urlParams.get('max_p');
-            if (minP && maxP) {
-                return { min: parseFloat(minP) || 100, max: parseFloat(maxP) || 500 };
+            if (minP !== null && maxP !== null) {
+                const p1 = parseFloat(minP);
+                const p2 = parseFloat(maxP);
+                if (!isNaN(p1) && !isNaN(p2)) {
+                    return { min: Math.min(p1, p2), max: Math.max(p1, p2) };
+                }
             }
             if (appState && Array.isArray(appState.filters)) {
                 const enabled = appState.filters.filter(f => f.enabled);
                 if (enabled.length > 0) {
+                    const mins = enabled.map(f => typeof f.minPrice === 'number' ? f.minPrice : (parseFloat(f.minPrice) || 0));
+                    const maxs = enabled.map(f => typeof f.maxPrice === 'number' ? f.maxPrice : (parseFloat(f.maxPrice) || 6));
                     return {
-                        min: Math.min(...enabled.map(f => f.minPrice || 0)),
-                        max: Math.max(...enabled.map(f => f.maxPrice || 500))
+                        min: Math.min(...mins),
+                        max: Math.max(...maxs)
                     };
                 }
             }
-            return { min: 100, max: 500 };
+            return { min: 0, max: 6 };
         }
 
         function renderMyDrops() {
@@ -3207,21 +3232,39 @@
                 }
             } catch (e) {}
 
-            // Если фильтров нет — создаем один дефолтный на все коллекции
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlMin = urlParams.get('min_p');
+            const urlMax = urlParams.get('max_p');
+            const urlAct = urlParams.get('act');
+            if (urlAct !== null) {
+                appState.isActive = (urlAct === '1' || urlAct === 'true');
+            }
+
+            const defMin = urlMin !== null ? (parseFloat(urlMin) || 0) : 0;
+            const defMax = urlMax !== null ? (parseFloat(urlMax) || 6) : 6;
+
+            // Если фильтров нет — создаем дефолтный по параметрам
             if (!appState.filters || appState.filters.length === 0) {
                 appState.filters = [
                     {
                         id: 'f_default',
                         collection: 'all',
                         collectionTitle: 'Любой подарок (все коллекции)',
-                        minPrice: 0,
-                        maxPrice: 500,
+                        minPrice: defMin,
+                        maxPrice: defMax,
                         discount: 15,
                         rareId: true,
                         mono: true,
                         enabled: true
                     }
                 ];
+            } else if (urlMin !== null && urlMax !== null) {
+                const p1 = parseFloat(urlMin);
+                const p2 = parseFloat(urlMax);
+                if (!isNaN(p1) && !isNaN(p2) && appState.filters[0]) {
+                    appState.filters[0].minPrice = Math.min(p1, p2);
+                    appState.filters[0].maxPrice = Math.max(p1, p2);
+                }
             }
             updateStatusUI();
             renderFiltersList();
@@ -3811,7 +3854,7 @@
             renderFiltersList();
             closeFilterModal();
             showToast('Фильтр сохранён!');
-            saveFiltersToTelegram();
+            // saveFiltersToTelegram synced via saveLocalState
         }
 
         // Init
