@@ -1567,6 +1567,16 @@
             updateStatusUI();
             saveLocalState();
             showToast(appState.isActive ? 'Снайпер запущен!' : 'Снайпер поставлен на паузу', appState.isActive ? '🟢' : '⏸');
+
+            // Мгновенная синхронизация статуса с ботом
+            if (tg) {
+                try {
+                    tg.sendData(JSON.stringify({ is_active: appState.isActive }));
+                } catch (e) {
+                    const action = appState.isActive ? 'resume' : 'pause';
+                    tg.openTelegramLink(`https://t.me/mrkt_loot_radar_bot?start=${action}`);
+                }
+            }
         });
 
         function updateStatusUI() {
