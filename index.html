@@ -2300,8 +2300,8 @@
         <button class="nav-tab-btn" id="tab-market-btn" onclick="switchMainTab('market')">
             📊 Рынок
         </button>
-        <button class="nav-tab-btn" id="tab-live-btn" onclick="switchMainTab('live')">
-            🔥 Live Уловы
+        <button class="nav-tab-btn" id="tab-my-drops-btn" onclick="switchMainTab('my-drops')">
+            🏆 Мои уловы
         </button>
     </div>
 
@@ -2362,6 +2362,19 @@
             <div class="m-filter-pill" id="m-pill-tonnel" onclick="switchMarketplaceFilter('tonnel', this)">Tonnel</div>
         </div>
 
+        <!-- Кнопки быстрого прямого перехода в Mini App каждого маркета -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px;">
+            <button onclick="openDirectMarketplace('mrkt')" style="background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); color: #a5b4fc; padding: 8px 4px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                🛍️ MRKT ↗
+            </button>
+            <button onclick="openDirectMarketplace('portals')" style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; padding: 8px 4px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                🏛️ Portals ↗
+            </button>
+            <button onclick="openDirectMarketplace('tonnel')" style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; padding: 8px 4px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                💎 Tonnel ↗
+            </button>
+        </div>
+
         <!-- Sub-pills under Market with interactive toggle arrows -->
         <div class="sub-pills">
             <button class="sub-pill-btn active" id="market-sort-vol" onclick="handleMarketSortClick('vol')">
@@ -2385,14 +2398,36 @@
         </div>
     </div>
     
-    <!-- ==================== TAB 4: LIVE УЛОВЫ ==================== -->
-    <div id="screen-live" style="display: none;">
-        <!-- Live Stat Counters -->
+    <!-- ==================== TAB 3: МОИ УЛОВЫ (ВАРИАНТ 3) ==================== -->
+    <div id="screen-my-drops" style="display: none;">
+        <!-- User Drops Stats -->
         <div class="live-stats-row">
             <div class="live-stat-card">
-                <div class="live-stat-val" id="live-stat-count">148</div>
-                <div class="live-stat-label">Снайпов 24ч</div>
+                <div class="live-stat-val" id="my-drops-count">0</div>
+                <div class="live-stat-label">Куплено лотов</div>
             </div>
+            <div class="live-stat-card">
+                <div class="live-stat-val profit-val" id="my-drops-spent">0 TON</div>
+                <div class="live-stat-label">Инвестировано</div>
+            </div>
+            <div class="live-stat-card">
+                <div class="live-stat-val highlight-val" id="my-drops-filter">100–500</div>
+                <div class="live-stat-label">Фильтр TON</div>
+            </div>
+        </div>
+
+        <div class="live-header-bar">
+            <div class="live-header-left">
+                <span class="pulse-dot"></span>
+                <span class="live-header-title">ИСТОРИЯ ВАШИХ ПОКУПОК И СНАЙПОВ</span>
+            </div>
+            <span class="live-header-sub">Личный журнал</span>
+        </div>
+
+        <div id="my-drops-container">
+            <!-- Rendered by JS: either empty state or real purchased lots -->
+        </div>
+    </div>
             <div class="live-stat-card">
                 <div class="live-stat-val profit-val" id="live-stat-saved">+4 120 TON</div>
                 <div class="live-stat-label">Сэкономлено</div>
@@ -2783,6 +2818,203 @@
     </div>
 
     <script>
+
+        // ================== RELIABLE GLOBAL TELEGRAM REDIRECTION ==================
+        function openTelegramOrBrowser(url) {
+            console.log("[NAV] Attempting redirect to:", url);
+            if (!url) return;
+
+            // 1. Пытаемся открыть нативно внутри Telegram
+            if (window.Telegram?.WebApp?.openTelegramLink) {
+                try {
+                    window.Telegram.WebApp.openTelegramLink(url);
+                    return;
+                } catch(e) {
+                    console.warn("[NAV] openTelegramLink failed:", e);
+                }
+            }
+
+            // 2. Резервный метод Telegram WebApp openLink
+            if (window.Telegram?.WebApp?.openLink) {
+                try {
+                    window.Telegram.WebApp.openLink(url);
+                    return;
+                } catch(e) {
+                    console.warn("[NAV] openLink failed:", e);
+                }
+            }
+
+            // 3. Fallback браузера
+            try {
+                window.open(url, '_blank');
+            } catch(e) {
+                window.location.href = url;
+            }
+        }
+
+        window.openDirectMarketplace = function(market) {
+            haptic('impact_heavy');
+            let url = 'https://t.me/mrkt/app';
+            if (market === 'portals') url = 'https://t.me/portals/market';
+            else if (market === 'tonnel') url = 'https://t.me/tonnel_network_bot/gifts';
+
+            showToast(`Открываем ${market.toUpperCase()}... 🛍️`);
+            openTelegramOrBrowser(url);
+        };
+
+        window.openMarketWithCollection = function(market, slug, title, event) {
+            if (event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+            haptic('impact_heavy');
+
+            let url = 'https://t.me/mrkt/app';
+            const cleanSlug = slug || (title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+            if (market === 'portals') {
+                url = cleanSlug ? `https://t.me/portals/market?startapp=${cleanSlug}` : 'https://t.me/portals/market';
+            } else if (market === 'tonnel') {
+                url = cleanSlug ? `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}` : 'https://t.me/tonnel_network_bot/gifts';
+            } else {
+                url = cleanSlug ? `https://t.me/mrkt/app?startapp=${cleanSlug}` : 'https://t.me/mrkt/app';
+            }
+
+            showToast(`Переход в ${market.toUpperCase()}: ${title || ''} 🛍️`);
+            openTelegramOrBrowser(url);
+        };
+
+        // ================== ВАРИАНТ 3: МОИ УЛОВЫ (РЕАЛЬНЫЙ ЖУРНАЛ) ==================
+        let userPurchasesList = [];
+
+        function loadUserPurchases() {
+            try {
+                const stored = localStorage.getItem('radar_loot_user_purchases');
+                if (stored) {
+                    userPurchasesList = JSON.parse(stored);
+                } else {
+                    userPurchasesList = [];
+                }
+            } catch(e) {
+                userPurchasesList = [];
+            }
+        }
+
+        function saveUserPurchases() {
+            try {
+                localStorage.setItem('radar_loot_user_purchases', JSON.stringify(userPurchasesList));
+            } catch(e) {}
+        }
+
+        function renderMyDrops() {
+            const container = document.getElementById('my-drops-container');
+            if (!container) return;
+
+            loadUserPurchases();
+
+            // Stats
+            const countEl = document.getElementById('my-drops-count');
+            const spentEl = document.getElementById('my-drops-spent');
+            const filterEl = document.getElementById('my-drops-filter');
+
+            if (countEl) countEl.innerText = userPurchasesList.length;
+            if (filterEl) filterEl.innerText = `${appState.minPrice}–${appState.maxPrice}`;
+
+            const totalSpent = userPurchasesList.reduce((acc, x) => acc + (parseFloat(x.price) || 0), 0);
+            if (spentEl) spentEl.innerText = totalSpent > 0 ? `+${totalSpent.toFixed(1)} TON` : '0 TON';
+
+            if (userPurchasesList.length === 0) {
+                container.innerHTML = `
+                    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 28px 18px; text-align: center; margin-top: 10px;">
+                        <div style="font-size: 40px; margin-bottom: 12px;">🎯</div>
+                        <div style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px;">У вас пока нет купленных лотов</div>
+                        <div style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; max-width: 320px; margin: 0 auto 18px;">
+                            Снайпер непрерывно ищет редкие подарки по вашему фильтру <strong>${appState.minPrice}–${appState.maxPrice} TON</strong>.<br>
+                            Когда вы перейдёте к покупке подарка на маркете, он сохранится в этот персональный список!
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="switchMainTab('filters')" style="flex:1; padding: 11px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; font-weight: 700; font-size: 12px; border: none; cursor: pointer;">
+                                🎯 Мои фильтры
+                            </button>
+                            <button onclick="switchMainTab('market')" style="flex:1; padding: 11px; border-radius: 12px; background: #1a1e2d; color: #a5b4fc; font-weight: 700; font-size: 12px; border: 1px solid rgba(99,102,241,0.3); cursor: pointer;">
+                                ⚡️ Арбитраж флоров
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="live-feed-list">';
+            userPurchasesList.forEach(item => {
+                const mktClass = (item.market || 'mrkt').toLowerCase();
+                const mktName = (item.market || 'MRKT').toUpperCase();
+                const numStr = item.number ? ` #${item.number}` : '';
+                const thumb = item.thumb ? `https://cdn.tgmrkt.io/${item.thumb}` : '';
+                const nftUrl = item.nftUrl || `https://t.me/nft/${(item.title || '').replace(/[^a-zA-Z0-9]/g, '')}-${item.number || 1}`;
+
+                html += `
+                    <div class="live-drop-card">
+                        <div class="live-drop-top">
+                            <div class="live-drop-thumb">
+                                <img src="${thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%231a1e2d\'/><text x=\'50%\' y=\'55%\' font-size=\'22\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                            </div>
+                            <div class="live-drop-info">
+                                <div class="live-drop-title-row">
+                                    <span class="live-drop-title">${item.title}</span>
+                                    <span class="live-drop-num">${numStr}</span>
+                                </div>
+                                <div class="live-drop-meta">
+                                    <span class="live-drop-mkt-tag ${mktClass}">${mktName}</span>
+                                    <span>·</span>
+                                    <span>${item.date || 'Недавно'}</span>
+                                </div>
+                            </div>
+                            <div class="live-drop-pricing">
+                                <div class="live-drop-price">${item.price} TON</div>
+                                <div class="live-drop-profit">✅ В коллекции</div>
+                            </div>
+                        </div>
+                        <div class="live-drop-actions">
+                            <button class="live-drop-btn primary" onclick="openTelegramOrBrowser('${nftUrl}')">
+                                🎁 Telegram NFT
+                            </button>
+                            <button class="live-drop-btn" onclick="openMarketWithCollection('${mktClass}', '', '${item.title}', event)">
+                                🔍 Найти на ${mktName}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            container.innerHTML = html;
+        }
+
+        // Обновляем recordPurchaseDeal, чтобы покупки автоматически записывались в Мои уловы
+        window.recordPurchaseDeal = function(title, price, market, number, thumb, nftUrl) {
+            const num = number || Math.floor(Math.random() * 5000 + 100);
+            const cleanTitle = title || "Telegram Gift";
+            const nftKey = cleanTitle.replace(/[^a-zA-Z0-9]/g, '');
+            const realNftUrl = nftUrl || `https://t.me/nft/${nftKey}-${num}`;
+
+            loadUserPurchases();
+            userPurchasesList.unshift({
+                id: 'deal_' + Date.now(),
+                title: cleanTitle,
+                number: num,
+                price: price || 0,
+                market: market || 'mrkt',
+                date: new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
+                thumb: thumb || '',
+                nftUrl: realNftUrl
+            });
+            saveUserPurchases();
+            if (appState.activeTab === 'my-drops') {
+                renderMyDrops();
+            }
+        };
+
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
@@ -3053,13 +3285,13 @@
 
             const sFilters = document.getElementById('screen-filters');
             const sMarket = document.getElementById('screen-market');
-            const sLive = document.getElementById('screen-live');
+            const sMyDrops = document.getElementById('screen-my-drops');
             const sProfile = document.getElementById('screen-profile');
             const navTabs = document.querySelector('.nav-tabs');
 
             if (sFilters) sFilters.style.display = (tab === 'filters') ? 'block' : 'none';
             if (sMarket) sMarket.style.display = (tab === 'market') ? 'block' : 'none';
-            if (sLive) sLive.style.display = (tab === 'live') ? 'block' : 'none';
+            if (sMyDrops) sMyDrops.style.display = (tab === 'my-drops') ? 'block' : 'none';
             if (sProfile) sProfile.style.display = (tab === 'profile') ? 'block' : 'none';
 
             if (tab === 'profile') {
@@ -3069,8 +3301,8 @@
                 if (navTabs) navTabs.style.display = 'grid';
             }
 
-            if (tab === 'live') {
-                renderLiveFeed();
+            if (tab === 'my-drops') {
+                renderMyDrops();
             }
         }
 
