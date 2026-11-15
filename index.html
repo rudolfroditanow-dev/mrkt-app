@@ -79,12 +79,7 @@
         }
 
         function openExternalUrl(url) {
-            haptic('impact_heavy');
-            if (window.Telegram?.WebApp?.openTelegramLink) {
-                window.Telegram.WebApp.openTelegramLink(url);
-            } else {
-                window.open(url, '_blank');
-            }
+            openTelegramOrBrowser(url);
         }
 
         // Live sniper simulation ticker (adds a hot drop every 28s when on live tab)
@@ -2810,8 +2805,33 @@
         function openTelegramOrBrowser(url) {
             console.log("[NAV] Attempting redirect to:", url);
             if (!url) return;
+            try { haptic('impact_heavy'); } catch(e) {}
 
-            // 1. Пытаемся открыть нативно внутри Telegram
+            // 1. Ссылки на Telegram NFT карточки ОБЯЗАТЕЛЬНО открываются через openLink
+            if (url.includes('/nft/') || url.includes('t.me/nft')) {
+                // Если нет суффикса номера, добавляем -1 для гарантированного открытия карточки
+                let nftTarget = url;
+                if (/t\.me\/nft\/[a-zA-Z0-9]+$/.test(nftTarget)) {
+                    nftTarget += '-1';
+                }
+                if (window.Telegram?.WebApp?.openLink) {
+                    try {
+                        window.Telegram.WebApp.openLink(nftTarget);
+                        return;
+                    } catch(e) {
+                        console.warn("[NAV] openLink failed for NFT:", e);
+                    }
+                }
+                try {
+                    window.open(nftTarget, '_blank');
+                    return;
+                } catch(e) {
+                    window.location.href = nftTarget;
+                    return;
+                }
+            }
+
+            // 2. Для ботов маркетов (MRKT, Portals, Tonnel, radar_loot_bot)
             if (window.Telegram?.WebApp?.openTelegramLink) {
                 try {
                     window.Telegram.WebApp.openTelegramLink(url);
@@ -2821,7 +2841,7 @@
                 }
             }
 
-            // 2. Резервный метод Telegram WebApp openLink
+            // 3. Fallback openLink
             if (window.Telegram?.WebApp?.openLink) {
                 try {
                     window.Telegram.WebApp.openLink(url);
@@ -2831,7 +2851,7 @@
                 }
             }
 
-            // 3. Fallback браузера
+            // 4. Fallback браузера
             try {
                 window.open(url, '_blank');
             } catch(e) {
@@ -2885,7 +2905,7 @@ function getCleanCollectionSlug(title) {
 
             let url = 'https://t.me/mrkt/app';
             if (market === 'nft') {
-                url = `https://t.me/nft/${pascalKey}`;
+                url = `https://t.me/nft/${pascalKey}-1`;
             } else if (market === 'portals') {
                 url = cleanSlug ? `https://t.me/portals/market?startapp=${cleanSlug}` : 'https://t.me/portals/market';
             } else if (market === 'tonnel') {
@@ -4392,12 +4412,7 @@ function getCleanCollectionSlug(title) {
         }
 
         function openExternalUrl(url) {
-            haptic('impact_heavy');
-            if (window.Telegram?.WebApp?.openTelegramLink) {
-                window.Telegram.WebApp.openTelegramLink(url);
-            } else {
-                window.open(url, '_blank');
-            }
+            openTelegramOrBrowser(url);
         }
 
         // Live sniper simulation ticker (adds a hot drop every 28s when on live tab)
