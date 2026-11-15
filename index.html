@@ -2588,6 +2588,12 @@
                     tg.sendData(JSON.stringify(payload));
                 } catch (e) {}
 
+                // Надежная синхронизация фильтров через deep-link бота
+                try {
+                    const syncParam = `set_${Math.round(minP)}_${Math.round(maxP)}`;
+                    tg.openTelegramLink(`https://t.me/radar_loot_bot?start=${syncParam}`);
+                } catch (e) {}
+
                 if (tg.MainButton) {
                     tg.MainButton.hide();
                 }
@@ -3046,6 +3052,7 @@
             renderFiltersList();
             closeFilterModal();
             showToast('Фильтр сохранён!');
+            saveFiltersToTelegram();
         }
 
         // Init
@@ -3118,11 +3125,17 @@
 
         function openCommunityChat() {
             haptic('medium');
-            const url = 'https://t.me/+hQjjlUzIcalxNjA6';
-            if (window.Telegram?.WebApp) {
-                window.Telegram.WebApp.openTelegramLink(url);
+            const inviteUrl = 'https://t.me/+hQjjlUzIcalxNjA6';
+            if (window.Telegram?.WebApp?.openLink) {
+                window.Telegram.WebApp.openLink(inviteUrl);
+            } else if (window.Telegram?.WebApp?.openTelegramLink) {
+                try {
+                    window.Telegram.WebApp.openTelegramLink(inviteUrl);
+                } catch(e) {
+                    window.open(inviteUrl, '_blank');
+                }
             } else {
-                window.open(url, '_blank');
+                window.open(inviteUrl, '_blank');
             }
         }
 
