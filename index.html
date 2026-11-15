@@ -3125,17 +3125,13 @@
 
         function openCommunityChat() {
             haptic('medium');
-            const inviteUrl = 'https://t.me/+hQjjlUzIcalxNjA6';
-            if (window.Telegram?.WebApp?.openLink) {
-                window.Telegram.WebApp.openLink(inviteUrl);
-            } else if (window.Telegram?.WebApp?.openTelegramLink) {
-                try {
-                    window.Telegram.WebApp.openTelegramLink(inviteUrl);
-                } catch(e) {
-                    window.open(inviteUrl, '_blank');
-                }
+            const chatUrl = 'https://t.me/radar_loot_chat';
+            if (window.Telegram?.WebApp?.openTelegramLink) {
+                window.Telegram.WebApp.openTelegramLink(chatUrl);
+            } else if (window.Telegram?.WebApp?.openLink) {
+                window.Telegram.WebApp.openLink(chatUrl);
             } else {
-                window.open(inviteUrl, '_blank');
+                window.open(chatUrl, '_blank');
             }
         }
 
