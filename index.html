@@ -1954,11 +1954,11 @@
         <div class="profile-section-card">
             <div class="profile-section-title">⚙️ ПОЛЕЗНОЕ & СООБЩЕСТВО</div>
             <div class="profile-actions-list">
-                <div class="profile-action-item" onclick="openSupportModal()">
+                <div class="profile-action-item" onclick="startBotSupport()">
                     <span class="action-item-icon">🎧</span>
                     <div class="action-item-text">
-                        <div class="action-item-title">Служба поддержки & Тикеты</div>
-                        <div class="action-item-sub">Сообщить о баге, задать вопрос или предложить идею</div>
+                        <div class="action-item-title">Служба поддержки & Обратная связь</div>
+                        <div class="action-item-sub">Написать идею, вопрос или баг-репорт прямо в боте</div>
                     </div>
                     <span class="action-item-arrow">›</span>
                 </div>
@@ -2162,45 +2162,6 @@
                     Я ознакомился 👍
                 </button>
             </div>
-        </div>
-    </div>
-
-    <!-- ==================== SUPPORT POPUP MODAL ==================== -->
-    <div class="disclaimer-overlay" id="support-modal" onclick="onSupportOverlayClick(event)">
-        <div class="disclaimer-card" onclick="event.stopPropagation()" style="max-height: 90vh; overflow-y: auto;">
-            <button class="disclaimer-close-btn" onclick="closeSupportModal()" title="Закрыть">✕</button>
-            
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 38px; margin-bottom: 8px;">🎧</div>
-                <div style="font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 0.5px;">Служба поддержки & Чат</div>
-                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Radar Loot • Помощь, тикеты и комьюнити</div>
-            </div>
-
-            <div class="profile-actions-list" style="margin-bottom: 16px;">
-                <!-- 1. Написать тикет в боте -->
-                <div class="profile-action-item" onclick="startBotSupport()">
-                    <span class="action-item-icon">🤖</span>
-                    <div class="action-item-text">
-                        <div class="action-item-title">Создать тикет через бота</div>
-                        <div class="action-item-sub">Скриншоты, баги, вопросы. Ответ прямо в чат бота</div>
-                    </div>
-                    <span class="action-item-arrow">›</span>
-                </div>
-
-                <!-- 2. Чат сообщества -->
-                <div class="profile-action-item" onclick="openCommunityChat()">
-                    <span class="action-item-icon">💬</span>
-                    <div class="action-item-text">
-                        <div class="action-item-title">Чат сообщества Radar Loot</div>
-                        <div class="action-item-sub">Общение охотников, обсуждение цен и дропов</div>
-                    </div>
-                    <span class="action-item-arrow">›</span>
-                </div>
-            </div>
-
-            <button class="disclaimer-ack-btn" onclick="closeSupportModal()" style="margin-top: 10px;">
-                Понятно, закрыть
-            </button>
         </div>
     </div>
 <!-- Toast Notification -->
