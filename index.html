@@ -4,7 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Radar Loot // NFT Gifts Sniper</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js">
+        // ================== LIVE SNIPES FEED DATA & RENDERER ==================
+        const LIVE_SNIPES_POOL = [
+            { title: "Khabib's Papakha", number: 29167, thumb: "gifts/papakha.png", buyPrice: 140.12, floor: 220, buyer: "@daayzer", market: "mrkt", timeAgo: "1 мин назад" },
+            { title: "Plush Pepe", number: 408, thumb: "gifts/pepe.png", buyPrice: 18.5, floor: 46.0, buyer: "@ton_shark", market: "portals", timeAgo: "3 мин назад" },
+            { title: "Durov's Cap", number: 184, thumb: "gifts/cap.png", buyPrice: 24.0, floor: 55.0, buyer: "@alex_flip", market: "tonnel", timeAgo: "6 мин назад" },
+            { title: "Spygar", number: 1203, thumb: "gifts/spygar.png", buyPrice: 32.0, floor: 78.0, buyer: "@loot_king", market: "mrkt", timeAgo: "11 мин назад" },
+            { title: "Signet Ring", number: 88, thumb: "gifts/ring.png", buyPrice: 85.0, floor: 190.0, buyer: "@whale_ton", market: "portals", timeAgo: "18 мин назад" },
+            { title: "Santa Hat", number: 455, thumb: "gifts/santa_hat.png", buyPrice: 12.0, floor: 29.5, buyer: "@frost_snipe", market: "mrkt", timeAgo: "24 мин назад" },
+            { title: "Perfume Bottle", number: 19, thumb: "gifts/perfume.png", buyPrice: 65.0, floor: 140.0, buyer: "@gem_finder", market: "tonnel", timeAgo: "32 мин назад" },
+            { title: "Magic Potion", number: 777, thumb: "gifts/potion.png", buyPrice: 42.0, floor: 110.0, buyer: "@lucky_strike", market: "portals", timeAgo: "41 мин назад" },
+            { title: "Diamond Ring", number: 104, thumb: "gifts/diamond_ring.png", buyPrice: 110.0, floor: 260.0, buyer: "@ton_baron", market: "mrkt", timeAgo: "55 мин назад" }
+        ];
+
+        let activeLiveFeed = [...LIVE_SNIPES_POOL];
+
+        function renderLiveFeed() {
+            const container = document.getElementById('live-feed-container');
+            if (!container) return;
+
+            let html = '';
+            activeLiveFeed.forEach(item => {
+                const profitTon = +(item.floor - item.buyPrice).toFixed(1);
+                const profitPct = Math.round((profitTon / item.buyPrice) * 100);
+                const cleanSlug = item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                const mktClass = item.market.toLowerCase();
+                const mktName = item.market.toUpperCase();
+
+                let buyUrl = 'https://t.me/mrkt/app';
+                if (mktClass === 'portals') buyUrl = `https://t.me/portals/market?startapp=${cleanSlug}-${item.number}`;
+                else if (mktClass === 'tonnel') buyUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}-${item.number}`;
+                else buyUrl = `https://t.me/mrkt/app?startapp=${cleanSlug}-${item.number}`;
+
+                const nftKey = item.title.replace(/[^a-zA-Z0-9]/g, '');
+                const nftUrl = `https://t.me/nft/${nftKey}-${item.number}`;
+
+                html += `
+                    <div class="live-drop-card">
+                        <div class="live-drop-top">
+                            <div class="live-drop-thumb">
+                                <img src="https://cdn.tgmrkt.io/${item.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%231a1e2d\'/><text x=\'50%\' y=\'55%\' font-size=\'22\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                            </div>
+                            <div class="live-drop-info">
+                                <div class="live-drop-title-row">
+                                    <span class="live-drop-title">${item.title}</span>
+                                    <span class="live-drop-num">#${item.number}</span>
+                                </div>
+                                <div class="live-drop-meta">
+                                    <span class="live-drop-mkt-tag ${mktClass}">${mktName}</span>
+                                    <span class="live-drop-buyer">${item.buyer}</span>
+                                    <span>·</span>
+                                    <span>${item.timeAgo}</span>
+                                </div>
+                            </div>
+                            <div class="live-drop-pricing">
+                                <div class="live-drop-price">${item.buyPrice} TON</div>
+                                <div class="live-drop-profit">+${profitPct}% (⚡️ +${profitTon} TON)</div>
+                            </div>
+                        </div>
+                        <div class="live-drop-actions">
+                            <button class="live-drop-btn primary" onclick="openExternalUrl('${nftUrl}')">
+                                🎁 Telegram NFT
+                            </button>
+                            <button class="live-drop-btn" onclick="openExternalUrl('${buyUrl}')">
+                                🛒 Открыть на ${mktName}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function openExternalUrl(url) {
+            haptic('impact_heavy');
+            if (window.Telegram?.WebApp?.openTelegramLink) {
+                window.Telegram.WebApp.openTelegramLink(url);
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+
+        // Live sniper simulation ticker (adds a hot drop every 28s when on live tab)
+        setInterval(() => {
+            const randomTitles = ["Khabib's Papakha", "Plush Pepe", "Durov's Cap", "Spygar", "Signet Ring", "Santa Hat", "Golden Trophy", "Magic Potion"];
+            const randomPick = randomTitles[Math.floor(Math.random() * randomTitles.length)];
+            const randNum = Math.floor(Math.random() * 8500 + 100);
+            const randMkts = ["mrkt", "portals", "tonnel"];
+            const randMkt = randMkts[Math.floor(Math.random() * randMkts.length)];
+            const baseFloor = (randPick === "Khabib's Papakha") ? 220 : (randPick === "Signet Ring") ? 180 : (randPick === "Spygar") ? 75 : 45;
+            const snipedPrice = +(baseFloor * (0.35 + Math.random() * 0.35)).toFixed(1);
+
+            const newDrop = {
+                title: randPick,
+                number: randNum,
+                thumb: `gifts/${randPick.toLowerCase().replace(/[^a-z]+/g, '_')}.png`,
+                buyPrice: snipedPrice,
+                floor: baseFloor,
+                buyer: "@sniper_" + Math.floor(Math.random() * 900 + 100),
+                market: randMkt,
+                timeAgo: "только что"
+            };
+
+            activeLiveFeed.unshift(newDrop);
+            if (activeLiveFeed.length > 25) activeLiveFeed.pop();
+
+            const countEl = document.getElementById('live-stat-count');
+            if (countEl) {
+                const cur = parseInt(countEl.innerText) || 148;
+                countEl.innerText = cur + 1;
+            }
+
+            if (appState.activeTab === 'live') {
+                renderLiveFeed();
+                showToast(`🔥 Новый улов: ${randPick} #${randNum} за ${snipedPrice} TON!`);
+            }
+        }, 28000);
+
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -141,7 +260,7 @@
         /* Main Navigation Tabs */
         .nav-tabs {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1.15fr;
             background: #10121b;
             padding: 4px;
             border-radius: 14px;
@@ -1850,6 +1969,280 @@
             color: #f59e0b;
             text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
         }
+
+        /* Arbitrage Badge & Market Comparator */
+        .arb-badge-container {
+            margin-top: 8px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .arb-top-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .arb-spread-tag {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .arb-route-text {
+            font-size: 11px;
+            color: var(--text-sub);
+        }
+        .arb-route-text strong {
+            color: #fff;
+        }
+        .arb-markets-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 2px;
+        }
+        .arb-m-chip {
+            flex: 1;
+            background: #151824;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 4px 6px;
+            text-align: center;
+            font-size: 10.5px;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .arb-m-chip .arb-m-name {
+            font-size: 9px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .arb-m-chip .arb-m-price {
+            font-size: 11px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .arb-m-chip.cheapest {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.12);
+        }
+        .arb-m-chip.cheapest .arb-m-price {
+            color: #34d399;
+        }
+        .arb-m-chip.highest {
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        .arb-m-chip.highest .arb-m-price {
+            color: #a5b4fc;
+        }
+
+        /* Live Snipes Feed */
+        .live-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .live-stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 10px 8px;
+            text-align: center;
+        }
+        .live-stat-val {
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .live-stat-val.profit-val {
+            color: var(--accent-green);
+        }
+        .live-stat-val.highlight-val {
+            color: #a855f7;
+        }
+        .live-stat-label {
+            font-size: 10.5px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        .live-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .live-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .live-radar-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+            animation: pulse-red 1.5s infinite;
+        }
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+        .live-header-title {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #f8fafc;
+        }
+        .live-header-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .live-feed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .live-drop-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px 14px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            animation: slideDownFade 0.35s ease;
+        }
+        @keyframes slideDownFade {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .live-drop-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .live-drop-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #1a1e2d;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .live-drop-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .live-drop-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .live-drop-title-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .live-drop-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .live-drop-num {
+            font-size: 12px;
+            color: #a5b4fc;
+            font-weight: 600;
+        }
+        .live-drop-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 3px;
+            font-size: 11px;
+            color: var(--text-sub);
+        }
+        .live-drop-buyer {
+            color: #94a3b8;
+        }
+        .live-drop-mkt-tag {
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 9.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .live-drop-mkt-tag.mrkt { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+        .live-drop-mkt-tag.portals { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .live-drop-mkt-tag.tonnel { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+
+        .live-drop-pricing {
+            text-align: right;
+        }
+        .live-drop-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .live-drop-profit {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-top: 2px;
+        }
+
+        .live-drop-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .live-drop-btn {
+            flex: 1;
+            padding: 7px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: #171b29;
+            color: #e2e8f0;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+        .live-drop-btn:active {
+            background: #1f2538;
+            transform: scale(0.98);
+        }
+        .live-drop-btn.primary {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.35);
+            color: #a5b4fc;
+        }
+
 </style>
 </head>
 <body>
@@ -1894,6 +2287,9 @@
         </button>
         <button class="nav-tab-btn" id="tab-market-btn" onclick="switchMainTab('market')">
             📊 Рынок
+        </button>
+        <button class="nav-tab-btn" id="tab-live-btn" onclick="switchMainTab('live')">
+            🔥 Live Уловы
         </button>
     </div>
 
@@ -1957,13 +2353,16 @@
         <!-- Sub-pills under Market with interactive toggle arrows -->
         <div class="sub-pills">
             <button class="sub-pill-btn active" id="market-sort-vol" onclick="handleMarketSortClick('vol')">
-                🔥 Оборот 24ч ↓
+                🔥 Оборот ↓
             </button>
             <button class="sub-pill-btn" id="market-sort-sales" onclick="handleMarketSortClick('sales')">
-                🛒 Продажи 24ч
+                🛒 Продажи
             </button>
             <button class="sub-pill-btn" id="market-sort-floor" onclick="handleMarketSortClick('floor')">
                 💰 Флор
+            </button>
+            <button class="sub-pill-btn" id="market-sort-arbitrage" onclick="handleMarketSortClick('arbitrage')">
+                ⚡️ Арбитраж
             </button>
         </div>
 
@@ -1973,6 +2372,38 @@
             <!-- 135 Collections rendered by JS -->
         </div>
     </div>
+    
+    <!-- ==================== TAB 4: LIVE УЛОВЫ ==================== -->
+    <div id="screen-live" style="display: none;">
+        <!-- Live Stat Counters -->
+        <div class="live-stats-row">
+            <div class="live-stat-card">
+                <div class="live-stat-val" id="live-stat-count">148</div>
+                <div class="live-stat-label">Снайпов 24ч</div>
+            </div>
+            <div class="live-stat-card">
+                <div class="live-stat-val profit-val" id="live-stat-saved">+4 120 TON</div>
+                <div class="live-stat-label">Сэкономлено</div>
+            </div>
+            <div class="live-stat-card">
+                <div class="live-stat-val highlight-val" id="live-stat-top">+380%</div>
+                <div class="live-stat-label">Топ профит</div>
+            </div>
+        </div>
+
+        <div class="live-header-bar">
+            <div class="live-header-left">
+                <span class="live-radar-pulse"></span>
+                <span class="live-header-title">LIVE ПЕРЕХВАТЫ РАДАРА</span>
+            </div>
+            <span class="live-header-sub">MRKT • Portals • Tonnel</span>
+        </div>
+
+        <div class="live-feed-list" id="live-feed-container">
+            <!-- Dynamic sniped items with prices, profits, and links -->
+        </div>
+    </div>
+
     <!-- ==================== TAB 3: ПРОФИЛЬ ==================== -->
     <div id="screen-profile" style="display: none;">
         <!-- Top Back Bar -->
@@ -2610,18 +3041,24 @@
 
             const sFilters = document.getElementById('screen-filters');
             const sMarket = document.getElementById('screen-market');
+            const sLive = document.getElementById('screen-live');
             const sProfile = document.getElementById('screen-profile');
             const navTabs = document.querySelector('.nav-tabs');
 
             if (sFilters) sFilters.style.display = (tab === 'filters') ? 'block' : 'none';
             if (sMarket) sMarket.style.display = (tab === 'market') ? 'block' : 'none';
+            if (sLive) sLive.style.display = (tab === 'live') ? 'block' : 'none';
             if (sProfile) sProfile.style.display = (tab === 'profile') ? 'block' : 'none';
 
             if (tab === 'profile') {
                 if (navTabs) navTabs.style.display = 'none';
                 updateProfileStats();
             } else {
-                if (navTabs) navTabs.style.display = 'flex';
+                if (navTabs) navTabs.style.display = 'grid';
+            }
+
+            if (tab === 'live') {
+                renderLiveFeed();
             }
         }
 
@@ -2797,9 +3234,10 @@
 
         function updateMarketSortButtons() {
             const tabs = [
-                { id: 'vol', base: '🔥 Оборот 24ч' },
-                { id: 'sales', base: '🛒 Продажи 24ч' },
-                { id: 'floor', base: '💰 Флор' }
+                { id: 'vol', base: '🔥 Оборот' },
+                { id: 'sales', base: '🛒 Продажи' },
+                { id: 'floor', base: '💰 Флор' },
+                { id: 'arbitrage', base: '⚡️ Арбитраж' }
             ];
 
             tabs.forEach(t => {
@@ -2856,12 +3294,43 @@
             // Сортировка по выбранной вкладке и направлению
             const dirMultiplier = (appState.marketSortDir === 'desc') ? 1 : -1;
 
+            // Подсчет цен по всем 3 маркетам для расчета спреда арбитража
+            list.forEach(c => {
+                const entry = CALIBRATED_STATS[c.name] || CALIBRATED_STATS[c.title] || null;
+                let mPrice = c.floor || 10;
+                let pPrice = +(mPrice * 1.14).toFixed(1);
+                let tPrice = +(mPrice * 1.08).toFixed(1);
+                if (entry) {
+                    if (entry.mrkt && entry.mrkt.floor) mPrice = entry.mrkt.floor;
+                    if (entry.portals && entry.portals.floor) pPrice = entry.portals.floor;
+                    if (entry.tonnel && entry.tonnel.floor) tPrice = entry.tonnel.floor;
+                }
+                const prices = [
+                    { name: 'MRKT', price: mPrice, key: 'mrkt' },
+                    { name: 'Portals', price: pPrice, key: 'portals' },
+                    { name: 'Tonnel', price: tPrice, key: 'tonnel' }
+                ];
+                prices.sort((x, y) => x.price - y.price);
+                const cheapest = prices[0];
+                const highest = prices[prices.length - 1];
+                const spreadTon = +(highest.price - cheapest.price).toFixed(1);
+                const spreadPct = Math.round((spreadTon / Math.max(cheapest.price, 0.1)) * 100);
+
+                c.arbCheapest = cheapest;
+                c.arbHighest = highest;
+                c.arbPrices = { mrkt: mPrice, portals: pPrice, tonnel: tPrice };
+                c.arbSpreadTon = spreadTon;
+                c.arbSpreadPct = spreadPct;
+            });
+
             if (appState.marketSort === 'vol') {
                 list.sort((a, b) => (b.vol - a.vol) * dirMultiplier);
             } else if (appState.marketSort === 'sales') {
                 list.sort((a, b) => (b.sales - a.sales) * dirMultiplier);
             } else if (appState.marketSort === 'floor') {
                 list.sort((a, b) => (b.floor - a.floor) * dirMultiplier);
+            } else if (appState.marketSort === 'arbitrage') {
+                list.sort((a, b) => (b.arbSpreadPct - a.arbSpreadPct) * dirMultiplier);
             }
 
             let html = '';
@@ -2888,6 +3357,28 @@
                         <button class="market-fav-star-btn ${isFav ? 'active' : ''}" onclick="toggleFavoriteCollection('${colTitle.replace(/'/g, "\\'")}', '${c.thumb}', ${c.floor || 0}, event)" title="В избранное">
                             ${isFav ? '⭐️' : '☆'}
                         </button>
+                        ${(appState.marketSort === 'arbitrage' || c.arbSpreadPct >= 15) ? `
+                            <div class="arb-badge-container" style="grid-column: 1 / -1; width: 100%;">
+                                <div class="arb-top-line">
+                                    <div class="arb-spread-tag">⚡️ Спред: +${c.arbSpreadTon} TON (+${c.arbSpreadPct}%)</div>
+                                    <div class="arb-route-text">Купить <strong>${c.arbCheapest.name}</strong> ➔ Слить <strong>${c.arbHighest.name}</strong></div>
+                                </div>
+                                <div class="arb-markets-row">
+                                    <div class="arb-m-chip ${c.arbCheapest.key === 'mrkt' ? 'cheapest' : (c.arbHighest.key === 'mrkt' ? 'highest' : '')}">
+                                        <span class="arb-m-name">MRKT</span>
+                                        <span class="arb-m-price">${c.arbPrices.mrkt} TON</span>
+                                    </div>
+                                    <div class="arb-m-chip ${c.arbCheapest.key === 'portals' ? 'cheapest' : (c.arbHighest.key === 'portals' ? 'highest' : '')}">
+                                        <span class="arb-m-name">Portals</span>
+                                        <span class="arb-m-price">${c.arbPrices.portals} TON</span>
+                                    </div>
+                                    <div class="arb-m-chip ${c.arbCheapest.key === 'tonnel' ? 'cheapest' : (c.arbHighest.key === 'tonnel' ? 'highest' : '')}">
+                                        <span class="arb-m-name">Tonnel</span>
+                                        <span class="arb-m-price">${c.arbPrices.tonnel} TON</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
             });
@@ -3524,6 +4015,125 @@
         loadFavorites();
         initUserProfile();
         loadLocalState();
+    
+        // ================== LIVE SNIPES FEED DATA & RENDERER ==================
+        const LIVE_SNIPES_POOL = [
+            { title: "Khabib's Papakha", number: 29167, thumb: "gifts/papakha.png", buyPrice: 140.12, floor: 220, buyer: "@daayzer", market: "mrkt", timeAgo: "1 мин назад" },
+            { title: "Plush Pepe", number: 408, thumb: "gifts/pepe.png", buyPrice: 18.5, floor: 46.0, buyer: "@ton_shark", market: "portals", timeAgo: "3 мин назад" },
+            { title: "Durov's Cap", number: 184, thumb: "gifts/cap.png", buyPrice: 24.0, floor: 55.0, buyer: "@alex_flip", market: "tonnel", timeAgo: "6 мин назад" },
+            { title: "Spygar", number: 1203, thumb: "gifts/spygar.png", buyPrice: 32.0, floor: 78.0, buyer: "@loot_king", market: "mrkt", timeAgo: "11 мин назад" },
+            { title: "Signet Ring", number: 88, thumb: "gifts/ring.png", buyPrice: 85.0, floor: 190.0, buyer: "@whale_ton", market: "portals", timeAgo: "18 мин назад" },
+            { title: "Santa Hat", number: 455, thumb: "gifts/santa_hat.png", buyPrice: 12.0, floor: 29.5, buyer: "@frost_snipe", market: "mrkt", timeAgo: "24 мин назад" },
+            { title: "Perfume Bottle", number: 19, thumb: "gifts/perfume.png", buyPrice: 65.0, floor: 140.0, buyer: "@gem_finder", market: "tonnel", timeAgo: "32 мин назад" },
+            { title: "Magic Potion", number: 777, thumb: "gifts/potion.png", buyPrice: 42.0, floor: 110.0, buyer: "@lucky_strike", market: "portals", timeAgo: "41 мин назад" },
+            { title: "Diamond Ring", number: 104, thumb: "gifts/diamond_ring.png", buyPrice: 110.0, floor: 260.0, buyer: "@ton_baron", market: "mrkt", timeAgo: "55 мин назад" }
+        ];
+
+        let activeLiveFeed = [...LIVE_SNIPES_POOL];
+
+        function renderLiveFeed() {
+            const container = document.getElementById('live-feed-container');
+            if (!container) return;
+
+            let html = '';
+            activeLiveFeed.forEach(item => {
+                const profitTon = +(item.floor - item.buyPrice).toFixed(1);
+                const profitPct = Math.round((profitTon / item.buyPrice) * 100);
+                const cleanSlug = item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                const mktClass = item.market.toLowerCase();
+                const mktName = item.market.toUpperCase();
+
+                let buyUrl = 'https://t.me/mrkt/app';
+                if (mktClass === 'portals') buyUrl = `https://t.me/portals/market?startapp=${cleanSlug}-${item.number}`;
+                else if (mktClass === 'tonnel') buyUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}-${item.number}`;
+                else buyUrl = `https://t.me/mrkt/app?startapp=${cleanSlug}-${item.number}`;
+
+                const nftKey = item.title.replace(/[^a-zA-Z0-9]/g, '');
+                const nftUrl = `https://t.me/nft/${nftKey}-${item.number}`;
+
+                html += `
+                    <div class="live-drop-card">
+                        <div class="live-drop-top">
+                            <div class="live-drop-thumb">
+                                <img src="https://cdn.tgmrkt.io/${item.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%231a1e2d\'/><text x=\'50%\' y=\'55%\' font-size=\'22\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                            </div>
+                            <div class="live-drop-info">
+                                <div class="live-drop-title-row">
+                                    <span class="live-drop-title">${item.title}</span>
+                                    <span class="live-drop-num">#${item.number}</span>
+                                </div>
+                                <div class="live-drop-meta">
+                                    <span class="live-drop-mkt-tag ${mktClass}">${mktName}</span>
+                                    <span class="live-drop-buyer">${item.buyer}</span>
+                                    <span>·</span>
+                                    <span>${item.timeAgo}</span>
+                                </div>
+                            </div>
+                            <div class="live-drop-pricing">
+                                <div class="live-drop-price">${item.buyPrice} TON</div>
+                                <div class="live-drop-profit">+${profitPct}% (⚡️ +${profitTon} TON)</div>
+                            </div>
+                        </div>
+                        <div class="live-drop-actions">
+                            <button class="live-drop-btn primary" onclick="openExternalUrl('${nftUrl}')">
+                                🎁 Telegram NFT
+                            </button>
+                            <button class="live-drop-btn" onclick="openExternalUrl('${buyUrl}')">
+                                🛒 Открыть на ${mktName}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function openExternalUrl(url) {
+            haptic('impact_heavy');
+            if (window.Telegram?.WebApp?.openTelegramLink) {
+                window.Telegram.WebApp.openTelegramLink(url);
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+
+        // Live sniper simulation ticker (adds a hot drop every 28s when on live tab)
+        setInterval(() => {
+            const randomTitles = ["Khabib's Papakha", "Plush Pepe", "Durov's Cap", "Spygar", "Signet Ring", "Santa Hat", "Golden Trophy", "Magic Potion"];
+            const randomPick = randomTitles[Math.floor(Math.random() * randomTitles.length)];
+            const randNum = Math.floor(Math.random() * 8500 + 100);
+            const randMkts = ["mrkt", "portals", "tonnel"];
+            const randMkt = randMkts[Math.floor(Math.random() * randMkts.length)];
+            const baseFloor = (randPick === "Khabib's Papakha") ? 220 : (randPick === "Signet Ring") ? 180 : (randPick === "Spygar") ? 75 : 45;
+            const snipedPrice = +(baseFloor * (0.35 + Math.random() * 0.35)).toFixed(1);
+
+            const newDrop = {
+                title: randPick,
+                number: randNum,
+                thumb: `gifts/${randPick.toLowerCase().replace(/[^a-z]+/g, '_')}.png`,
+                buyPrice: snipedPrice,
+                floor: baseFloor,
+                buyer: "@sniper_" + Math.floor(Math.random() * 900 + 100),
+                market: randMkt,
+                timeAgo: "только что"
+            };
+
+            activeLiveFeed.unshift(newDrop);
+            if (activeLiveFeed.length > 25) activeLiveFeed.pop();
+
+            const countEl = document.getElementById('live-stat-count');
+            if (countEl) {
+                const cur = parseInt(countEl.innerText) || 148;
+                countEl.innerText = cur + 1;
+            }
+
+            if (appState.activeTab === 'live') {
+                renderLiveFeed();
+                showToast(`🔥 Новый улов: ${randPick} #${randNum} за ${snipedPrice} TON!`);
+            }
+        }, 28000);
+
     </script>
 </body>
 </html>
