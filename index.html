@@ -1387,6 +1387,38 @@
             padding: 3px 10px;
             border-radius: 12px;
         }
+        .profile-sub-badge.tier-admin {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.08));
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #f87171;
+        }
+        .profile-sub-badge.tier-admin .sub-status-text {
+            color: #fca5a5;
+        }
+        .profile-sub-badge.tier-whale {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(147, 51, 234, 0.08));
+            border-color: rgba(168, 85, 247, 0.4);
+            color: #c084fc;
+        }
+        .profile-sub-badge.tier-whale .sub-status-text {
+            color: #e9d5ff;
+        }
+        .profile-sub-badge.tier-pro {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.08));
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #60a5fa;
+        }
+        .profile-sub-badge.tier-pro .sub-status-text {
+            color: #93c5fd;
+        }
+        .profile-sub-badge.tier-free {
+            background: linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(100, 116, 139, 0.05));
+            border-color: rgba(148, 163, 184, 0.25);
+            color: #94a3b8;
+        }
+        .profile-sub-badge.tier-free .sub-status-text {
+            color: #cbd5e1;
+        }
         .sub-sep {
             opacity: 0.5;
         }
@@ -1815,12 +1847,29 @@
                     <span class="profile-user-tag" id="profile-username-tag">@username</span>
                     <span class="profile-id-tag" id="profile-user-id">ID: 6607029329</span>
                 </div>
-                <div class="profile-sub-badge">
-                    <span>💎 PRO Снайпер</span>
+                <div class="profile-sub-badge" id="profile-tier-badge">
+                    <span id="profile-tier-name">💎 PRO Снайпер</span>
                     <span class="sub-sep">•</span>
-                    <span class="sub-status-text">Без ограничений</span>
+                    <span class="sub-status-text" id="profile-tier-sub">Без ограничений</span>
                 </div>
             </div>
+        </div>
+
+        <!-- PRO Upgrade promo banner for FREE users -->
+        <div class="profile-section-card" id="profile-upgrade-card" style="display:none; background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border-color: rgba(99,102,241,0.3);">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <span style="font-size:24px;">💎</span>
+                <div>
+                    <div style="font-size:14px; font-weight:800; color:#fff;">Активировать PRO Снайпер</div>
+                    <div style="font-size:11px; color:#a5b4fc;">Турбо-скорость, до 15 фильтров и редкие трейты</div>
+                </div>
+            </div>
+            <div style="font-size:11.5px; color:#cbd5e1; line-height:1.45; margin-bottom:12px;">
+                Пригласите 2 друзей по вашей ссылке или напишите в поддержку для активации PRO доступа.
+            </div>
+            <button class="profile-invite-btn" onclick="shareRefLink()" style="background: linear-gradient(135deg, #3b82f6, #6366f1);">
+                🚀 Пригласить друзей (+PRO доступ)
+            </button>
         </div>
 
         <!-- Quick Sniper Status Card in Profile -->
@@ -1895,7 +1944,7 @@
                     <div class="stat-mini-lbl">Маркетплейса</div>
                 </div>
                 <div class="stat-mini-box">
-                    <div class="stat-mini-val">&lt; 0.5s</div>
+                    <div class="stat-mini-val" id="profile-radar-speed">&lt; 0.5s</div>
                     <div class="stat-mini-lbl">Скорость радара</div>
                 </div>
             </div>
@@ -3024,6 +3073,39 @@
                     pInitial.innerText = letter;
                     pInitial.style.display = 'flex';
                     if (pAvatar) pAvatar.style.display = 'none';
+                }
+
+                // 3. User Privilege Tier (admin, whale, pro, free)
+                const tierParam = (urlParams.get('tier') || (currentUserId === '6607029329' ? 'admin' : 'free')).toLowerCase();
+                const pTierBadge = document.getElementById('profile-tier-badge');
+                const pTierName = document.getElementById('profile-tier-name');
+                const pTierSub = document.getElementById('profile-tier-sub');
+                const pUpgradeCard = document.getElementById('profile-upgrade-card');
+                const pSpeedVal = document.getElementById('profile-radar-speed');
+
+                if (pTierBadge && pTierName && pTierSub) {
+                    pTierBadge.className = `profile-sub-badge tier-${tierParam}`;
+                    if (tierParam === 'admin') {
+                        pTierName.innerText = '👑 ADMIN Снайпер';
+                        pTierSub.innerText = 'Полный доступ';
+                        if (pSpeedVal) pSpeedVal.innerText = '< 0.1s';
+                        if (pUpgradeCard) pUpgradeCard.style.display = 'none';
+                    } else if (tierParam === 'whale' || tierParam === 'elite') {
+                        pTierName.innerText = '🐋 WHALE Снайпер';
+                        pTierSub.innerText = 'Турбо-приоритет';
+                        if (pSpeedVal) pSpeedVal.innerText = '< 0.3s';
+                        if (pUpgradeCard) pUpgradeCard.style.display = 'none';
+                    } else if (tierParam === 'pro') {
+                        pTierName.innerText = '💎 PRO Снайпер';
+                        pTierSub.innerText = 'Без ограничений';
+                        if (pSpeedVal) pSpeedVal.innerText = '< 0.5s';
+                        if (pUpgradeCard) pUpgradeCard.style.display = 'none';
+                    } else {
+                        pTierName.innerText = '🎯 FREE Снайпер';
+                        pTierSub.innerText = 'Базовый доступ';
+                        if (pSpeedVal) pSpeedVal.innerText = '~2.5s';
+                        if (pUpgradeCard) pUpgradeCard.style.display = 'block';
+                    }
                 }
 
                 updateProfileStats();
