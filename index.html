@@ -3331,7 +3331,7 @@
                             thumb: 'c/lolpop.png',
                             market: 'mrkt',
                             discount: 15,
-                            url: 'https://t.me/mrkt/app?startapp=lol-pop_1234'
+                            url: 'https://t.me/mrkt/app?startapp=lol-pop-1234'
                         },
                         {
                             id: 'astral_shard_777',
@@ -3341,7 +3341,7 @@
                             thumb: 'c/astralshard.png',
                             market: 'portals',
                             discount: 20,
-                            url: 'https://t.me/portals/market?startapp=astral-shard_777'
+                            url: 'https://t.me/portals/market?startapp=astral-shard-777'
                         },
                         {
                             id: 'onyx_flask_999',
@@ -3351,7 +3351,7 @@
                             thumb: 'c/onyxflask.png',
                             market: 'tonnel',
                             discount: 18,
-                            url: 'https://t.me/tonnel_network_bot/gifts?startapp=onyx-flask_999'
+                            url: 'https://t.me/tonnel_network_bot/gifts?startapp=onyx-flask-999'
                         }
                     ];
                     saveFavorites();
@@ -3488,11 +3488,11 @@
                 const randNum = Math.floor(Math.random() * 8000 + 100);
                 let directUrl = 'https://t.me/mrkt/app';
                 if (curMkt === 'portals') {
-                    directUrl = `https://t.me/portals/market?startapp=${cleanSlug}_${randNum}`;
+                    directUrl = `https://t.me/portals/market?startapp=${cleanSlug}-${randNum}`;
                 } else if (curMkt === 'tonnel') {
-                    directUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}_${randNum}`;
+                    directUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}-${randNum}`;
                 } else {
-                    directUrl = `https://t.me/mrkt/app?startapp=${cleanSlug}_${randNum}`;
+                    directUrl = `https://t.me/mrkt/app?startapp=${cleanSlug}-${randNum}`;
                 }
 
                 favoritesList.unshift({
