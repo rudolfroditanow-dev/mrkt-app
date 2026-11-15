@@ -1529,6 +1529,20 @@
                 try {
                     tg.sendData(JSON.stringify(payload));
                 } catch (e) {}
+
+                if (tg.MainButton) {
+                    tg.MainButton.setText(`ПРИМЕНИТЬ ДЛЯ БОТА (${minP} - ${maxP} TON)`);
+                    tg.MainButton.show();
+                    tg.MainButton.offClick && tg.MainButton.offClick();
+                    tg.MainButton.onClick(() => {
+                        try {
+                            tg.sendData(JSON.stringify(payload));
+                        } catch (err) {
+                            const link = `https://t.me/mrkt_loot_radar_bot?start=c_${minP}_${maxP}_${minD}_${rare ? 1 : 0}_${mono ? 1 : 0}_all`;
+                            tg.openTelegramLink(link);
+                        }
+                    });
+                }
             }
         }
 
