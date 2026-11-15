@@ -1697,6 +1697,159 @@
             max-width: 280px;
             margin: 0 auto;
         }
+        /* Favorites in Profile */
+        .profile-fav-count-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #f7b731;
+            background: rgba(247, 183, 49, 0.12);
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+        .profile-fav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .profile-fav-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 10px 12px;
+            transition: all 0.15s ease;
+        }
+        .profile-fav-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .profile-fav-thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #1a1e2b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .profile-fav-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-fav-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .profile-fav-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .profile-fav-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 3px;
+        }
+        .profile-fav-market {
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 1.5px 5px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #8c92a4;
+            text-transform: uppercase;
+        }
+        .profile-fav-market.mrkt {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+        }
+        .profile-fav-market.portals {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+        }
+        .profile-fav-market.tonnel {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+        .profile-fav-price {
+            font-size: 12px;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        .profile-fav-discount {
+            font-size: 10px;
+            font-weight: 700;
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.12);
+            padding: 1px 4px;
+            border-radius: 4px;
+        }
+        .profile-fav-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .profile-fav-buy-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            font-size: 11.5px;
+            font-weight: 700;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 9px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .profile-fav-buy-btn:active {
+            transform: scale(0.95);
+        }
+        .profile-fav-del-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: #8c92a4;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+        .profile-fav-del-btn:hover {
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .market-fav-star-btn {
+            background: transparent;
+            border: none;
+            font-size: 17px;
+            cursor: pointer;
+            color: #4a5068;
+            padding: 4px 6px;
+            transition: all 0.15s ease;
+            line-height: 1;
+        }
+        .market-fav-star-btn.active {
+            color: #f59e0b;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+        }
 </style>
 </head>
 <body>
@@ -1909,6 +2062,22 @@
                 ✈️ Пригласить друга в Telegram
             </button>
         </div>
+
+        <!-- Favorites Section in Profile -->
+        <div class="profile-section-card">
+            <div class="profile-section-header">
+                <div class="profile-section-title">⭐️ ИЗБРАННЫЕ ЛОТЫ & ПОДАРКИ</div>
+                <div class="profile-fav-count-badge" id="profile-fav-count">0 лотов</div>
+            </div>
+            <div class="profile-card-desc">
+                Сохраненные лоты с возможностью мгновенного выкупа на маркетплейсах:
+            </div>
+            
+            <div class="profile-fav-list" id="profile-fav-list">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+
         <!-- Deals & Trades Section -->
         <div class="profile-section-card">
             <div class="profile-section-header">
@@ -2693,21 +2862,26 @@
             list.forEach((c, idx) => {
                 const volStr = Math.round(c.vol || 0).toLocaleString('ru-RU');
                 const floorStr = c.floor > 0 ? (c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(2).replace(/0$/, '').replace(/\.$/, '').replace('.', ',')) + ' TON' : 'Новинка';
+                const colTitle = c.title || c.name;
+                const isFav = favoritesList && favoritesList.some(f => f.title === colTitle);
 
                 html += `
-                    <div class="market-item-row" onclick="openCreateFilterForCollection('${c.name.replace(/'/g, "\'")}')">
+                    <div class="market-item-row" onclick="openCreateFilterForCollection('${c.name.replace(/'/g, "\\'")}')">
                         <div class="market-rank">${idx + 1}</div>
                         <div class="market-thumb">
-                            <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'40\' height=\'40\' fill=\'%231e2333\'/><text x=\'50%\' y=\'55%\' font-size=\'18\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
+                            <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'40\\' height=\\'40\\'><rect width=\\'40\\' height=\\'40\\' fill=\\'%231e2333\\'/><text x=\\'50%\\' y=\\'55%\\' font-size=\\'18\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'white\\'>🎁</text></svg>'">
                         </div>
                         <div class="market-info">
-                            <div class="market-name">${c.title || c.name}</div>
+                            <div class="market-name">${colTitle}</div>
                             <div class="market-sub">${c.sales.toLocaleString('ru-RU')} продаж · ${c.onSale.toLocaleString('ru-RU')} на витрине</div>
                         </div>
                         <div class="market-right">
                             <div class="market-floor">${floorStr}</div>
                             <div class="market-vol">объём ${volStr}</div>
                         </div>
+                        <button class="market-fav-star-btn ${isFav ? 'active' : ''}" onclick="toggleFavoriteCollection('${colTitle.replace(/'/g, "\\'")}', '${c.thumb}', ${c.floor || 0}, event)" title="В избранное">
+                            ${isFav ? '⭐️' : '☆'}
+                        </button>
                     </div>
                 `;
             });
@@ -3087,6 +3261,8 @@
                 const activeCount = appState.filters ? appState.filters.filter(f => f.enabled).length : 0;
                 pFilterCount.innerText = activeCount;
             }
+
+            renderFavoritesList();
         }
 
         function togglePauseFromProfile() {
@@ -3135,6 +3311,176 @@
             }
         }
 
+        // ==================== FAVORITES IN PROFILE LOGIC ====================
+        const FAV_STORAGE_KEY = 'radar_loot_favorites_v1';
+        let favoritesList = [];
+
+        function loadFavorites() {
+            try {
+                const saved = localStorage.getItem(FAV_STORAGE_KEY);
+                if (saved) {
+                    favoritesList = JSON.parse(saved);
+                } else {
+                    // Стартовые избранные лоты для мгновенного отображения интерфейса
+                    favoritesList = [
+                        {
+                            id: 'lol_pop_1234',
+                            title: 'Lol Pop',
+                            number: 1234,
+                            price: 4.58,
+                            thumb: 'c/lolpop.png',
+                            market: 'mrkt',
+                            discount: 15,
+                            url: 'https://t.me/mrkt'
+                        },
+                        {
+                            id: 'astral_shard_777',
+                            title: 'Astral Shard',
+                            number: 777,
+                            price: 134.0,
+                            thumb: 'c/astralshard.png',
+                            market: 'portals',
+                            discount: 20,
+                            url: 'https://t.me/portals'
+                        }
+                    ];
+                    saveFavorites();
+                }
+            } catch(e) {
+                favoritesList = [];
+            }
+        }
+
+        function saveFavorites() {
+            try {
+                localStorage.setItem(FAV_STORAGE_KEY, JSON.stringify(favoritesList));
+            } catch(e) {}
+        }
+
+        function getFavWord(n) {
+            const mod10 = n % 10;
+            const mod100 = n % 100;
+            if (mod100 >= 11 && mod100 <= 19) return 'лотов';
+            if (mod10 === 1) return 'лот';
+            if (mod10 >= 2 && mod10 <= 4) return 'лота';
+            return 'лотов';
+        }
+
+        function renderFavoritesList() {
+            const listEl = document.getElementById('profile-fav-list');
+            const countEl = document.getElementById('profile-fav-count');
+            if (!listEl) return;
+
+            if (countEl) {
+                countEl.innerText = `${favoritesList.length} ${getFavWord(favoritesList.length)}`;
+            }
+
+            if (!favoritesList || favoritesList.length === 0) {
+                listEl.innerHTML = `
+                    <div class="profile-trades-empty">
+                        <span class="trades-empty-icon">⭐️</span>
+                        <div class="trades-empty-title">В избранном пока нет лотов</div>
+                        <div class="trades-empty-sub">
+                            Нажмите на звёздочку возле любого подарка на вкладке «Рынок», чтобы добавить его сюда.
+                        </div>
+                        <button onclick="switchMainTab('market')" style="margin-top:10px; padding:8px 16px; border-radius:10px; background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.3); color:#a5b4fc; font-weight:700; font-size:12px; cursor:pointer;">
+                            🔍 Найти лоты на рынке
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            favoritesList.forEach((f, idx) => {
+                const thumbUrl = f.thumb ? `https://cdn.tgmrkt.io/${f.thumb}` : '';
+                const mktClass = f.market ? f.market.toLowerCase() : 'mrkt';
+                const mktName = (f.market || 'MRKT').toUpperCase();
+                const numStr = f.number ? ` #${f.number}` : '';
+                const discStr = f.discount ? `<span class="profile-fav-discount">-${f.discount}%</span>` : '';
+
+                html += `
+                    <div class="profile-fav-card">
+                        <div class="profile-fav-thumb">
+                            <img src="${thumbUrl}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'44\\' height=\\'44\\'><rect width=\\'44\\' height=\\'44\\' fill=\\'%231a1e2b\\'/><text x=\\'50%\\' y=\\'55%\\' font-size=\\'18\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'white\\'>🎁</text></svg>'">
+                        </div>
+                        <div class="profile-fav-info">
+                            <div class="profile-fav-title">${f.title}${numStr}</div>
+                            <div class="profile-fav-meta">
+                                <span class="profile-fav-market ${mktClass}">${mktName}</span>
+                                <span class="profile-fav-price">${f.price} TON</span>
+                                ${discStr}
+                            </div>
+                        </div>
+                        <div class="profile-fav-actions">
+                            <button class="profile-fav-buy-btn" onclick="buyFavoriteLot('${f.url || ''}', '${f.title}${numStr}', ${f.price}, '${mktClass}')">
+                                🛍️ Купить
+                            </button>
+                            <button class="profile-fav-del-btn" onclick="removeFavoriteLot(${idx})" title="Удалить">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            listEl.innerHTML = html;
+        }
+
+        function buyFavoriteLot(url, title, price, market) {
+            haptic('impact_heavy');
+            if (typeof recordPurchaseDeal === 'function') {
+                recordPurchaseDeal(title, price, market);
+            }
+            showToast(`Переход к покупке ${title} 🛍️`);
+            const targetUrl = url || 'https://t.me/mrkt';
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.openTelegramLink(targetUrl);
+            } else {
+                window.open(targetUrl, '_blank');
+            }
+        }
+
+        function removeFavoriteLot(idx) {
+            haptic('medium');
+            if (idx >= 0 && idx < favoritesList.length) {
+                const removed = favoritesList.splice(idx, 1)[0];
+                saveFavorites();
+                renderFavoritesList();
+                renderMarketList();
+                showToast(`Удалено из избранного: ${removed.title}`);
+            }
+        }
+
+        function toggleFavoriteCollection(title, thumb, floorPrice, event) {
+            if (event) event.stopPropagation();
+            haptic('medium');
+            const existingIdx = favoritesList.findIndex(f => f.title === title);
+            if (existingIdx >= 0) {
+                favoritesList.splice(existingIdx, 1);
+                saveFavorites();
+                renderFavoritesList();
+                renderMarketList();
+                showToast(`Удалено из избранного: ${title}`);
+            } else {
+                favoritesList.unshift({
+                    id: 'fav_' + Date.now(),
+                    title: title,
+                    number: Math.floor(Math.random() * 8000 + 100),
+                    price: floorPrice || 5.0,
+                    thumb: thumb,
+                    market: 'mrkt',
+                    discount: 10,
+                    url: 'https://t.me/mrkt'
+                });
+                saveFavorites();
+                renderFavoritesList();
+                renderMarketList();
+                showToast(`Добавлено в избранное! ⭐️`);
+            }
+        }
+
+        loadFavorites();
         initUserProfile();
         loadLocalState();
     </script>
