@@ -2902,11 +2902,31 @@
             } catch(e) {}
         }
 
+        function getUserPriceRange() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const minP = urlParams.get('min_p');
+            const maxP = urlParams.get('max_p');
+            if (minP && maxP) {
+                return { min: parseFloat(minP) || 100, max: parseFloat(maxP) || 500 };
+            }
+            if (appState && Array.isArray(appState.filters)) {
+                const enabled = appState.filters.filter(f => f.enabled);
+                if (enabled.length > 0) {
+                    return {
+                        min: Math.min(...enabled.map(f => f.minPrice || 0)),
+                        max: Math.max(...enabled.map(f => f.maxPrice || 500))
+                    };
+                }
+            }
+            return { min: 100, max: 500 };
+        }
+
         function renderMyDrops() {
             const container = document.getElementById('my-drops-container');
             if (!container) return;
 
             loadUserPurchases();
+            const pRange = getUserPriceRange();
 
             // Stats
             const countEl = document.getElementById('my-drops-count');
@@ -2914,7 +2934,7 @@
             const filterEl = document.getElementById('my-drops-filter');
 
             if (countEl) countEl.innerText = userPurchasesList.length;
-            if (filterEl) filterEl.innerText = `${appState.minPrice}–${appState.maxPrice}`;
+            if (filterEl) filterEl.innerText = `${pRange.min}–${pRange.max}`;
 
             const totalSpent = userPurchasesList.reduce((acc, x) => acc + (parseFloat(x.price) || 0), 0);
             if (spentEl) spentEl.innerText = totalSpent > 0 ? `+${totalSpent.toFixed(1)} TON` : '0 TON';
@@ -2925,7 +2945,7 @@
                         <div style="font-size: 40px; margin-bottom: 12px;">🎯</div>
                         <div style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px;">У вас пока нет купленных лотов</div>
                         <div style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; max-width: 320px; margin: 0 auto 18px;">
-                            Снайпер непрерывно ищет редкие подарки по вашему фильтру <strong>${appState.minPrice}–${appState.maxPrice} TON</strong>.<br>
+                            Снайпер непрерывно ищет редкие подарки по вашему фильтру <strong>${pRange.min}–${pRange.max} TON</strong>.<br>
                             Когда вы перейдёте к покупке подарка на маркете, он сохранится в этот персональный список!
                         </div>
                         <div style="display: flex; gap: 8px;">
