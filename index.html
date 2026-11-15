@@ -1043,7 +1043,193 @@
             box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
         }
 
-    </style>
+    
+        /* ==================== DISCLAIMER POPUP MODAL ==================== */
+        .disclaimer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+        .disclaimer-overlay.open {
+            display: flex;
+            animation: fadeIn 0.2s ease forwards;
+        }
+        .disclaimer-card {
+            background: #141722;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            width: 100%;
+            max-width: 360px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(245, 166, 35, 0.15);
+            animation: zoomModalIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes zoomModalIn {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .disclaimer-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #a0a5b5;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.15s ease;
+        }
+        .disclaimer-close-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+        .disclaimer-hero {
+            position: relative;
+            background: radial-gradient(circle at 50% 30%, #2b2110 0%, #17151e 75%, #101118 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 30px 16px 22px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .disclaimer-hero-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .hero-pattern-tag {
+            position: absolute;
+            font-weight: 900;
+            color: rgba(245, 166, 35, 0.15);
+            user-select: none;
+        }
+        .hero-pattern-tag.tag-1 { top: 12px; left: 16px; font-size: 26px; transform: rotate(-15deg); }
+        .hero-pattern-tag.tag-2 { bottom: 10px; left: 30px; font-size: 28px; transform: rotate(10deg); }
+        .hero-pattern-tag.tag-3 { top: 16px; right: 20px; font-size: 22px; transform: rotate(18deg); }
+        .hero-pattern-tag.tag-4 { bottom: 8px; right: 28px; font-size: 32px; transform: rotate(-12deg); }
+
+        .disclaimer-badge {
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, #1f1a12 0%, #16141a 100%);
+            border: 2.5px solid #f5a623;
+            border-radius: 16px;
+            padding: 12px 24px;
+            box-shadow: 0 10px 28px rgba(245, 166, 35, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            transform: rotate(-1.5deg);
+        }
+        .badge-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 0.8px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+        .badge-subtitle {
+            margin-top: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #ffd166;
+            letter-spacing: 1.2px;
+            background: rgba(245, 166, 35, 0.18);
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .disclaimer-content {
+            padding: 18px 20px 20px;
+        }
+        .disclaimer-headline {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .disclaimer-lead {
+            margin-top: 6px;
+            margin-bottom: 16px;
+            font-size: 12.5px;
+            line-height: 1.45;
+            color: #9da3b4;
+            text-align: center;
+        }
+        .disclaimer-points {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .point-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 9px 12px;
+        }
+        .point-icon {
+            font-size: 16px;
+            line-height: 1.2;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .point-text {
+            font-size: 12px;
+            line-height: 1.45;
+            color: #cbd1de;
+        }
+        .point-text b {
+            color: #ffd166;
+        }
+
+        .disclaimer-ack-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ffd166 0%, #f5a623 100%);
+            color: #0c0e14;
+            font-size: 15px;
+            font-weight: 800;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(245, 166, 35, 0.35);
+            transition: transform 0.15s ease, filter 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .disclaimer-ack-btn:active {
+            transform: scale(0.98);
+            filter: brightness(0.95);
+        }
+</style>
 </head>
 <body>
 
@@ -1109,6 +1295,10 @@
         <button class="btn-secondary-action" id="btn-toggle-budget">
             ⚡ Готовые фильтры под бюджет
         </button>
+        <button class="btn-secondary-action" style="margin-top: 8px; border-color: rgba(255, 179, 0, 0.35); color: #ffca28; background: rgba(255, 179, 0, 0.06);" onclick="openDisclaimerModal()">
+            ⚠️ Памятка: Как избежать спама лотов?
+        </button>
+
 
         <!-- Budget Presets Card -->
         <div class="budget-presets-card" id="budget-presets-box">
@@ -1275,7 +1465,67 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    
+    <!-- ==================== DISCLAIMER POPUP MODAL ==================== -->
+    <div class="disclaimer-overlay" id="disclaimer-modal" onclick="onDisclaimerOverlayClick(event)">
+        <div class="disclaimer-card" onclick="event.stopPropagation()">
+            <button class="disclaimer-close-btn" onclick="closeDisclaimerModal()" title="Закрыть">✕</button>
+            
+            <div class="disclaimer-hero">
+                <div class="disclaimer-hero-bg">
+                    <div class="hero-pattern-tag tag-1">🏷️</div>
+                    <div class="hero-pattern-tag tag-2">%</div>
+                    <div class="hero-pattern-tag tag-3">💎</div>
+                    <div class="hero-pattern-tag tag-4">%</div>
+                </div>
+                
+                <div class="disclaimer-badge">
+                    <div class="badge-title">⚠️ ВНИМАНИЕ</div>
+                    <div class="badge-subtitle">НАСТРОЙКА ФИЛЬТРОВ</div>
+                </div>
+            </div>
+
+            <div class="disclaimer-content">
+                <div class="disclaimer-headline">НАСТРАИВАЙТЕ ФИЛЬТРЫ АККУРАТНО</div>
+                <div class="disclaimer-lead">Неправильная настройка может вызвать поток сотен уведомлений в чате:</div>
+
+                <div class="disclaimer-points">
+                    <div class="point-item">
+                        <div class="point-icon">⚠️</div>
+                        <div class="point-text">
+                            <b>Широкий диапазон</b> — если указать 0–500 TON без скидки («Все лоты»), бот будет присылать абсолютно каждый выставленный подарок на маркетах.
+                        </div>
+                    </div>
+
+                    <div class="point-item">
+                        <div class="point-icon">📉</div>
+                        <div class="point-text">
+                            <b>Скидка от флора</b> — выбирайте скидку <b>-10%</b> или <b>-15%</b>, чтобы получать только действительно выгодные находки дешевле рынка.
+                        </div>
+                    </div>
+
+                    <div class="point-item">
+                        <div class="point-icon">🎁</div>
+                        <div class="point-text">
+                            <b>Конкретные подарки</b> — сужайте макс. цену (до 10–20 TON) или выбирайте конкретные коллекции вместо поиска по всем.
+                        </div>
+                    </div>
+
+                    <div class="point-item">
+                        <div class="point-icon">⏸️</div>
+                        <div class="point-text">
+                            <b>Пауза в любой момент</b> — если уведомлений слишком много, нажмите «Пауза» вверху экрана для моментальной остановки.
+                        </div>
+                    </div>
+                </div>
+
+                <button class="disclaimer-ack-btn" onclick="acknowledgeDisclaimer()">
+                    Я ознакомился 👍
+                </button>
+            </div>
+        </div>
+    </div>
+<!-- Toast Notification -->
     <div class="toast-notify" id="toast-bar">
         <span id="toast-icon">✅</span>
         <span id="toast-text">Настройки сохранены</span>
@@ -1993,7 +2243,40 @@
             }
         });
 
-        loadLocalState();
+        
+        // ==================== DISCLAIMER MODAL LOGIC ====================
+        function openDisclaimerModal() {
+            haptic('medium');
+            const el = document.getElementById('disclaimer-modal');
+            if (el) el.classList.add('open');
+        }
+
+        function closeDisclaimerModal() {
+            haptic('light');
+            const el = document.getElementById('disclaimer-modal');
+            if (el) el.classList.remove('open');
+        }
+
+        function acknowledgeDisclaimer() {
+            haptic('notification_success');
+            localStorage.setItem('loot_radar_disclaimer_ack_v1', 'true');
+            closeDisclaimerModal();
+            showToast('Настройки приняты! Удачной охоты 🎯');
+        }
+
+        function onDisclaimerOverlayClick(e) {
+            if (e.target && e.target.id === 'disclaimer-modal') {
+                closeDisclaimerModal();
+            }
+        }
+
+            // Show disclaimer on launch if not acknowledged yet
+            if (!localStorage.getItem('loot_radar_disclaimer_ack_v1')) {
+                setTimeout(() => {
+                    openDisclaimerModal();
+                }, 400);
+            }
+    loadLocalState();
     </script>
 </body>
 </html>
