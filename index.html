@@ -3194,6 +3194,8 @@ function getCleanCollectionSlug(title) {
             const cleanSlug = slug || getCleanCollectionSlug(title);
             const pascalKey = getPascalCaseKey(title);
 
+            const alphaSlug = (title || slug || '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
             let url = 'https://t.me/mrkt/app';
             if (market === 'nft') {
                 url = `https://t.me/nft/${pascalKey}-1`;
@@ -3202,7 +3204,7 @@ function getCleanCollectionSlug(title) {
             } else if (market === 'tonnel') {
                 url = cleanSlug ? `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}` : 'https://t.me/tonnel_network_bot/gifts';
             } else {
-                url = cleanSlug ? `https://t.me/mrkt/app?startapp=${cleanSlug}` : 'https://t.me/mrkt/app';
+                url = alphaSlug ? `https://t.me/mrkt/app?startapp=market_${alphaSlug}` : 'https://t.me/mrkt/app';
             }
 
             const label = market === 'nft' ? 'Telegram NFT' : market.toUpperCase();
