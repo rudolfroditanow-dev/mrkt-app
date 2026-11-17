@@ -3193,8 +3193,12 @@ function getCleanCollectionSlug(title) {
 
             const cleanSlug = slug || getCleanCollectionSlug(title);
             const pascalKey = getPascalCaseKey(title);
-
             const alphaSlug = (title || slug || '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+            // Копируем название подарка в буфер обмена для мгновенной вставки в поиск
+            if (title && navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(title).catch(() => {});
+            }
 
             let url = 'https://t.me/mrkt/app';
             if (market === 'nft') {
@@ -3208,7 +3212,7 @@ function getCleanCollectionSlug(title) {
             }
 
             const label = market === 'nft' ? 'Telegram NFT' : market.toUpperCase();
-            showToast(`Переход в ${label}: ${title || ''} 🛍️`);
+            showToast(`📋 «${title || 'Подарок'}» скопировано! Вставьте в поиск ${label}`);
             openTelegramOrBrowser(url);
         };
 
