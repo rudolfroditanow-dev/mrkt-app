@@ -2262,6 +2262,235 @@
             color: #a5b4fc;
         }
 
+
+        /* ================== ARBITRAGE SCREEN STYLES ================== */
+        .arb-hero-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.08));
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        .arb-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .arb-stat-box {
+            background: rgba(15, 17, 26, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 8px;
+            text-align: center;
+        }
+        .arb-stat-val {
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .arb-stat-val.green { color: #10b981; }
+        .arb-stat-val.purple { color: #a855f7; }
+        .arb-stat-lbl {
+            font-size: 10px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        .arb-filter-pills {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+        .arb-pill-btn {
+            background: #171b29;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .arb-pill-btn.active {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: rgba(99, 102, 241, 0.55);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .arb-sort-btn {
+            background: #171b29;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            padding: 5px 9px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .arb-sort-btn.active {
+            background: #1e2438;
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+            font-weight: 700;
+        }
+
+        .arb-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 13px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .arb-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+        .arb-card-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .arb-thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #1e2333;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .arb-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .arb-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .arb-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .arb-sub {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+        .arb-badge {
+            padding: 4px 8px;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #34d399;
+            font-size: 12.5px;
+            font-weight: 800;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .arb-route-box {
+            background: rgba(15, 17, 26, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 9px 12px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .arb-step {
+            flex: 1;
+        }
+        .arb-step-lbl {
+            font-size: 9.5px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .arb-step-val {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: #fff;
+            margin-top: 2px;
+        }
+        .arb-step-val.buy { color: #818cf8; }
+        .arb-step-val.sell { color: #fbbf24; }
+        .arb-arrow {
+            padding: 0 6px;
+            color: #6366f1;
+            font-size: 14px;
+            font-weight: 900;
+        }
+        .arb-net-profit {
+            text-align: right;
+        }
+        .arb-net-val {
+            font-size: 13px;
+            font-weight: 800;
+            color: #10b981;
+        }
+
+        .arb-actions-row {
+            display: flex;
+            gap: 7px;
+            margin-top: 10px;
+            padding-top: 9px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .arb-action-btn {
+            flex: 1;
+            padding: 7px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #171b29;
+            color: #e2e8f0;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.15s;
+        }
+        .arb-action-btn:active {
+            transform: scale(0.97);
+        }
+        .arb-action-btn.buy-btn {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.35);
+            color: #a5b4fc;
+        }
+        .arb-action-btn.sell-btn {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+        }
+        .arb-action-btn.snipe-btn {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+
+        .arb-calc-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 16px;
+            padding: 14px;
+            margin-top: 14px;
+        }
+
 </style>
 </head>
 <body>
@@ -2307,8 +2536,8 @@
         <button class="nav-tab-btn" id="tab-market-btn" onclick="switchMainTab('market')">
             📊 Рынок
         </button>
-        <button class="nav-tab-btn" id="tab-my-drops-btn" onclick="switchMainTab('my-drops')">
-            🏆 Мои уловы
+        <button class="nav-tab-btn" id="tab-arbitrage-btn" onclick="switchMainTab('arbitrage')">
+            ⚡️ Арбитраж
         </button>
     </div>
 
@@ -2405,35 +2634,111 @@
         </div>
     </div>
     
-    <!-- ==================== TAB 3: МОИ УЛОВЫ (ВАРИАНТ 3) ==================== -->
+    <!-- ==================== TAB 3: АРБИТРАЖ & СПРЕДЫ ==================== -->
+    <div id="screen-arbitrage" style="display: none;">
+        <!-- Top Stats Banner -->
+        <div class="arb-hero-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+                <div style="font-size:14px; font-weight:800; color:#fff; display:flex; align-items:center; gap:6px;">
+                    <span>⚡️ МЕЖРЫНОЧНЫЙ АРБИТРАЖ</span>
+                    <span class="live-tag" style="background:rgba(16,185,129,0.2); color:#34d399; font-size:10px; padding:2px 6px; border-radius:6px; font-weight:700;">LIVE</span>
+                </div>
+                <div style="font-size:11px; color:#a5b4fc;">MRKT ⇄ Portals ⇄ Tonnel</div>
+            </div>
+            <div style="font-size:11.5px; color:#cbd5e1; line-height:1.45;">
+                Связки цен между маркетами с расчётом чистого дохода после вычета комиссий (2% MRKT, 5% Portals/Tonnel).
+            </div>
+            <div class="arb-stats-grid">
+                <div class="arb-stat-box">
+                    <div class="arb-stat-val green" id="arb-stat-max-spread">+18.0%</div>
+                    <div class="arb-stat-lbl">Макс. спред</div>
+                </div>
+                <div class="arb-stat-box">
+                    <div class="arb-stat-val purple" id="arb-stat-count">0</div>
+                    <div class="arb-stat-lbl">Связок найдено</div>
+                </div>
+                <div class="arb-stat-box">
+                    <div class="arb-stat-val" id="arb-stat-avg-profit">+1.5 TON</div>
+                    <div class="arb-stat-lbl">Ср. прибыль</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Sort Controls -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div class="section-label" style="margin:0;">БЮДЖЕТ СВЯЗКИ:</div>
+            <div style="display:flex; gap:6px;">
+                <button class="arb-sort-btn active" id="arb-sort-pct" onclick="setArbSort('pct')">🔥 % Спред</button>
+                <button class="arb-sort-btn" id="arb-sort-profit" onclick="setArbSort('profit')">💰 +TON</button>
+                <button class="arb-sort-btn" id="arb-sort-price" onclick="setArbSort('price')">🏷 Вход</button>
+            </div>
+        </div>
+
+        <div class="arb-filter-pills">
+            <button class="arb-pill-btn active" id="arb-budget-all" onclick="setArbBudget('all')">Все связки</button>
+            <button class="arb-pill-btn" id="arb-budget-10" onclick="setArbBudget(10)">До 10 TON</button>
+            <button class="arb-pill-btn" id="arb-budget-50" onclick="setArbBudget(50)">10–50 TON</button>
+            <button class="arb-pill-btn" id="arb-budget-high" onclick="setArbBudget('high')">50+ TON</button>
+        </div>
+
+        <!-- Arbitrage List Container -->
+        <div id="arbitrage-list-container">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Quick Flip & Fee Calculator Card -->
+        <div class="arb-calc-card">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                <span style="font-size:18px;">🧮</span>
+                <div>
+                    <div style="font-size:13.5px; font-weight:800; color:#fff;">Экспресс-калькулятор профита</div>
+                    <div style="font-size:11px; color:var(--text-sub);">Расчёт чистой прибыли с учётом комиссий</div>
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:10px;">
+                <div>
+                    <label style="font-size:10.5px; color:var(--text-sub); font-weight:600; display:block; margin-bottom:4px;">ЦЕНА ПОКУПКИ (TON)</label>
+                    <input type="number" id="calc-buy-price" value="4.5" step="0.1" style="width:100%; box-sizing:border-box; background:#141724; border:1px solid var(--border-color); border-radius:10px; color:#fff; font-size:13px; font-weight:700; padding:8px 10px;" oninput="recalcArbCustom()">
+                </div>
+                <div>
+                    <label style="font-size:10.5px; color:var(--text-sub); font-weight:600; display:block; margin-bottom:4px;">ЦЕНА ПРОДАЖИ (TON)</label>
+                    <input type="number" id="calc-sell-price" value="5.2" step="0.1" style="width:100%; box-sizing:border-box; background:#141724; border:1px solid var(--border-color); border-radius:10px; color:#fff; font-size:13px; font-weight:700; padding:8px 10px;" oninput="recalcArbCustom()">
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+                <div>
+                    <label style="font-size:10.5px; color:var(--text-sub); font-weight:600; display:block; margin-bottom:4px;">МАРКЕТ ПОКУПКИ</label>
+                    <select id="calc-buy-market" style="width:100%; box-sizing:border-box; background:#141724; border:1px solid var(--border-color); border-radius:10px; color:#fff; font-size:12px; font-weight:600; padding:8px 6px;" onchange="recalcArbCustom()">
+                        <option value="mrkt" selected>MRKT (Комиссия 2%)</option>
+                        <option value="portals">Portals (Комиссия 5%)</option>
+                        <option value="tonnel">Tonnel (Комиссия 5%)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:10.5px; color:var(--text-sub); font-weight:600; display:block; margin-bottom:4px;">МАРКЕТ СБЫТА</label>
+                    <select id="calc-sell-market" style="width:100%; box-sizing:border-box; background:#141724; border:1px solid var(--border-color); border-radius:10px; color:#fff; font-size:12px; font-weight:600; padding:8px 6px;" onchange="recalcArbCustom()">
+                        <option value="portals" selected>Portals (Комиссия 5%)</option>
+                        <option value="tonnel">Tonnel (Комиссия 5%)</option>
+                        <option value="mrkt">MRKT (Комиссия 2%)</option>
+                    </select>
+                </div>
+            </div>
+            <div style="background:rgba(15,17,26,0.85); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                    <div style="font-size:10.5px; color:var(--text-sub);">Чистый доход после всех комиссий:</div>
+                    <div style="font-size:15px; font-weight:800; color:#10b981; margin-top:2px;" id="calc-result-net">+0.35 TON (+7.8%)</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:10px; color:#94a3b8;" id="calc-result-fees">Комиссии: ~0.35 TON</div>
+                    <div style="font-size:10px; color:#a5b4fc; font-weight:600;" id="calc-result-breakeven">В ноль при: 4.84 TON</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden compatibility container for my-drops -->
     <div id="screen-my-drops" style="display: none;">
-        <!-- User Drops Stats -->
-        <div class="live-stats-row">
-            <div class="live-stat-card">
-                <div class="live-stat-val" id="my-drops-count">0</div>
-                <div class="live-stat-label">Куплено лотов</div>
-            </div>
-            <div class="live-stat-card">
-                <div class="live-stat-val profit-val" id="my-drops-spent">0 TON</div>
-                <div class="live-stat-label">Инвестировано</div>
-            </div>
-            <div class="live-stat-card">
-                <div class="live-stat-val highlight-val" id="my-drops-filter">0–6</div>
-                <div class="live-stat-label">Фильтр TON</div>
-            </div>
-        </div>
-
-        <div class="live-header-bar">
-            <div class="live-header-left">
-                <span class="pulse-dot"></span>
-                <span class="live-header-title">ИСТОРИЯ ВАШИХ ПОКУПОК И СНАЙПОВ</span>
-            </div>
-            <span class="live-header-sub">Личный журнал</span>
-        </div>
-
-        <div id="my-drops-container">
-            <!-- Rendered by JS: either empty state or real purchased lots -->
-        </div>
+        <div id="my-drops-container"></div>
     </div>
 
     <!-- ==================== TAB 3: ПРОФИЛЬ ==================== -->
@@ -2954,98 +3259,249 @@ function getCleanCollectionSlug(title) {
             return { min: 0, max: 6 };
         }
 
-        function renderMyDrops() {
-            const container = document.getElementById('my-drops-container');
+        
+        // ================== TAB 3: АРБИТРАЖ & СПРЕДЫ ==================
+        let curArbSort = 'pct'; // 'pct' | 'profit' | 'price'
+        let curArbBudget = 'all'; // 'all' | 10 | 50 | 'high'
+
+        function setArbSort(mode) {
+            haptic('selection');
+            curArbSort = mode;
+            document.querySelectorAll('.arb-sort-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById(`arb-sort-${mode}`);
+            if (btn) btn.classList.add('active');
+            renderArbitrageScreen();
+        }
+
+        function setArbBudget(budget) {
+            haptic('selection');
+            curArbBudget = budget;
+            document.querySelectorAll('.arb-pill-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById(`arb-budget-${budget}`);
+            if (btn) btn.classList.add('active');
+            renderArbitrageScreen();
+        }
+
+        function recalcArbCustom() {
+            const buyPrice = parseFloat(document.getElementById('calc-buy-price')?.value) || 0;
+            const sellPrice = parseFloat(document.getElementById('calc-sell-price')?.value) || 0;
+            const buyMkt = document.getElementById('calc-buy-market')?.value || 'mrkt';
+            const sellMkt = document.getElementById('calc-sell-market')?.value || 'portals';
+
+            // Комиссии: MRKT 2%, Portals 5%, Tonnel 5%
+            const buyFeeRate = buyMkt === 'mrkt' ? 0.02 : 0.05;
+            const sellFeeRate = (sellMkt === 'portals' || sellMkt === 'tonnel') ? 0.05 : 0.02;
+
+            const buyTotal = buyPrice * (1 + (buyMkt === 'mrkt' ? 0.02 : 0));
+            const sellNet = sellPrice * (1 - sellFeeRate);
+            const profit = sellNet - buyTotal;
+            const profitPct = buyTotal > 0 ? (profit / buyTotal) * 100 : 0;
+            const totalFees = (buyPrice * buyFeeRate) + (sellPrice * sellFeeRate);
+            const breakeven = sellFeeRate < 1 ? (buyTotal / (1 - sellFeeRate)) : 0;
+
+            const netEl = document.getElementById('calc-result-net');
+            const feesEl = document.getElementById('calc-result-fees');
+            const beEl = document.getElementById('calc-result-breakeven');
+
+            if (netEl) {
+                const sign = profit >= 0 ? '+' : '';
+                netEl.innerText = `${sign}${profit.toFixed(2)} TON (${sign}${profitPct.toFixed(1)}%)`;
+                netEl.style.color = profit >= 0 ? '#10b981' : '#ef4444';
+            }
+            if (feesEl) {
+                feesEl.innerText = `Комиссии: ~${totalFees.toFixed(2)} TON`;
+            }
+            if (beEl) {
+                beEl.innerText = `В ноль при: ${breakeven.toFixed(2)} TON`;
+            }
+        }
+
+        function round2(v) { return +(Math.round(v * 100) / 100).toFixed(2); }
+        function round1(v) { return +(Math.round(v * 10) / 10).toFixed(1); }
+
+        function renderArbitrageScreen() {
+            const container = document.getElementById('arbitrage-list-container');
             if (!container) return;
 
-            loadUserPurchases();
-            const pRange = getUserPriceRange();
-            const minV = (pRange && typeof pRange.min === 'number' && !isNaN(pRange.min)) ? pRange.min : 0;
-            const maxV = (pRange && typeof pRange.max === 'number' && !isNaN(pRange.max)) ? pRange.max : 6;
+            // Специфические коэффициенты по популярным коллекциям (как в core/arbitrage.py)
+            const arbRatios = {
+                "snake box": { mrkt: 1.0, portals: 1.15, tonnel: 1.08 },
+                "lunar snake": { mrkt: 1.0, portals: 1.16, tonnel: 1.07 },
+                "instant ramen": { mrkt: 1.0, portals: 1.14, tonnel: 1.09 },
+                "plush pepe": { mrkt: 1.08, portals: 1.0, tonnel: 1.06 },
+                "resistance dog": { mrkt: 1.02, portals: 1.0, tonnel: 1.01 },
+                "durovs cap": { mrkt: 1.0, portals: 1.18, tonnel: 1.10 },
+                "durovs coat": { mrkt: 1.0, portals: 1.15, tonnel: 1.09 },
+                "lol pop": { mrkt: 1.0, portals: 1.13, tonnel: 1.06 },
+                "xmas stocking": { mrkt: 1.0, portals: 1.14, tonnel: 1.08 },
+                "berry box": { mrkt: 1.0, portals: 1.15, tonnel: 1.07 },
+                "b-day candle": { mrkt: 1.0, portals: 1.12, tonnel: 1.05 },
+                "precious peach": { mrkt: 1.0, portals: 1.15, tonnel: 1.08 },
+                "trojan horse": { mrkt: 1.0, portals: 1.16, tonnel: 1.09 },
+                "spiced wine": { mrkt: 1.0, portals: 1.14, tonnel: 1.07 },
+                "chill flame": { mrkt: 1.0, portals: 1.16, tonnel: 1.08 }
+            };
 
-            // Stats
-            const countEl = document.getElementById('my-drops-count');
-            const spentEl = document.getElementById('my-drops-spent');
-            const filterEl = document.getElementById('my-drops-filter');
+            let arbList = [];
 
-            if (countEl) countEl.innerText = userPurchasesList.length;
-            if (filterEl) filterEl.innerText = `${minV}–${maxV}`;
+            ALL_COLLECTIONS.forEach(c => {
+                const floor = c.floor || 0;
+                if (floor <= 0) return;
 
-            const totalSpent = userPurchasesList.reduce((acc, x) => acc + (parseFloat(x.price) || 0), 0);
-            if (spentEl) spentEl.innerText = totalSpent > 0 ? `+${totalSpent.toFixed(1)} TON` : '0 TON';
+                const clean = (c.name || '').toLowerCase().replace(/['’]/g, '').trim();
+                const ratio = arbRatios[clean] || { mrkt: 1.0, portals: 1.14, tonnel: 1.08 };
 
-            if (userPurchasesList.length === 0) {
+                const entry = CALIBRATED_STATS[c.name] || CALIBRATED_STATS[c.title] || null;
+                let mPrice = round2(floor * ratio.mrkt);
+                let pPrice = round2(floor * ratio.portals);
+                let tPrice = round2(floor * ratio.tonnel);
+
+                if (entry) {
+                    if (entry.mrkt && entry.mrkt.floor) mPrice = entry.mrkt.floor;
+                    if (entry.portals && entry.portals.floor) pPrice = entry.portals.floor;
+                    if (entry.tonnel && entry.tonnel.floor) tPrice = entry.tonnel.floor;
+                }
+
+                const marketOptions = [
+                    { name: 'MRKT', key: 'mrkt', price: mPrice, buyFee: 0.02, sellFee: 0.02 },
+                    { name: 'Portals', key: 'portals', price: pPrice, buyFee: 0.0, sellFee: 0.05 },
+                    { name: 'Tonnel', key: 'tonnel', price: tPrice, buyFee: 0.0, sellFee: 0.05 }
+                ];
+
+                // Находим самый дешёвый маркет (вход) и самый дорогой (выход)
+                marketOptions.sort((a, b) => a.price - b.price);
+                const buyM = marketOptions[0];
+                const sellM = marketOptions[marketOptions.length - 1];
+
+                const buyCost = round2(buyM.price * (1 + buyM.buyFee));
+                const sellNet = round2(sellM.price * (1 - sellM.sellFee));
+                const pureProfitTon = round2(sellNet - buyCost);
+                const roiPct = buyCost > 0 ? round1((pureProfitTon / buyCost) * 100) : 0;
+                const grossSpreadPct = buyM.price > 0 ? round1(((sellM.price - buyM.price) / buyM.price) * 100) : 0;
+
+                if (pureProfitTon >= 0.20 && roiPct >= 5.0) {
+                    arbList.push({
+                        name: c.name,
+                        title: c.title || c.name,
+                        thumb: c.thumb,
+                        vol: c.vol || 0,
+                        buyMarket: buyM.name,
+                        buyKey: buyM.key,
+                        buyPrice: buyM.price,
+                        buyCost: buyCost,
+                        sellMarket: sellM.name,
+                        sellKey: sellM.key,
+                        sellPrice: sellM.price,
+                        sellNet: sellNet,
+                        profitTon: pureProfitTon,
+                        roiPct: roiPct,
+                        grossSpreadPct: grossSpreadPct
+                    });
+                }
+            });
+
+            // Статистика в шапке
+            const maxSpreadEl = document.getElementById('arb-stat-max-spread');
+            const countEl = document.getElementById('arb-stat-count');
+            const avgEl = document.getElementById('arb-stat-avg-profit');
+
+            if (arbList.length > 0) {
+                const maxSpread = Math.max(...arbList.map(a => a.roiPct));
+                const avgProfit = (arbList.reduce((acc, a) => acc + a.profitTon, 0) / arbList.length);
+                if (maxSpreadEl) maxSpreadEl.innerText = `+${maxSpread}%`;
+                if (countEl) countEl.innerText = `${arbList.length} связок`;
+                if (avgEl) avgEl.innerText = `+${avgProfit.toFixed(1)} TON`;
+            }
+
+            // Фильтр по бюджету
+            if (curArbBudget === 10) {
+                arbList = arbList.filter(a => a.buyPrice <= 10);
+            } else if (curArbBudget === 50) {
+                arbList = arbList.filter(a => a.buyPrice > 10 && a.buyPrice <= 50);
+            } else if (curArbBudget === 'high') {
+                arbList = arbList.filter(a => a.buyPrice > 50);
+            }
+
+            // Сортировка
+            if (curArbSort === 'pct') {
+                arbList.sort((a, b) => b.roiPct - a.roiPct);
+            } else if (curArbSort === 'profit') {
+                arbList.sort((a, b) => b.profitTon - a.profitTon);
+            } else if (curArbSort === 'price') {
+                arbList.sort((a, b) => a.buyPrice - b.buyPrice);
+            }
+
+            if (arbList.length === 0) {
                 container.innerHTML = `
-                    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 28px 18px; text-align: center; margin-top: 10px;">
-                        <div style="font-size: 40px; margin-bottom: 12px;">🎯</div>
-                        <div style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px;">У вас пока нет купленных лотов</div>
-                        <div style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; max-width: 320px; margin: 0 auto 18px;">
-                            Снайпер непрерывно ищет редкие подарки по вашему фильтру <strong>${pRange.min}–${pRange.max} TON</strong>.<br>
-                            Когда вы перейдёте к покупке подарка на маркете, он сохранится в этот персональный список!
-                        </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button onclick="switchMainTab('filters')" style="flex:1; padding: 11px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; font-weight: 700; font-size: 12px; border: none; cursor: pointer;">
-                                🎯 Мои фильтры
-                            </button>
-                            <button onclick="switchMainTab('market')" style="flex:1; padding: 11px; border-radius: 12px; background: #1a1e2d; color: #a5b4fc; font-weight: 700; font-size: 12px; border: 1px solid rgba(99,102,241,0.3); cursor: pointer;">
-                                ⚡️ Арбитраж флоров
-                            </button>
-                        </div>
+                    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; text-align: center; margin-top: 10px;">
+                        <div style="font-size: 36px; margin-bottom: 8px;">⚡️</div>
+                        <div style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 4px;">Нет связок в этом бюджете</div>
+                        <div style="font-size: 12px; color: var(--text-sub);">Попробуйте переключить фильтр бюджета на «Все связки».</div>
                     </div>
                 `;
                 return;
             }
 
-            let html = '<div class="live-feed-list">';
-            userPurchasesList.forEach(item => {
-                const mktClass = (item.market || 'mrkt').toLowerCase();
-                const mktName = (item.market || 'MRKT').toUpperCase();
-                const numStr = item.number ? ` #${item.number}` : '';
-                const thumb = item.thumb ? `https://cdn.tgmrkt.io/${item.thumb}` : '';
-                const nftUrl = item.nftUrl || `https://t.me/nft/${(item.title || '').replace(/[^a-zA-Z0-9]/g, '')}-${item.number || 1}`;
+            let html = '';
+            arbList.forEach(a => {
+                const thumb = a.thumb ? `https://cdn.tgmrkt.io/${a.thumb}` : '';
+                const cleanSlug = getCleanCollectionSlug(a.title);
 
                 html += `
-                    <div class="live-drop-card">
-                        <div class="live-drop-top">
-                            <div class="live-drop-thumb">
+                    <div class="arb-card">
+                        <div class="arb-card-top">
+                            <div class="arb-thumb">
                                 <img src="${thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%231a1e2d\'/><text x=\'50%\' y=\'55%\' font-size=\'22\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'white\'>🎁</text></svg>'">
                             </div>
-                            <div class="live-drop-info">
-                                <div class="live-drop-title-row">
-                                    <span class="live-drop-title">${item.title}</span>
-                                    <span class="live-drop-num">${numStr}</span>
-                                </div>
-                                <div class="live-drop-meta">
-                                    <span class="live-drop-mkt-tag ${mktClass}">${mktName}</span>
-                                    <span>·</span>
-                                    <span>${item.date || 'Недавно'}</span>
-                                </div>
+                            <div class="arb-info">
+                                <div class="arb-title">${a.title}</div>
+                                <div class="arb-sub">Объём: ${Math.round(a.vol).toLocaleString('ru-RU')} TON · Спред: +${a.grossSpreadPct}%</div>
                             </div>
-                            <div class="live-drop-pricing">
-                                <div class="live-drop-price">${item.price} TON</div>
-                                <div class="live-drop-profit">✅ В коллекции</div>
+                            <div class="arb-badge">
+                                +${a.roiPct}% ROI
                             </div>
                         </div>
-                        <div class="live-drop-actions">
-                            <button class="live-drop-btn primary" onclick="openMarketWithCollection('mrkt', '', '${item.title}', event)">
-                                🛒 MRKT
+
+                        <div class="arb-route-box">
+                            <div class="arb-step">
+                                <div class="arb-step-lbl">Вход (${a.buyMarket})</div>
+                                <div class="arb-step-val buy">${a.buyPrice} TON</div>
+                            </div>
+                            <div class="arb-arrow">➔</div>
+                            <div class="arb-step">
+                                <div class="arb-step-lbl">Сбыт (${a.sellMarket})</div>
+                                <div class="arb-step-val sell">${a.sellPrice} TON</div>
+                            </div>
+                            <div class="arb-net-profit">
+                                <div class="arb-step-lbl">Чистая прибыль</div>
+                                <div class="arb-net-val">+${a.profitTon} TON</div>
+                            </div>
+                        </div>
+
+                        <div class="arb-actions-row">
+                            <button class="arb-action-btn buy-btn" onclick="openMarketWithCollection('${a.buyKey}', '${cleanSlug}', '${a.title.replace(/'/g, "\'")}', event)">
+                                🛒 Вход: ${a.buyMarket}
                             </button>
-                            <button class="live-drop-btn" onclick="openMarketWithCollection('portals', '', '${item.title}', event)">
-                                🔮 Portals
+                            <button class="arb-action-btn sell-btn" onclick="openMarketWithCollection('${a.sellKey}', '${cleanSlug}', '${a.title.replace(/'/g, "\'")}', event)">
+                                🔮 Сбыт: ${a.sellMarket}
                             </button>
-                            <button class="live-drop-btn" onclick="openMarketWithCollection('tonnel', '', '${item.title}', event)">
-                                ⚡️ Tonnel
+                            <button class="arb-action-btn snipe-btn" onclick="openCreateFilterForCollection('${a.name.replace(/'/g, "\'")}')">
+                                🎯 В радар
                             </button>
                         </div>
                     </div>
                 `;
             });
-            html += '</div>';
 
             container.innerHTML = html;
         }
 
-        // Обновляем recordPurchaseDeal, чтобы покупки автоматически записывались в Мои уловы
+        // Backwards compatibility stub
+        function renderMyDrops() {
+            renderArbitrageScreen();
+        }
+
+
         window.recordPurchaseDeal = function(title, price, market, number, thumb, nftUrl) {
             const num = number || Math.floor(Math.random() * 5000 + 100);
             const cleanTitle = title || "Telegram Gift";
@@ -3327,21 +3783,24 @@ function getCleanCollectionSlug(title) {
 
         // ================== NAVIGATION ==================
         function switchMainTab(tab) {
+            if (tab === 'my-drops') tab = 'arbitrage';
             haptic('selection');
             appState.activeTab = tab;
             document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById(`tab-${tab}-btn`);
+            const activeBtn = document.getElementById(`tab-${tab}-btn`) || document.getElementById('tab-arbitrage-btn');
             if (activeBtn) activeBtn.classList.add('active');
 
             const sFilters = document.getElementById('screen-filters');
             const sMarket = document.getElementById('screen-market');
+            const sArb = document.getElementById('screen-arbitrage');
             const sMyDrops = document.getElementById('screen-my-drops');
             const sProfile = document.getElementById('screen-profile');
             const navTabs = document.querySelector('.nav-tabs');
 
             if (sFilters) sFilters.style.display = (tab === 'filters') ? 'block' : 'none';
             if (sMarket) sMarket.style.display = (tab === 'market') ? 'block' : 'none';
-            if (sMyDrops) sMyDrops.style.display = (tab === 'my-drops') ? 'block' : 'none';
+            if (sArb) sArb.style.display = (tab === 'arbitrage') ? 'block' : 'none';
+            if (sMyDrops) sMyDrops.style.display = 'none';
             if (sProfile) sProfile.style.display = (tab === 'profile') ? 'block' : 'none';
 
             if (tab === 'profile') {
@@ -3351,8 +3810,8 @@ function getCleanCollectionSlug(title) {
                 if (navTabs) navTabs.style.display = 'grid';
             }
 
-            if (tab === 'my-drops') {
-                renderMyDrops();
+            if (tab === 'arbitrage' || tab === 'my-drops') {
+                renderArbitrageScreen();
             }
         }
 
