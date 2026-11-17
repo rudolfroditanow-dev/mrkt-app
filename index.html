@@ -3807,6 +3807,52 @@ function getCleanCollectionSlug(title) {
             }
         }
 
+        function saveFiltersToTelegram() {
+            const enabledFilters = appState.filters.filter(f => f.enabled);
+            let minP = 0, maxP = 500, minD = 0, rare = 1, mono = 1;
+            let selIndices = [];
+
+            if (enabledFilters.length > 0) {
+                minP = Math.min(...enabledFilters.map(f => f.minPrice));
+                maxP = Math.max(...enabledFilters.map(f => f.maxPrice));
+                minD = Math.min(...enabledFilters.map(f => f.discount));
+                rare = enabledFilters.some(f => f.rareId) ? 1 : 0;
+                mono = enabledFilters.some(f => f.mono) ? 1 : 0;
+
+                const hasAll = enabledFilters.some(f => f.collection === 'all');
+                if (hasAll) {
+                    selIndices = ['all'];
+                } else {
+                    enabledFilters.forEach(f => {
+                        const targetName = (f.collectionTitle || f.collection || '').toLowerCase();
+                        const idx = ALL_COLLECTIONS.findIndex(c => 
+                            c.name.toLowerCase() === targetName || 
+                            c.title.toLowerCase() === targetName
+                        );
+                        if (idx !== -1) selIndices.push(idx);
+                    });
+                    selIndices = [...new Set(selIndices)];
+                }
+            } else {
+                selIndices = ['all'];
+            }
+
+            if (selIndices.length === 0) selIndices = ['all'];
+
+            const configStr = `c_${minP}_${maxP}_${minD}_${rare}_${mono}_${selIndices.join('_')}`;
+            const botUrl = `https://t.me/radar_loot_bot?start=${configStr}`;
+
+            try {
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
+                    window.Telegram.WebApp.openTelegramLink(botUrl);
+                } else {
+                    window.open(botUrl, '_blank');
+                }
+            } catch (e) {
+                window.open(botUrl, '_blank');
+            }
+        }
+
         function saveNewFilterFromForm() {
             haptic('medium');
             const minV = parseFloat(document.getElementById('price-from-input').value) || 0;
@@ -3835,8 +3881,8 @@ function getCleanCollectionSlug(title) {
             saveLocalState();
             renderFiltersList();
             closeFilterModal();
-            showToast('Фильтр сохранён!');
-            // saveFiltersToTelegram synced via saveLocalState
+            showToast('Фильтр сохранён! Применяем в боте...');
+            setTimeout(saveFiltersToTelegram, 350);
         }
 
         // Init
