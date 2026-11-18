@@ -3827,7 +3827,16 @@ function getCleanCollectionSlug(title) {
             appState.isActive = !appState.isActive;
             updateStatusUI();
             saveLocalState();
-            showToast(appState.isActive ? 'Снайпер запущен!' : 'Снайпер поставлен на паузу', appState.isActive ? '🟢' : '⏸');
+
+            // СИНХРОНИЗАЦИЯ ПАУЗЫ С БОТОМ В РЕАЛЬНОМ ВРЕМЕНИ (0 ms)
+            const targetAction = appState.isActive ? 'resume' : 'pause';
+            const botUrl = `https://t.me/radar_loot_bot?start=${targetAction}`;
+            
+            if (window.Telegram?.WebApp?.openTelegramLink) {
+                window.Telegram.WebApp.openTelegramLink(botUrl);
+            }
+
+            showToast(appState.isActive ? 'Снайпер запущен! 🟢' : 'Снайпер на паузе! ⏸', appState.isActive ? '🟢' : '⏸');
         });
 
         function updateStatusUI() {
@@ -4276,6 +4285,7 @@ function getCleanCollectionSlug(title) {
             const enabledFilters = appState.filters.filter(f => f.enabled);
             let minP = 0, maxP = 500, minD = 0, rare = 1, mono = 1;
             let selIndices = [];
+            let allMarkets = new Set();
 
             if (enabledFilters.length > 0) {
                 minP = Math.min(...enabledFilters.map(f => f.minPrice));
@@ -4283,6 +4293,12 @@ function getCleanCollectionSlug(title) {
                 minD = Math.min(...enabledFilters.map(f => f.discount));
                 rare = enabledFilters.some(f => f.rareId) ? 1 : 0;
                 mono = enabledFilters.some(f => f.mono) ? 1 : 0;
+
+                enabledFilters.forEach(f => {
+                    if (f.markets && Array.isArray(f.markets)) {
+                        f.markets.forEach(m => allMarkets.add(m.toLowerCase().trim()));
+                    }
+                });
 
                 const hasAll = enabledFilters.some(f => f.collection === 'all');
                 if (hasAll) {
@@ -4304,7 +4320,14 @@ function getCleanCollectionSlug(title) {
 
             if (selIndices.length === 0) selIndices = ['all'];
 
-            const configStr = `c_${minP}_${maxP}_${minD}_${rare}_${mono}_${selIndices.join('_')}`;
+            let mktArr = Array.from(allMarkets);
+            if (mktArr.length === 0 && curFormMarkets && curFormMarkets.length > 0) {
+                mktArr = curFormMarkets;
+            }
+            if (mktArr.length === 0) mktArr = ['mrkt', 'portals', 'tonnel'];
+            const mktToken = mktArr.join('-');
+
+            const configStr = `c_${minP}_${maxP}_${minD}_${rare}_${mono}_m-${mktToken}_${selIndices.join('_')}`;
             const botUrl = `https://t.me/radar_loot_bot?start=${configStr}`;
 
             try {
