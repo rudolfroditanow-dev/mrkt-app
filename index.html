@@ -809,6 +809,7 @@
             gap: 8px;
         }
         .gift-grid-card {
+            position: relative;
             background: #171b28;
             border: 1px solid var(--border-color);
             border-radius: 14px;
@@ -828,9 +829,27 @@
             background: #1f2538;
         }
         .gift-grid-card.selected {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.15);
-            box-shadow: 0 0 14px rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
+        }
+        .gift-check-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            border: 1.5px solid #fff;
+            z-index: 2;
         }
         .gift-thumb-box {
             width: 44px;
@@ -2923,6 +2942,11 @@
                     <div class="gift-grid" id="gifts-grid-container">
                         <!-- Populated by JS -->
                     </div>
+                    <div id="modal-step1-footer" style="position: sticky; bottom: 0; background: linear-gradient(to top, #111520 85%, transparent); padding: 12px 0 4px; margin-top: 8px; z-index: 20;">
+                        <button id="btn-confirm-selection" onclick="confirmMultiCollectionSelection()" style="width: 100%; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; border: none; padding: 13px; border-radius: 14px; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 4px 16px rgba(99,102,241,0.4); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <span id="confirm-btn-label">Выбрать (все коллекции)</span> ➔
+                        </button>
+                    </div>
                 </div>
 
                 <!-- STEP 2: Configure Price & Traits -->
@@ -3710,19 +3734,54 @@ function getCleanCollectionSlug(title) {
             const urlParams = new URLSearchParams(window.location.search);
             const urlMin = urlParams.get('min_p');
             const urlMax = urlParams.get('max_p');
+            const urlCols = urlParams.get('cols');
             const urlAct = urlParams.get('act');
             if (urlAct !== null) {
                 appState.isActive = (urlAct === '1' || urlAct === 'true');
             }
 
-            // Пользователь сам настраивает фильтры: никаких готовых дефолтных фильтров не создаем!
             if (!appState.filters) {
                 appState.filters = [];
             }
-            if (urlMin !== null && urlMax !== null) {
+
+            // Если локальное хранилище пустое, восстанавливаем активный фильтр из URL бота
+            if (appState.filters.length === 0 && (urlMax !== null || urlCols !== null)) {
+                const p1 = urlMin !== null ? parseFloat(urlMin) : 0;
+                const p2 = urlMax !== null ? parseFloat(urlMax) : 500;
+                let parsedCols = ['all'];
+                let colTitle = 'Любой подарок';
+                let thumb = '';
+                if (urlCols) {
+                    const list = urlCols.split(',').map(s => s.trim()).filter(Boolean);
+                    if (list.length > 0 && !list.includes('all')) {
+                        parsedCols = list;
+                        if (list.length === 1) {
+                            const found = ALL_COLLECTIONS.find(c => c.name.toLowerCase() === list[0].toLowerCase() || (c.title && c.title.toLowerCase() === list[0].toLowerCase()));
+                            colTitle = found ? (found.title || found.name) : list[0];
+                            thumb = found ? found.thumb : '';
+                        } else {
+                            colTitle = `${list.length} подарков (${list.slice(0, 2).join(', ')}...)`;
+                        }
+                    }
+                }
+                appState.filters.push({
+                    id: 'f_' + Date.now(),
+                    collection: parsedCols.length === 1 ? parsedCols[0] : 'custom',
+                    selectedCollections: parsedCols,
+                    collectionTitle: colTitle,
+                    thumb: thumb,
+                    minPrice: !isNaN(p1) ? p1 : 0,
+                    maxPrice: !isNaN(p2) && p2 > 0 ? p2 : 500,
+                    discount: 0,
+                    rareId: true,
+                    mono: true,
+                    enabled: true,
+                    markets: ['mrkt']
+                });
+            } else if (urlMin !== null && urlMax !== null && appState.filters[0]) {
                 const p1 = parseFloat(urlMin);
                 const p2 = parseFloat(urlMax);
-                if (!isNaN(p1) && !isNaN(p2) && p2 > 0 && appState.filters[0]) {
+                if (!isNaN(p1) && !isNaN(p2) && p2 > 0) {
                     appState.filters[0].minPrice = Math.min(p1, p2);
                     appState.filters[0].maxPrice = Math.max(p1, p2);
                 }
@@ -3751,11 +3810,18 @@ function getCleanCollectionSlug(title) {
                 minD = Math.min(...enabledFilters.map(f => f.discount));
                 rare = enabledFilters.some(f => f.rareId);
                 mono = enabledFilters.some(f => f.mono);
-                const hasAll = enabledFilters.some(f => f.collection === 'all');
+                const hasAll = enabledFilters.some(f => f.collection === 'all' || (f.selectedCollections && f.selectedCollections.includes('all')));
                 if (hasAll) {
                     selCols = ['all'];
                 } else {
-                    selCols = [...new Set(enabledFilters.map(f => f.collection))];
+                    const list = [];
+                    enabledFilters.forEach(f => {
+                        const colsList = (f.selectedCollections && f.selectedCollections.length > 0)
+                            ? f.selectedCollections
+                            : [f.collection];
+                        colsList.forEach(c => list.push(c));
+                    });
+                    selCols = [...new Set(list)];
                 }
             }
 
@@ -3870,12 +3936,12 @@ function getCleanCollectionSlug(title) {
                 container.innerHTML = `
                     <div class="empty-card" style="padding: 26px 18px; text-align: center; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; margin: 12px 0;">
                         <div class="empty-icon" style="font-size: 40px; margin-bottom: 10px;">🎯</div>
-                        <div class="empty-title" style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px;">У вас пока нет фильтров</div>
+                        <div class="empty-title" style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px;">Фильтры не настроены</div>
                         <div class="empty-desc" style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; max-width: 290px; margin: 0 auto 16px;">
                             Настройте фильтр под нужные подарки и бюджет, затем нажмите <strong>«Включить»</strong> для старта перехвата!
                         </div>
-                        <button onclick="openCreateFilterModal()" style="background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; border: none; padding: 11px 22px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(99,102,241,0.35);">
-                            ➕ Добавить первый фильтр
+                        <button onclick="openFilterModal()" style="background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; border: none; padding: 11px 22px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(99,102,241,0.35);">
+                            🎯 Настроить фильтр
                         </button>
                     </div>
                 `;
@@ -4148,8 +4214,8 @@ function getCleanCollectionSlug(title) {
             container.innerHTML = html;
         }
 
-        // ================== FILTER MODAL & CREATOR ==================
-        let curFormCol = 'all';
+        // ================== FILTER MODAL & MULTI-COLLECTION SELECTOR ==================
+        let curFormCols = ['all'];
         let curFormColTitle = 'Любой подарок';
         let curFormColThumb = '';
         let curFormDiscount = 0;
@@ -4183,6 +4249,8 @@ function getCleanCollectionSlug(title) {
             haptic('medium');
             const modal = document.getElementById('filter-modal');
             if (modal) modal.classList.add('open');
+            curFormCols = ['all'];
+            updateConfirmButtonState();
             backToStepCollections();
             renderGiftsGrid();
         }
@@ -4205,6 +4273,92 @@ function getCleanCollectionSlug(title) {
             if (mSub) mSub.innerText = 'Под каждым подарком — текущий флор на MRKT';
         }
 
+        function toggleCollectionSelection(colName, colTitle, thumb) {
+            haptic('selection');
+            if (colName === 'all') {
+                curFormCols = ['all'];
+            } else {
+                curFormCols = curFormCols.filter(c => c !== 'all');
+                const idx = curFormCols.indexOf(colName);
+                if (idx !== -1) {
+                    curFormCols.splice(idx, 1);
+                } else {
+                    curFormCols.push(colName);
+                }
+                if (curFormCols.length === 0) {
+                    curFormCols = ['all'];
+                }
+            }
+            updateConfirmButtonState();
+            renderGiftsGrid(document.getElementById('gift-search-input') ? document.getElementById('gift-search-input').value : '');
+        }
+
+        function updateConfirmButtonState() {
+            const btnLabel = document.getElementById('confirm-btn-label');
+            if (!btnLabel) return;
+            if (curFormCols.includes('all') || curFormCols.length === 0) {
+                btnLabel.innerText = 'Выбрать (все коллекции)';
+            } else if (curFormCols.length === 1) {
+                const found = ALL_COLLECTIONS.find(c => c.name === curFormCols[0]);
+                btnLabel.innerText = `Выбрать (${found ? (found.title || found.name) : curFormCols[0]})`;
+            } else {
+                btnLabel.innerText = `Выбрать (${curFormCols.length} подарков)`;
+            }
+        }
+
+        function confirmMultiCollectionSelection() {
+            haptic('medium');
+            document.getElementById('modal-step-collections').style.display = 'none';
+            document.getElementById('modal-step-params').style.display = 'block';
+            document.getElementById('modal-screen-title').innerText = 'Настройка фильтра';
+            document.getElementById('modal-screen-sub').innerText = 'Задай условия для мгновенных уведомлений';
+
+            const formColNameEl = document.getElementById('form-col-name');
+            if (curFormCols.includes('all')) {
+                formColNameEl.innerText = 'Любой подарок (все коллекции)';
+                curFormColTitle = 'Любой подарок';
+                curFormColThumb = '';
+                document.getElementById('price-from-input').value = '0';
+                document.getElementById('price-to-input').value = '500';
+            } else if (curFormCols.length === 1) {
+                const found = ALL_COLLECTIONS.find(c => c.name === curFormCols[0]);
+                const title = found ? (found.title || found.name) : curFormCols[0];
+                formColNameEl.innerText = title;
+                curFormColTitle = title;
+                curFormColThumb = found ? found.thumb : '';
+                if (found && found.floor > 0) {
+                    document.getElementById('price-from-input').value = Math.max(0, Math.round(found.floor * 0.7));
+                    document.getElementById('price-to-input').value = Math.round(found.floor * 1.4);
+                } else {
+                    document.getElementById('price-from-input').value = '0';
+                    document.getElementById('price-to-input').value = '500';
+                }
+            } else {
+                const titles = curFormCols.map(name => {
+                    const found = ALL_COLLECTIONS.find(c => c.name === name);
+                    return found ? (found.title || found.name) : name;
+                });
+                formColNameEl.innerText = `${curFormCols.length} подарков: ${titles.slice(0, 3).join(', ')}${titles.length > 3 ? '...' : ''}`;
+                curFormColTitle = `${curFormCols.length} подарков (${titles.slice(0, 2).join(', ')}...)`;
+                curFormColThumb = '';
+
+                const floors = curFormCols.map(name => {
+                    const f = ALL_COLLECTIONS.find(c => c.name === name);
+                    return f && f.floor > 0 ? f.floor : null;
+                }).filter(Boolean);
+
+                if (floors.length > 0) {
+                    const minF = Math.min(...floors);
+                    const maxF = Math.max(...floors);
+                    document.getElementById('price-from-input').value = Math.max(0, Math.round(minF * 0.7));
+                    document.getElementById('price-to-input').value = Math.round(maxF * 1.4);
+                } else {
+                    document.getElementById('price-from-input').value = '0';
+                    document.getElementById('price-to-input').value = '500';
+                }
+            }
+        }
+
         function renderGiftsGrid(searchQuery = '') {
             const grid = document.getElementById('gifts-grid-container');
             if (!grid) return;
@@ -4215,8 +4369,11 @@ function getCleanCollectionSlug(title) {
                 list = list.filter(c => c.name.toLowerCase().includes(q) || (c.title && c.title.toLowerCase().includes(q)));
             }
 
+            const isAllSelected = curFormCols.includes('all');
+
             let html = `
-                <div class="gift-grid-card ${curFormCol === 'all' ? 'selected' : ''}" onclick="selectCollectionForFilter('all', 'Любой подарок', '')">
+                <div class="gift-grid-card ${isAllSelected ? 'selected' : ''}" onclick="toggleCollectionSelection('all', 'Любой подарок', '')">
+                    ${isAllSelected ? '<div class="gift-check-badge">✓</div>' : ''}
                     <div class="gift-thumb-box" style="background: rgba(99, 102, 241, 0.2);">🎁</div>
                     <div class="gift-card-title">Любой подарок</div>
                     <div class="gift-card-floor">все коллекции</div>
@@ -4224,9 +4381,11 @@ function getCleanCollectionSlug(title) {
             `;
 
             list.forEach(c => {
+                const isSelected = curFormCols.includes(c.name);
                 const floorStr = c.floor > 0 ? `${c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(1)} TON` : 'новинка';
                 html += `
-                    <div class="gift-grid-card ${curFormCol === c.name ? 'selected' : ''}" onclick="selectCollectionForFilter('${c.name.replace(/'/g, "\\'")}', '${(c.title || c.name).replace(/'/g, "\\'")}', '${c.thumb}')">
+                    <div class="gift-grid-card ${isSelected ? 'selected' : ''}" onclick="toggleCollectionSelection('${c.name.replace(/'/g, "\\'")}', '${(c.title || c.name).replace(/'/g, "\\'")}', '${c.thumb}')">
+                        ${isSelected ? '<div class="gift-check-badge">✓</div>' : ''}
                         <div class="gift-thumb-box">
                             <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'40\\' height=\\'40\\'><rect width=\\'40\\' height=\\'40\\' fill=\\'%231e2333\\'/><text x=\\'50%\\' y=\\'55%\\' font-size=\\'18\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'white\\'>🎁</text></svg>'">
                         </div>
@@ -4243,7 +4402,9 @@ function getCleanCollectionSlug(title) {
             openFilterModal();
             const found = ALL_COLLECTIONS.find(c => c.name === colName);
             if (found) {
-                selectCollectionForFilter(found.name, found.title || found.name, found.thumb);
+                curFormCols = [found.name];
+                updateConfirmButtonState();
+                confirmMultiCollectionSelection();
             }
         }
 
@@ -4255,25 +4416,8 @@ function getCleanCollectionSlug(title) {
         }
 
         function selectCollectionForFilter(colName, colTitle, thumb) {
-            haptic('selection');
-            curFormCol = colName;
-            curFormColTitle = colTitle;
-            curFormColThumb = thumb;
-
-            document.getElementById('modal-step-collections').style.display = 'none';
-            document.getElementById('modal-step-params').style.display = 'block';
-            document.getElementById('modal-screen-title').innerText = 'Настройка фильтра';
-            document.getElementById('modal-screen-sub').innerText = 'Задай условия для мгновенных уведомлений';
-            document.getElementById('form-col-name').innerText = colTitle;
-
-            const found = ALL_COLLECTIONS.find(c => c.name === colName);
-            if (found && found.floor > 0) {
-                document.getElementById('price-from-input').value = Math.max(0, Math.round(found.floor * 0.7));
-                document.getElementById('price-to-input').value = Math.round(found.floor * 1.4);
-            } else {
-                document.getElementById('price-from-input').value = '0';
-                document.getElementById('price-to-input').value = '500';
-            }
+            curFormCols = [colName];
+            confirmMultiCollectionSelection();
         }
 
         function saveFiltersToTelegram() {
@@ -4295,17 +4439,22 @@ function getCleanCollectionSlug(title) {
                     }
                 });
 
-                const hasAll = enabledFilters.some(f => f.collection === 'all');
+                const hasAll = enabledFilters.some(f => f.collection === 'all' || (f.selectedCollections && f.selectedCollections.includes('all')));
                 if (hasAll) {
                     selIndices = ['all'];
                 } else {
                     enabledFilters.forEach(f => {
-                        const targetName = (f.collectionTitle || f.collection || '').toLowerCase();
-                        const idx = ALL_COLLECTIONS.findIndex(c => 
-                            c.name.toLowerCase() === targetName || 
-                            c.title.toLowerCase() === targetName
-                        );
-                        if (idx !== -1) selIndices.push(idx);
+                        const colsList = (f.selectedCollections && f.selectedCollections.length > 0)
+                            ? f.selectedCollections
+                            : [f.collection || f.collectionTitle];
+                        colsList.forEach(colName => {
+                            const cNameLow = String(colName).toLowerCase();
+                            const idx = ALL_COLLECTIONS.findIndex(c => 
+                                c.name.toLowerCase() === cNameLow || 
+                                (c.title && c.title.toLowerCase() === cNameLow)
+                            );
+                            if (idx !== -1) selIndices.push(idx);
+                        });
                     });
                     selIndices = [...new Set(selIndices)];
                 }
@@ -4345,9 +4494,14 @@ function getCleanCollectionSlug(title) {
             const numFrom = document.getElementById('num-from-input').value;
             const numTo = document.getElementById('num-to-input').value;
 
+            const selectedCols = [...curFormCols];
+            const isSingle = selectedCols.length === 1 && selectedCols[0] !== 'all';
+            const isAll = selectedCols.includes('all');
+
             const newF = {
                 id: 'f_' + Date.now(),
-                collection: curFormCol,
+                collection: isAll ? 'all' : (isSingle ? selectedCols[0] : 'custom'),
+                selectedCollections: isAll ? ['all'] : selectedCols,
                 collectionTitle: curFormColTitle,
                 thumb: curFormColThumb,
                 minPrice: minV,
