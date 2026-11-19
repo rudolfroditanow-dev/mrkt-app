@@ -3177,7 +3177,7 @@
         window.openDirectMarketplace = function(market) {
             haptic('impact_heavy');
             let url = 'https://t.me/mrkt/app';
-            if (market === 'portals') url = 'https://t.me/portals/market';
+            if (market === 'portals') url = 'https://t.me/portals_market_bot/market';
             else if (market === 'tonnel') url = 'https://t.me/tonnel_network_bot/gifts';
 
             showToast(`Открываем ${market.toUpperCase()}... 🛍️`);
@@ -3228,7 +3228,7 @@ function getCleanCollectionSlug(title) {
             if (market === 'nft') {
                 url = `https://t.me/nft/${pascalKey}-1`;
             } else if (market === 'portals') {
-                url = cleanSlug ? `https://t.me/portals/market?startapp=${cleanSlug}` : 'https://t.me/portals/market';
+                url = cleanSlug ? `https://t.me/portals_market_bot/market?startapp=${cleanSlug}` : 'https://t.me/portals_market_bot/market';
             } else if (market === 'tonnel') {
                 url = cleanSlug ? `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}` : 'https://t.me/tonnel_network_bot/gifts';
             } else {
@@ -4914,7 +4914,7 @@ function getCleanCollectionSlug(title) {
             const m = (market || 'mrkt').toLowerCase();
             if (!targetUrl) {
                 if (m === 'portals') {
-                    targetUrl = 'https://t.me/portals/market';
+                    targetUrl = 'https://t.me/portals_market_bot/market';
                 } else if (m === 'tonnel') {
                     targetUrl = 'https://t.me/tonnel_network_bot/gifts';
                 } else {
@@ -4955,7 +4955,7 @@ function getCleanCollectionSlug(title) {
                 const randNum = Math.floor(Math.random() * 8000 + 100);
                 let directUrl = 'https://t.me/mrkt/app';
                 if (curMkt === 'portals') {
-                    directUrl = `https://t.me/portals/market?startapp=${cleanSlug}-${randNum}`;
+                    directUrl = `https://t.me/portals_market_bot/market?startapp=${cleanSlug}-${randNum}`;
                 } else if (curMkt === 'tonnel') {
                     directUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}-${randNum}`;
                 } else {
