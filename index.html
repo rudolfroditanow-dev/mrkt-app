@@ -3829,12 +3829,7 @@ function getCleanCollectionSlug(title) {
             saveLocalState();
 
             // СИНХРОНИЗАЦИЯ ПАУЗЫ С БОТОМ В РЕАЛЬНОМ ВРЕМЕНИ (0 ms)
-            const targetAction = appState.isActive ? 'resume' : 'pause';
-            const botUrl = `https://t.me/radar_loot_bot?start=${targetAction}`;
-            
-            if (window.Telegram?.WebApp?.openTelegramLink) {
-                window.Telegram.WebApp.openTelegramLink(botUrl);
-            }
+            saveFiltersToTelegram();
 
             showToast(appState.isActive ? 'Снайпер запущен! 🟢' : 'Снайпер на паузе! ⏸', appState.isActive ? '🟢' : '⏸');
         });
@@ -4327,7 +4322,8 @@ function getCleanCollectionSlug(title) {
             if (mktArr.length === 0) mktArr = ['mrkt', 'portals', 'tonnel'];
             const mktToken = mktArr.join('-');
 
-            const configStr = `c_${minP}_${maxP}_${minD}_${rare}_${mono}_m-${mktToken}_${selIndices.join('_')}`;
+            const actToken = appState.isActive ? 'act-1' : 'act-0';
+            const configStr = `c_${minP}_${maxP}_${minD}_${rare}_${mono}_${actToken}_m-${mktToken}_${selIndices.join('_')}`;
             const botUrl = `https://t.me/radar_loot_bot?start=${configStr}`;
 
             try {
