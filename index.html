@@ -3039,6 +3039,22 @@
                         <div class="sub-help-text" id="markets-help-caption">Следим за всеми маркетами: MRKT, Portals, Tonnel.</div>
                     </div>
 
+                    <!-- МЕЖРЫНОЧНЫЙ АРБИТРАЖ -->
+                    <div class="param-section-title">⚡️ МЕЖРЫНОЧНЫЙ АРБИТРАЖ</div>
+                    <div class="param-card">
+                        <div class="switch-row" style="margin-bottom: 0;">
+                            <div>
+                                <div class="switch-title">⚡️ Межрыночный арбитраж</div>
+                                <div class="switch-sub">Искать связки цен между маркетплейсами для быстрой перепродажи с профитом</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="modal-arbitrage-toggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="sub-help-text">Если выключить — бот будет присылать чистые сигналы выбранных маркетов без арбитражных связок.</div>
+                    </div>
+
                     <!-- СОХРАНИТЬ ФИЛЬТР -->
                     <button class="btn-submit-filter" onclick="saveNewFilterFromForm()">
                         СОХРАНИТЬ ФИЛЬТР
@@ -3736,6 +3752,9 @@ function getCleanCollectionSlug(title) {
             const urlMax = urlParams.get('max_p');
             const urlCols = urlParams.get('cols');
             const urlAct = urlParams.get('act');
+            const urlArb = urlParams.get('arb');
+            const defaultArb = (urlArb === '0' || urlArb === 'false') ? false : true;
+
             if (urlAct !== null) {
                 appState.isActive = (urlAct === '1' || urlAct === 'true');
             }
@@ -3775,6 +3794,7 @@ function getCleanCollectionSlug(title) {
                     discount: 0,
                     rareId: true,
                     mono: true,
+                    arbitrage: defaultArb,
                     enabled: true,
                     markets: ['mrkt']
                 });
@@ -3803,6 +3823,7 @@ function getCleanCollectionSlug(title) {
             const enabledFilters = appState.filters.filter(f => f.enabled);
             let minP = 0, maxP = 500, minD = 0, rare = true, mono = true;
             let selCols = [];
+            const arbEnabled = enabledFilters.some(f => f.arbitrage !== false);
 
             if (enabledFilters.length > 0) {
                 minP = Math.min(...enabledFilters.map(f => f.minPrice));
@@ -3839,6 +3860,7 @@ function getCleanCollectionSlug(title) {
                 check_rare_id: rare,
                 check_monochrome: mono,
                 is_active: appState.isActive,
+                arbitrage_enabled: arbEnabled,
                 selected_collections: selCols,
                 selected_markets: selMkts
             };
@@ -3954,6 +3976,9 @@ function getCleanCollectionSlug(title) {
                 const discText = f.discount > 0 ? `· Скидка -${f.discount}%` : '';
                 const traitsText = [f.rareId ? 'Low-ID' : '', f.mono ? 'Монохром' : ''].filter(Boolean).join(' + ');
                 const mktsText = (f.markets && f.markets.length > 0) ? f.markets.map(m => m.toUpperCase()).join(' · ') : 'MRKT · Portals · Tonnel';
+                const arbBadge = (f.arbitrage === false)
+                    ? `<span style='color: #f87171; font-size: 10px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); padding: 1px 6px; border-radius: 6px; margin-left: 6px;'>🚫 Без арбитража</span>`
+                    : `<span style='color: #34d399; font-size: 10px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); padding: 1px 6px; border-radius: 6px; margin-left: 6px;'>⚡️ Арбитраж</span>`;
 
                 html += `
                     <div class="filter-item-card">
@@ -3961,7 +3986,7 @@ function getCleanCollectionSlug(title) {
                             <div class="filter-item-icon">${thumbImg}</div>
                             <div class="filter-item-info">
                                 <div class="filter-item-title">${f.collectionTitle}</div>
-                                <div class="filter-item-desc">${f.minPrice}–${f.maxPrice} TON ${discText} ${traitsText ? '· ' + traitsText : ''}<br><span style='color: #818cf8; font-size: 10.5px;'>🏛 ${mktsText}</span></div>
+                                <div class="filter-item-desc">${f.minPrice}–${f.maxPrice} TON ${discText} ${traitsText ? '· ' + traitsText : ''}<br><span style='color: #818cf8; font-size: 10.5px;'>🏛 ${mktsText}</span>${arbBadge}</div>
                             </div>
                         </div>
                         <div class="filter-item-actions">
@@ -4472,7 +4497,9 @@ function getCleanCollectionSlug(title) {
             const mktToken = mktArr.join('-');
 
             const actToken = appState.isActive ? 'act-1' : 'act-0';
-            const configStr = `c_${minP}_${maxP}_${minD}_${rare}_${mono}_${actToken}_m-${mktToken}_${selIndices.join('_')}`;
+            const arbActive = enabledFilters.some(f => f.arbitrage !== false);
+            const arbToken = arbActive ? 'arb-1' : 'arb-0';
+            const configStr = `c_${minP}_${maxP}_${minD}_${rare}_${mono}_${actToken}_${arbToken}_m-${mktToken}_${selIndices.join('_')}`;
             const botUrl = `https://t.me/radar_loot_bot?start=${configStr}`;
 
             try {
@@ -4491,6 +4518,8 @@ function getCleanCollectionSlug(title) {
             const minV = parseFloat(document.getElementById('price-from-input').value) || 0;
             const maxV = parseFloat(document.getElementById('price-to-input').value) || 500;
             const isRare = document.getElementById('modal-rare-toggle').checked;
+            const isArbToggle = document.getElementById('modal-arbitrage-toggle');
+            const isArbitrage = isArbToggle ? isArbToggle.checked : true;
             const numFrom = document.getElementById('num-from-input').value;
             const numTo = document.getElementById('num-to-input').value;
 
@@ -4509,6 +4538,7 @@ function getCleanCollectionSlug(title) {
                 discount: curFormDiscount,
                 rareId: isRare,
                 mono: true,
+                arbitrage: isArbitrage,
                 numFrom: numFrom || null,
                 numTo: numTo || null,
                 markets: [...curFormMarkets],
