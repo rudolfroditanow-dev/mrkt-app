@@ -32,10 +32,10 @@
                 const mktClass = item.market.toLowerCase();
                 const mktName = item.market.toUpperCase();
 
-                let buyUrl = 'https://t.me/mrkt/app';
-                if (mktClass === 'portals') buyUrl = `https://t.me/portals/market?startapp=${cleanSlug}-${item.number}`;
+                let buyUrl = 'https://t.me/main_mrkt_bot/app';
+                if (mktClass === 'portals') buyUrl = `https://t.me/portals_market_bot/market?startapp=${cleanSlug}-${item.number}`;
                 else if (mktClass === 'tonnel') buyUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}-${item.number}`;
-                else buyUrl = `https://t.me/mrkt/app?startapp=${cleanSlug}-${item.number}`;
+                else buyUrl = `https://t.me/main_mrkt_bot/app?startapp=${cleanSlug}-${item.number}`;
 
                 const nftKey = item.title.replace(/[^a-zA-Z0-9]/g, '');
                 const nftUrl = `https://t.me/nft/${nftKey}-${item.number}`;
@@ -2935,9 +2935,24 @@
             <div class="modal-body" id="modal-scroll-area">
                 <!-- STEP 1: Select Gift / Collection -->
                 <div id="modal-step-collections">
-                    <div class="search-box">
+                    <div class="search-box" style="margin-bottom: 8px;">
                         <span class="search-icon">🔍</span>
                         <input type="text" class="search-input" id="gift-search-input" placeholder="Поиск подарка...">
+                    </div>
+                    <!-- Панель мультивыбора коллекций -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 2px 10px; font-size: 12px;">
+                        <div id="selection-counter-badge" style="color: #c7d2fe; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                            <span>Выбрано:</span>
+                            <span id="selected-gifts-count" style="background: rgba(99,102,241,0.25); border: 1px solid rgba(99,102,241,0.4); color: #fff; padding: 2px 8px; border-radius: 8px; font-size: 11px;">все коллекции</span>
+                        </div>
+                        <div style="display: flex; gap: 6px;">
+                            <button type="button" onclick="selectAllCollections()" style="background: rgba(99,102,241,0.18); border: 1px solid rgba(99,102,241,0.35); color: #e0e7ff; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">
+                                ✓ Все
+                            </button>
+                            <button type="button" onclick="resetCollectionSelection()" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #94a3b8; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                                ✕ Сброс
+                            </button>
+                        </div>
                     </div>
                     <div class="gift-grid" id="gifts-grid-container">
                         <!-- Populated by JS -->
@@ -3192,7 +3207,7 @@
 
         window.openDirectMarketplace = function(market) {
             haptic('impact_heavy');
-            let url = 'https://t.me/mrkt/app';
+            let url = 'https://t.me/main_mrkt_bot/app';
             if (market === 'portals') url = 'https://t.me/portals_market_bot/market';
             else if (market === 'tonnel') url = 'https://t.me/tonnel_network_bot/gifts';
 
@@ -3240,7 +3255,7 @@ function getCleanCollectionSlug(title) {
                 navigator.clipboard.writeText(title).catch(() => {});
             }
 
-            let url = 'https://t.me/mrkt/app';
+            let url = 'https://t.me/main_mrkt_bot/app';
             if (market === 'nft') {
                 url = `https://t.me/nft/${pascalKey}-1`;
             } else if (market === 'portals') {
@@ -3248,7 +3263,7 @@ function getCleanCollectionSlug(title) {
             } else if (market === 'tonnel') {
                 url = cleanSlug ? `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}` : 'https://t.me/tonnel_network_bot/gifts';
             } else {
-                url = alphaSlug ? `https://t.me/mrkt/app?startapp=market_${alphaSlug}` : 'https://t.me/mrkt/app';
+                url = alphaSlug ? `https://t.me/main_mrkt_bot/app?startapp=market_${alphaSlug}` : 'https://t.me/main_mrkt_bot/app';
             }
 
             const label = market === 'nft' ? 'Telegram NFT' : market.toUpperCase();
@@ -3956,15 +3971,12 @@ function getCleanCollectionSlug(title) {
 
             if (total === 0) {
                 container.innerHTML = `
-                    <div class="empty-card" style="padding: 26px 18px; text-align: center; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; margin: 12px 0;">
+                    <div class="empty-card" style="padding: 24px 18px; text-align: center; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; margin: 12px 0;">
                         <div class="empty-icon" style="font-size: 40px; margin-bottom: 10px;">🎯</div>
                         <div class="empty-title" style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px;">Фильтры не настроены</div>
-                        <div class="empty-desc" style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; max-width: 290px; margin: 0 auto 16px;">
-                            Настройте фильтр под нужные подарки и бюджет, затем нажмите <strong>«Включить»</strong> для старта перехвата!
+                        <div class="empty-desc" style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; max-width: 290px; margin: 0 auto;">
+                            Нажмите <strong>«+ Новый фильтр»</strong> ниже, чтобы выбрать подарки и бюджет для перехвата!
                         </div>
-                        <button onclick="openFilterModal()" style="background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; border: none; padding: 11px 22px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(99,102,241,0.35);">
-                            🎯 Настроить фильтр
-                        </button>
                     </div>
                 `;
                 return;
@@ -4320,8 +4332,14 @@ function getCleanCollectionSlug(title) {
 
         function updateConfirmButtonState() {
             const btnLabel = document.getElementById('confirm-btn-label');
+            const countBadge = document.getElementById('selected-gifts-count');
+            const isAll = curFormCols.includes('all') || curFormCols.length === 0;
+            const count = isAll ? 'все коллекции' : `${curFormCols.length} шт.`;
+
+            if (countBadge) countBadge.innerText = count;
             if (!btnLabel) return;
-            if (curFormCols.includes('all') || curFormCols.length === 0) {
+
+            if (isAll) {
                 btnLabel.innerText = 'Выбрать (все коллекции)';
             } else if (curFormCols.length === 1) {
                 const found = ALL_COLLECTIONS.find(c => c.name === curFormCols[0]);
@@ -4384,6 +4402,20 @@ function getCleanCollectionSlug(title) {
             }
         }
 
+        function selectAllCollections() {
+            haptic('selection');
+            curFormCols = ALL_COLLECTIONS.map(c => c.name);
+            updateConfirmButtonState();
+            renderGiftsGrid(document.getElementById('gift-search-input') ? document.getElementById('gift-search-input').value : '');
+        }
+
+        function resetCollectionSelection() {
+            haptic('selection');
+            curFormCols = ['all'];
+            updateConfirmButtonState();
+            renderGiftsGrid(document.getElementById('gift-search-input') ? document.getElementById('gift-search-input').value : '');
+        }
+
         function renderGiftsGrid(searchQuery = '') {
             const grid = document.getElementById('gifts-grid-container');
             if (!grid) return;
@@ -4394,11 +4426,13 @@ function getCleanCollectionSlug(title) {
                 list = list.filter(c => c.name.toLowerCase().includes(q) || (c.title && c.title.toLowerCase().includes(q)));
             }
 
-            const isAllSelected = curFormCols.includes('all');
+            const isAllSelected = curFormCols.includes('all') || curFormCols.length === 0;
 
             let html = `
-                <div class="gift-grid-card ${isAllSelected ? 'selected' : ''}" onclick="toggleCollectionSelection('all', 'Любой подарок', '')">
-                    ${isAllSelected ? '<div class="gift-check-badge">✓</div>' : ''}
+                <div class="gift-grid-card ${isAllSelected ? 'selected' : ''}" onclick="toggleCollectionSelection('all', 'Любой подарок', '')" style="position: relative; ${isAllSelected ? 'border-color: #6366f1; background: rgba(99,102,241,0.2); box-shadow: 0 0 12px rgba(99,102,241,0.3);' : ''}">
+                    <div class="gift-check-badge" style="position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 6px; background: ${isAllSelected ? '#4f46e5' : 'rgba(255,255,255,0.08)'}; border: 1.5px solid ${isAllSelected ? '#818cf8' : 'rgba(255,255,255,0.2)'}; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; font-weight: 800;">
+                        ${isAllSelected ? '✓' : ''}
+                    </div>
                     <div class="gift-thumb-box" style="background: rgba(99, 102, 241, 0.2);">🎁</div>
                     <div class="gift-card-title">Любой подарок</div>
                     <div class="gift-card-floor">все коллекции</div>
@@ -4406,11 +4440,13 @@ function getCleanCollectionSlug(title) {
             `;
 
             list.forEach(c => {
-                const isSelected = curFormCols.includes(c.name);
+                const isSelected = !isAllSelected && curFormCols.includes(c.name);
                 const floorStr = c.floor > 0 ? `${c.floor >= 100 ? Math.round(c.floor) : c.floor.toFixed(1)} TON` : 'новинка';
                 html += `
-                    <div class="gift-grid-card ${isSelected ? 'selected' : ''}" onclick="toggleCollectionSelection('${c.name.replace(/'/g, "\\'")}', '${(c.title || c.name).replace(/'/g, "\\'")}', '${c.thumb}')">
-                        ${isSelected ? '<div class="gift-check-badge">✓</div>' : ''}
+                    <div class="gift-grid-card ${isSelected ? 'selected' : ''}" onclick="toggleCollectionSelection('${c.name.replace(/'/g, "\\'")}', '${(c.title || c.name).replace(/'/g, "\\'")}', '${c.thumb}')" style="position: relative; ${isSelected ? 'border-color: #6366f1; background: rgba(99,102,241,0.2); box-shadow: 0 0 12px rgba(99,102,241,0.3);' : ''}">
+                        <div class="gift-check-badge" style="position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 6px; background: ${isSelected ? '#4f46e5' : 'rgba(255,255,255,0.08)'}; border: 1.5px solid ${isSelected ? '#818cf8' : 'rgba(255,255,255,0.2)'}; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; font-weight: 800;">
+                            ${isSelected ? '✓' : ''}
+                        </div>
                         <div class="gift-thumb-box">
                             <img src="https://cdn.tgmrkt.io/${c.thumb}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'40\\' height=\\'40\\'><rect width=\\'40\\' height=\\'40\\' fill=\\'%231e2333\\'/><text x=\\'50%\\' y=\\'55%\\' font-size=\\'18\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'white\\'>🎁</text></svg>'">
                         </div>
@@ -4828,7 +4864,7 @@ function getCleanCollectionSlug(title) {
                             thumb: 'c/lolpop.png',
                             market: 'mrkt',
                             discount: 15,
-                            url: 'https://t.me/mrkt/app?startapp=lol-pop-1234'
+                            url: 'https://t.me/main_mrkt_bot/app?startapp=lol-pop-1234'
                         },
                         {
                             id: 'astral_shard_777',
@@ -4838,7 +4874,7 @@ function getCleanCollectionSlug(title) {
                             thumb: 'c/astralshard.png',
                             market: 'portals',
                             discount: 20,
-                            url: 'https://t.me/portals/market?startapp=astral-shard-777'
+                            url: 'https://t.me/portals_market_bot/market?startapp=astral-shard-777'
                         },
                         {
                             id: 'onyx_flask_999',
@@ -4948,7 +4984,7 @@ function getCleanCollectionSlug(title) {
                 } else if (m === 'tonnel') {
                     targetUrl = 'https://t.me/tonnel_network_bot/gifts';
                 } else {
-                    targetUrl = 'https://t.me/mrkt/app';
+                    targetUrl = 'https://t.me/main_mrkt_bot/app';
                 }
             }
             if (window.Telegram?.WebApp) {
@@ -4983,13 +5019,13 @@ function getCleanCollectionSlug(title) {
                 const curMkt = (typeof curMarketFilter !== 'undefined' && curMarketFilter !== 'all') ? curMarketFilter : 'mrkt';
                 const cleanSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
                 const randNum = Math.floor(Math.random() * 8000 + 100);
-                let directUrl = 'https://t.me/mrkt/app';
+                let directUrl = 'https://t.me/main_mrkt_bot/app';
                 if (curMkt === 'portals') {
                     directUrl = `https://t.me/portals_market_bot/market?startapp=${cleanSlug}-${randNum}`;
                 } else if (curMkt === 'tonnel') {
                     directUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}-${randNum}`;
                 } else {
-                    directUrl = `https://t.me/mrkt/app?startapp=${cleanSlug}-${randNum}`;
+                    directUrl = `https://t.me/main_mrkt_bot/app?startapp=${cleanSlug}-${randNum}`;
                 }
 
                 favoritesList.unshift({
@@ -5040,10 +5076,10 @@ function getCleanCollectionSlug(title) {
                 const mktClass = item.market.toLowerCase();
                 const mktName = item.market.toUpperCase();
 
-                let buyUrl = 'https://t.me/mrkt/app';
-                if (mktClass === 'portals') buyUrl = `https://t.me/portals/market?startapp=${cleanSlug}-${item.number}`;
+                let buyUrl = 'https://t.me/main_mrkt_bot/app';
+                if (mktClass === 'portals') buyUrl = `https://t.me/portals_market_bot/market?startapp=${cleanSlug}-${item.number}`;
                 else if (mktClass === 'tonnel') buyUrl = `https://t.me/tonnel_network_bot/gifts?startapp=${cleanSlug}-${item.number}`;
-                else buyUrl = `https://t.me/mrkt/app?startapp=${cleanSlug}-${item.number}`;
+                else buyUrl = `https://t.me/main_mrkt_bot/app?startapp=${cleanSlug}-${item.number}`;
 
                 const nftKey = item.title.replace(/[^a-zA-Z0-9]/g, '');
                 const nftUrl = `https://t.me/nft/${nftKey}-${item.number}`;
